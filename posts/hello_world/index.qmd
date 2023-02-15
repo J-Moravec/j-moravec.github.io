@@ -1,0 +1,32 @@
+---
+title: "Hello World!"
+date: "2023-02-15"
+image: image.png
+categories: [news]
+---
+
+So I decided to do blogging. Again.
+
+### What can you expect?
+
+Since I am computational biologists, you can expect some statistics and data science with biological motivations, usually evolutionary biology or bioinformatics.
+
+Regarding programming things, I will write mostly about R. I am kind of purist so I am one of the few people who prefers base R, including base graphics, so I will try to write a few articles regarding some forgotten treasures there. For example, since base does not divide its functions into namespaces (like Python's standard library), it is hard to find a complex documentation about all the string-manipulation functions, so many people might not know that functions like `trimws()` even exists.
+
+Outside of R, I use also Python, and I finally starter using C/C++, at least in connection with R.
+
+### Why wrote blogs? Aren't there already plenty of them?
+My memory is terrible and I have a bad tendency of leaving projects unfinished. Blogposts will serve as a good written memory and something that will force me to finish projects to a state where I woldn't be ashamed of them being public. This goes double for various learning projects. So you see, this blog is not for you, it is for me. But since most of the popular blogs originated in this way, I hope that eventually, 
+
+### My previous attempts at blogging
+
+My previous attempts at blogging didn't get far.
+One was named "Mammoths on Mars", a cool name, something about why developing science to such a degree that we could have mammoths on Mars would be so frigging awesome. But all I got from it was a half-assed post about why testing for phylogenetic signal from data that could arise from an evolutionary process is so complicated. Something that would plague me in the future. Not the half-assed blogpost, but the phylogenetic signal.
+
+That was 8 years ago, I was just learning about static site generators which were becoming increasingly popular. Finally, small sites with pure HTML generated from markup format! And since I was using quite a bit Python at that time, I didn't pick the omnipresent Jekyll, but a Python-based Pelican. But the documentation wasn't there yet, everyone was talking about templates, but no one really explained what _are_ those in the first places. That was not very beginner friendly.
+
+My second attempt came years later, because I really wanted to understand all these templates. Which was a cool learning experience, because you can create a static site generator really easily! You can see the attempt [here](https://github.com/J-Moravec/CookingRecipes/blob/master/ssg.r), only 7 direct dependencies (6, if I remove `magrittr`) and ~300 lines of code. The site is technically still [lives](https://j-moravec.github.io/CookingRecipes/), but I don't update it often because getting good photos of food is so damn hard. Something about proper light and clean table.
+
+The learning experience was cool, I learned a lot about CSS at least. I still dislike the whole experience, which was the reason why for the third time, I picked something pre-backed. And [Quarto](https://quarto.org) was recently released. So here we are, after a week fiddling with some internals, parameters, trying to modify the `.scss` bootstrap theme and finding that it doesn't do anything. But perfect is the enemy of good, and I really want to write some blogposts and not fiddle with the parameters that much.
+
+So here we are, now you know everything. Hope you will find content interesting or at least in some way entertaining.

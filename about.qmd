@@ -1,0 +1,31 @@
+---
+title: "Jiří C. Moravec"
+image: profile.jpg
+about:
+  template: trestles
+  image-shape: round
+  links:
+    - icon: twitter
+      text: Twitter
+      href: https://twitter.com/jcmoravec
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/ji%C5%99%C3%AD-moravec-2a104815b/
+    - icon: github
+      text: Github
+      href: https://github.com/J-Moravec/
+    - text: Email
+      href: mailto:jiri.c.moravec@gmail.com
+    - text: CV
+      href: Moravec_CV.pdf
+---
+
+## About
+I am a computational biologist, bioinformatician, statistician, or just *data scientist* for short.
+
+My main interests are phylogenetic trees and their applications, while traditionally phylogenetic trees are used to estimate the evolutionary relationship of biological species from DNA, I have applied phylogenetic trees to study population dynamics of viruses, animals, cancer cells and languages.
+
+My language of choice is typically R as it is usually the fastest way to read and process data.
+But I am proficient with Python, C/C++ and Java as well.
+
+Here you can view my [publications](publications.qmd) or [CV](Moravec_CV.pdf).
