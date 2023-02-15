@@ -1,0 +1,10 @@
+---
+title: Publications
+bibliography: bibliography/jcm.bib
+csl: bibliography/apa-6th-edition.csl
+nocite: |
+  @*
+---
+
+::: {#refs}
+:::

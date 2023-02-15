@@ -1,0 +1,28 @@
+project:
+  type: website
+  resources:
+    - "Moravec_CV.pdf"
+
+website:
+  title: "Jiří C. Moravec"
+  navbar:
+    right:
+      - text: "Home"
+        href: index.qmd
+      - text: "About"
+        href: about.qmd
+      - text: "Publications"
+        href: publications.qmd
+      - text: "Software"
+        href: software.qmd
+      - icon: github
+        href: https://github.com/
+      - icon: twitter
+        href: https://twitter.com
+format:
+  html:
+    theme: blog.scss
+    css: styles.css
+
+
+
