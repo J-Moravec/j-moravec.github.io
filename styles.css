@@ -1,0 +1,12 @@
+/* css styles */
+
+a {
+    color: #268fcc;
+    text-decoration: none;
+    background-color: transparent;
+    font-weight: bold;
+}
+
+.listing-description, .listing-author, .listing-date {
+    font-weight: normal;
+}

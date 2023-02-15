@@ -1,0 +1,37 @@
+[
+  {
+    "objectID": "software.html",
+    "href": "software.html",
+    "title": "Software",
+    "section": "",
+    "text": "beter: Beast Templates in R, another way how to create input XML files for the Beast phylogenetic software.\nbaffle: make a waffle plots in base R graphics!\nrrnni: compute phylogenetic distances in the RNNI space"
+  },
+  {
+    "objectID": "publications.html",
+    "href": "publications.html",
+    "title": "Publications",
+    "section": "",
+    "text": "Moravec, J. C., Lanfear, R., Spector, D. L., Diermeier, S. D., & Gavryushkin, A. (In Press). Testing for phylogenetic signal in single-cell RNA-seq data. Journal of Computational Biology. https://doi.org/10.1101/2021.01.07.425804\n\n\nChen, K., Moravec, J. C., Gavryushkin, A., Welch, D., & Drummond, A. J. (2022). Accounting for Errors in Data Improves Divergence Time Estimates in Single-cell Cancer Evolution. Molecular Biology and Evolution, 39(8), msac143. https://doi.org/10.1093/molbev/msac143\n\n\nPowell, R. M., Pattison, S., Moravec, J. C., Bhat, B., Guirguis, N., Markie, D., Jones, G. T., Copedo, J., Print, C. G., Morison, I. M., Gavryushkin, A., Gray, B., Wyeth, L. J., Eccles, M. R., & Macaulay, E. C. (2022). Tuberous sclerosis complex: A complex case. Cold Spring Harbor Molecular Case Studies, 8(3), a006182. https://doi.org/10.1101/mcs.a006182\n\n\nMoravec, J. C., Marsland, S., & Cox, M. P. (2019). Warfare induces post-marital residence change. Journal of Theoretical Biology, 474, 52–62.\n\n\nHarazim, M., Horáček, I., Jakešová, L., Luermann, K., Moravec, J. C., Morgan, S., Pikula, J., Sosík, P., Vavrušová, Z., Zahradníková, A., Zukal, J., & Martínková, N. (2018). Natural selection in bats with historical exposure to white-nose syndrome. BMC Zoology, 3(1), 8.\n\n\nMoravec, J. C., Atkinson, Q., Bowern, C., Greenhill, S. J., Jordan, F. M., Ross, R. M., Gray, R., Marsland, S., & Cox, M. P. (2018). Post-marital residence patterns show lineage-specific evolution. Evolution and Human Behavior, 39(6), 594–601.\n\n\nPečnerová, P., Moravec, J. C., & Martínková, N. (2015). A skull might lie: Modeling ancestral ranges and diet from genes and shape of tree squirrels. Systematic Biology, 64(6), 1074–1088.\n\n\nJaron, K. S., Moravec, J. C., & Martínková, N. (2014). SigHunt: Horizontal gene transfer finder optimized for eukaryotic genomes. Bioinformatics, 30(8), 1081–1086.\n\n\nMartínková, N., & Moravec, J. (2012). Multilocus phylogeny of arvicoline voles (Arvicolini, Rodentia) shows small tree terrace size. Folia Zoologica, 61(3–4), 254–267."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Jiří C. Moravec",
+    "section": "",
+    "text": "Hello World!\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nFeb 15, 2023\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "Jiří C. Moravec",
+    "section": "",
+    "text": "I am a computational biologist, bioinformatician, statistician, or just data scientist for short.\nMy main interests are phylogenetic trees and their applications, while traditionally phylogenetic trees are used to estimate the evolutionary relationship of biological species from DNA, I have applied phylogenetic trees to study population dynamics of viruses, animals, cancer cells and languages.\nMy language of choice is typically R as it is usually the fastest way to read and process data. But I am proficient with Python, C/C++ and Java as well.\nHere you can view my publications or CV."
+  },
+  {
+    "objectID": "posts/hello_world/index.html",
+    "href": "posts/hello_world/index.html",
+    "title": "Hello World!",
+    "section": "",
+    "text": "So I decided to do blogging. Again.\n\nWhat can you expect?\nSince I am computational biologists, you can expect some statistics and data science with biological motivations, usually evolutionary biology or bioinformatics.\nRegarding programming things, I will write mostly about R. I am kind of purist so I am one of the few people who prefers base R, including base graphics, so I will try to write a few articles regarding some forgotten treasures there. For example, since base does not divide its functions into namespaces (like Python’s standard library), it is hard to find a complex documentation about all the string-manipulation functions, so many people might not know that functions like trimws() even exists.\nOutside of R, I use also Python, and I finally starter using C/C++, at least in connection with R.\n\n\nWhy wrote blogs? Aren’t there already plenty of them?\nMy memory is terrible and I have a bad tendency of leaving projects unfinished. Blogposts will serve as a good written memory and something that will force me to finish projects to a state where I woldn’t be ashamed of them being public. This goes double for various learning projects. So you see, this blog is not for you, it is for me. But since most of the popular blogs originated in this way, I hope that eventually,\n\n\nMy previous attempts at blogging\nMy previous attempts at blogging didn’t get far. One was named “Mammoths on Mars”, a cool name, something about why developing science to such a degree that we could have mammoths on Mars would be so frigging awesome. But all I got from it was a half-assed post about why testing for phylogenetic signal from data that could arise from an evolutionary process is so complicated. Something that would plague me in the future. Not the half-assed blogpost, but the phylogenetic signal.\nThat was 8 years ago, I was just learning about static site generators which were becoming increasingly popular. Finally, small sites with pure HTML generated from markup format! And since I was using quite a bit Python at that time, I didn’t pick the omnipresent Jekyll, but a Python-based Pelican. But the documentation wasn’t there yet, everyone was talking about templates, but no one really explained what are those in the first places. That was not very beginner friendly.\nMy second attempt came years later, because I really wanted to understand all these templates. Which was a cool learning experience, because you can create a static site generator really easily! You can see the attempt here, only 7 direct dependencies (6, if I remove magrittr) and ~300 lines of code. The site is technically still lives, but I don’t update it often because getting good photos of food is so damn hard. Something about proper light and clean table.\nThe learning experience was cool, I learned a lot about CSS at least. I still dislike the whole experience, which was the reason why for the third time, I picked something pre-backed. And Quarto was recently released. So here we are, after a week fiddling with some internals, parameters, trying to modify the .scss bootstrap theme and finding that it doesn’t do anything. But perfect is the enemy of good, and I really want to write some blogposts and not fiddle with the parameters that much.\nSo here we are, now you know everything. Hope you will find content interesting or at least in some way entertaining."
+  }
+]

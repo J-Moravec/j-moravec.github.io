@@ -1,0 +1,9 @@
+---
+title: Software
+---
+
+## R
+
+* [beter](https://biods.github.io/beter/): **Be**ast **Te**mplates in **R**, another way how to create input XML files for the [Beast](https://github.com/CompEvol/beast2) phylogenetic software.
+* [baffle](https://j-moravec.github.io/baffle/): make a waffle plots in base R graphics! 
+* [rrnni](https://rrnni.biods.org/): compute phylogenetic distances in the RNNI space
