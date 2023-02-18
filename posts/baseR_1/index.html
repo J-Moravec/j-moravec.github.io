@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2023-02-18">
+<meta name="description" content="Overview of preinstalled packages">
+
+<title>Jiří C. Moravec - Base R from A to Z: Introduction (1)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Jiří C. Moravec</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications.html">
+ <span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../software.html">
+ <span class="menu-text">Software</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#preinstalled-packages" id="toc-preinstalled-packages" class="nav-link" data-scroll-target="#preinstalled-packages">Preinstalled packages</a>
+  <ul>
+  <li><a href="#exported-functions" id="toc-exported-functions" class="nav-link" data-scroll-target="#exported-functions">Exported functions</a></li>
+  </ul></li>
+  <li><a href="#base-r" id="toc-base-r" class="nav-link" data-scroll-target="#base-r">Base R</a></li>
+  <li><a href="#what-can-you-expect-next" id="toc-what-can-you-expect-next" class="nav-link" data-scroll-target="#what-can-you-expect-next">What can you expect next?</a></li>
+  <li><a href="#list-of-functions-in-the-base-package" id="toc-list-of-functions-in-the-base-package" class="nav-link" data-scroll-target="#list-of-functions-in-the-base-package">List of functions in the <code>base</code> package</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Base R from A to Z: Introduction (1)</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">R</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Overview of preinstalled packages
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 18, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level3">
+<h3 class="anchored" data-anchor-id="introduction">Introduction</h3>
+<p>R has quite a rich standard library<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, not just to process text, read and work with files, do parallel computing, but also a whole load of statistical functions, including simple neural networks, additive models, survival analysis, and three whole packages for plotting and graphics (<code>graphics</code> for base graphics, <code>grid</code>, and <code>lattice</code>). You can read about all functions in the R’s standard library in the <a href="https://cran.r-project.org/doc/manuals/r-release/fullrefman.pdf">R reference manual</a>.</p>
+<p>The disadvantage is that while R has a very large standard library, it doesn’t use namespaces. Don’t get me wrong, R has namespaces. Every package has a namespace. And R comes with a bunch of preinstalled packages. But while some specialized statistical functions are in aptly named packages (<code>survival</code> for survival analysis), often a group of unrelated functions are grouped into a single namespace. This presents a significant barrier when it comes to the discoverability of these functions. For instance, consider Python. If you want to work with paths, you know that the functions will be in the <a href="https://docs.python.org/3/library/os.path.html">os.path</a> module or in the <a href="https://docs.python.org/3/library/pathlib.html">pathlib</a> module, if you want to go for an object-oriented way of handling paths. Additionally, Python’s <a href="https://docs.python.org/3/library/index.html">documentation</a> groups functions according to their usage. Compare this to the R’s reference manual linked above. So if you want to, for instance, know all the functions for text parsing, well good luck. You will have to do a lot of contextualized searches through R’s help system or find a book that does this for you. But while there are books about some popular user-created packages, for instance, the <a href="https://bookdown.org/yihui/rmarkdown/">R markdown</a> book, or books that serve as an in-depth exploration of R, such as <a href="https://adv-r.hadley.nz/">Advanced R</a> or <a href="https://r-pkgs.org/">R packages</a>, there is no in-depth exploration of functions available in base R. This often means that a lot of people will keep reinventing wheels or coming up with complicated solutions requiring one or even multiple packages when there is a more performant one-liner in base R available.</p>
+<p>The purpose of this series is to explore functions in base R and later perhaps to create a book that will serve as additional documentation of functionalities available in base R.</p>
+</section>
+<section id="preinstalled-packages" class="level3">
+<h3 class="anchored" data-anchor-id="preinstalled-packages">Preinstalled packages</h3>
+<p>R comes with a number of preinstalled packages, they are labelled as <em>base</em> and <em>recommended</em>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>packages <span class="ot">=</span> <span class="fu">installed.packages</span>()[,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">4</span>)] <span class="sc">|&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> <span class="fu">unique</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split</span>(<span class="fu">formula</span>(<span class="st">"~Priority"</span>))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(packages, nrow)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       base recommended 
+         14          15 </code></pre>
+</div>
+</div>
+<p>The 14 <em>base</em> packages are usually the main workhorse of R, while the 15 <em>recommended</em> packages are predominantly of statistical nature. Do not expect the latest, fastest and most feature-full implementation of them, but it also means that if you need something like k-nearest-neighbours, you will find it in the R standard library, which is something that is not typically true for most programming languages.</p>
+<p>Because of this, the packages have quite a variable number of objects. Here we don’t count only functions, but also included example datasets or pre-set variables. For example <code>T</code> is an alias for <code>TRUE</code>, but you can easily change it such as by setting <code>T=FALSE</code>. So please don’t use <code>T</code> in your scripts, interactive usage only.</p>
+<p>Before we show the number of objects in each package, we define some helper functions, that way the code will be more readable.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get object names from a package</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>getObjects <span class="ot">=</span> <span class="cf">function</span>(name, <span class="at">all=</span><span class="cn">TRUE</span>){</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">getNamespace</span>(name) <span class="sc">|&gt;</span> <span class="fu">ls</span>(<span class="at">all.names=</span>all)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># count the number of objects in a package</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>countObjects <span class="ot">=</span> <span class="cf">function</span>(name, <span class="at">all=</span><span class="cn">TRUE</span>){</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">getObjects</span>(name) <span class="sc">|&gt;</span> <span class="fu">length</span>()</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># apply the countObjects on the `packages` objects defined above</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>n_objects <span class="ot">=</span> <span class="fu">sapply</span>(packages, <span class="cf">function</span>(x){</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    x[,<span class="dv">1</span>] <span class="sc">|&gt;</span> <span class="fu">sapply</span>(countObjects) <span class="sc">|&gt;</span> <span class="fu">sort</span>(<span class="at">decreasing=</span><span class="cn">TRUE</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>n_objects</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$base
+     base     stats      grid   methods     tools     utils     tcltk  compiler 
+     1370      1134       872       761       733       529       313       289 
+grDevices  graphics  parallel   splines    stats4  datasets 
+      254       170       145        50        30         3 
+
+$recommended
+    Matrix       nlme       mgcv   survival    lattice       MASS    cluster 
+       996        607        495        421        289        232         91 
+ codetools       boot    spatial      rpart    foreign       nnet      class 
+        89         84         55         51         42         41         29 
+KernSmooth 
+        27 </code></pre>
+</div>
+</div>
+<p>For the packages labelled as <code>base</code>, the <code>base</code> package leads with 1370 objects. The majority of common operations are implemented in this package, from file-system operations, and text-parsing functions, but also mathematical functions like <code>min</code>, <code>mean</code> or set operations. The second largest package is <code>stats</code>, which implements a large number of mathematical and statistical functions. The bread and butter statistical functions like <code>t.test</code>, <code>anova</code>, <code>lm</code> or a general-purpose optimization algorithm <code>optim</code> or functions to work with time-series data are all included in this package. The third largest package is the <code>grid</code> package with 872 objects. <code>grid</code> is one of the alternatives to base graphics, which are implemented in the <code>graphics</code> package. Surprisingly, the <code>graphics</code> package has only 170 objects. Outside of <code>base</code>, <code>stats</code>, <code>tools</code> and <code>utils</code>, the packages starts to be more specialized and also smaller. The packages <code>utils</code> and especially <code>tools</code> are already supposed to be specialized for making packages, but since making packages requires a lot of tooling, and this tooling often has quite a lot of utility, you might occasionally use functions from <code>tools</code>. <code>utils</code> on the other hand has kind of everything, from functions to make packages, download packages, spellchecker, but also functions like <code>help</code>, <code>head</code>, <code>read.table</code>. Classical <em>if you don’t know where to put it, put it into utils</em>.</p>
+<p>If we look at the packages labelled as <code>recommended</code>, the largest package is the <code>Matrix</code> package, which is the third overall package by size out of preinstalled packages. The <code>Matrix</code> package implements several kinds of sparse matrices and operations on them. This is very important in linear algebra and statistics, as the solution of many statistical models often relies on eigenvalues.</p>
+<section id="exported-functions" class="level4">
+<h4 class="anchored" data-anchor-id="exported-functions">Exported functions</h4>
+<p>You might have noticed that I have shown objects using <code>ls()</code>. This way, all objects, whether they are exported or not, are counted. After all, I don’t remember reading about 145 functions in the <code>parallel</code> documentation, so something is off.</p>
+<p>If we look only at exported objects, the situation would be like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>n_exported_objects <span class="ot">=</span> <span class="fu">sapply</span>(packages, <span class="cf">function</span>(x){</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    x[,<span class="dv">1</span>] <span class="sc">|&gt;</span> <span class="fu">sapply</span>(\(y){</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">getNamespaceExports</span>(y) <span class="sc">|&gt;</span> <span class="fu">length</span>()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        }) <span class="sc">|&gt;</span> <span class="fu">sort</span>(<span class="at">decreasing=</span><span class="cn">TRUE</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>n_exported_objects</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$base
+     base     stats   methods     tcltk     utils      grid grDevices     tools 
+     1370       456       371       269       221       212       119       119 
+ graphics  parallel    stats4   splines  compiler  datasets 
+       88        33        28        13         9         0 
+
+$recommended
+    Matrix       mgcv    lattice       nlme       MASS   survival       boot 
+       367        182        144        109         78         77         36 
+   spatial    cluster  codetools    foreign      class      rpart KernSmooth 
+        25         24         19         17         15         14          7 
+      nnet 
+         7 </code></pre>
+</div>
+</div>
+<p>We can see that the number of objects changes drastically, although the <code>base</code> package remained unaltered. Interestingly, the package <code>datasets</code> doesn’t have a single exported object. This is because <code>datasets</code> consist only of datasets, which are loaded lazily. That is until you use the dataset, it does not occupy the computer memory.</p>
+<p>Now, let’s move to the core of the series, the <code>base</code> package.</p>
+</section>
+</section>
+<section id="base-r" class="level3">
+<h3 class="anchored" data-anchor-id="base-r">Base R</h3>
+<p>We have explored the number of objects across preinstalled packages, but how many functions are in the <em>base</em> package? The core of <em>base R</em>?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># You can see a similar code in ?Filter examples</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>funs <span class="ot">=</span> <span class="fu">Filter</span>(is.function, <span class="fu">sapply</span>(<span class="fu">ls</span>(<span class="fu">baseenv</span>(), <span class="at">all.names=</span><span class="cn">TRUE</span>), get, <span class="fu">baseenv</span>()))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(funs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1325</code></pre>
+</div>
+</div>
+<p>Quite a lot, 1325 functions. However, a great deal of them are S3 methods. For instance, there are 36 methods just for the S3 generic <code>print</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span>(<span class="st">"print."</span>, <span class="fu">baseenv</span>() <span class="sc">|&gt;</span> <span class="fu">ls</span>(<span class="at">all.names=</span><span class="cn">TRUE</span>), <span class="at">value=</span><span class="cn">TRUE</span>, <span class="at">fixed=</span><span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">length</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 36</code></pre>
+</div>
+</div>
+<p>These methods are very important to seamlessly work with different S3 classes. After all, no one wants to call <code>print.foo(x)</code> and <code>print.bar(y)</code>, when we can just type <code>print(z)</code>. This reduces typing for sure, but also decreases mental overload. In fact, many R users do not know about S3 system, but the dispatch of various methods still work like magic. But enough about S3. For the purpose of this exercise, these are not very interesting. Maybe in the future, we will explore what kind of S3 classes are defined in base R.</p>
+<p>To filter the S3 methods, we can use <code>isS3method</code>. The only issue is that this function fails for any object starting with a dot. Bummer. Objects starting with a dot are typically considered hidden objects, which should not be used unless you know what you are doing (such as <code>.C</code> or <code>.Call</code>, which are important tools when writing packages).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this would fail:</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># isS3method(".C")</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>visible <span class="ot">=</span> <span class="fu">grep</span>(<span class="st">"^</span><span class="sc">\\</span><span class="st">."</span>, <span class="fu">names</span>(funs), <span class="at">value=</span><span class="cn">TRUE</span>, <span class="at">invert=</span><span class="cn">TRUE</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>normal <span class="ot">=</span> <span class="fu">Filter</span>(<span class="fu">Negate</span>(isS3method), visible)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>normal <span class="sc">|&gt;</span> <span class="fu">length</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 865</code></pre>
+</div>
+</div>
+<p>This means that to explore all the functions in <code>base</code> package, we need to go through 865 functions.</p>
+<p>There is a small caveat we have talked about before. <code>ls()</code> does not distinguish whether the functions are or are not exported. Luckily for us, we saw that all the functions in the <code>base</code> package are exported. But just to be sure:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># helper, take a string instead of a function object</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>is_function <span class="ot">=</span> <span class="cf">function</span>(name, <span class="at">env=</span><span class="fu">baseenv</span>()){</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    f <span class="ot">=</span> <span class="fu">get</span>(name, <span class="at">envir=</span>env)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">is.function</span>(f)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>normal <span class="ot">=</span> <span class="fu">getNamespaceExports</span>(<span class="st">"base"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Filter</span>(<span class="at">f=</span>is_function) <span class="sc">|&gt;</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">grep</span>(<span class="at">pattern=</span><span class="st">"^</span><span class="sc">\\</span><span class="st">."</span>, <span class="at">value=</span><span class="cn">TRUE</span>, <span class="at">invert=</span><span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Filter</span>(<span class="at">f=</span><span class="fu">Negate</span>(isS3method)) <span class="sc">|&gt;</span> <span class="fu">sort</span>()</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>normal <span class="sc">|&gt;</span> <span class="fu">length</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 865</code></pre>
+</div>
+</div>
+<p>Using slightly different calls, we have arrived at the same number. Great!</p>
+</section>
+<section id="what-can-you-expect-next" class="level3">
+<h3 class="anchored" data-anchor-id="what-can-you-expect-next">What can you expect next?</h3>
+<p>In the following part of the series, we will start going through the functions alphabetically. Although when we will find a group of similar or related functions, we will describe them together, such as <code>sub</code> and <code>gsub</code>.</p>
+<p>We will start with the special symbols or <strong>operators</strong>, make a small segway about different types of functions in R, like <code>.Primitive</code>, <code>.Internal</code>, and we will have to talk a bit more about the generics.</p>
+<p>I hope that you have found this small exploration of the preinstalled packages interesting and that you are as excited as me about continuing in this series.</p>
+</section>
+<section id="list-of-functions-in-the-base-package" class="level3">
+<h3 class="anchored" data-anchor-id="list-of-functions-in-the-base-package">List of functions in the <code>base</code> package</h3>
+<p>We will end with a list of all functions that we will go through in this series:</p>
+<details>
+<summary>
+Click to unroll
+</summary>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] "-"                              ":"                             
+  [3] "::"                             ":::"                           
+  [5] "!"                              "!="                            
+  [7] "("                              "["                             
+  [9] "[["                             "[[&lt;-"                          
+ [11] "[&lt;-"                            "{"                             
+ [13] "@"                              "@&lt;-"                           
+ [15] "*"                              "/"                             
+ [17] "&amp;"                              "&amp;&amp;"                            
+ [19] "%*%"                            "%/%"                           
+ [21] "%%"                             "%in%"                          
+ [23] "%o%"                            "%x%"                           
+ [25] "^"                              "+"                             
+ [27] "&lt;"                              "&lt;-"                            
+ [29] "&lt;&lt;-"                            "&lt;="                            
+ [31] "="                              "=="                            
+ [33] "&gt;"                              "&gt;="                            
+ [35] "|"                              "||"                            
+ [37] "~"                              "$"                             
+ [39] "$&lt;-"                            "abbreviate"                    
+ [41] "abs"                            "acos"                          
+ [43] "acosh"                          "activeBindingFunction"         
+ [45] "addNA"                          "addTaskCallback"               
+ [47] "agrep"                          "agrepl"                        
+ [49] "alist"                          "all"                           
+ [51] "all.equal"                      "all.names"                     
+ [53] "all.vars"                       "allowInterrupts"               
+ [55] "any"                            "anyDuplicated"                 
+ [57] "anyNA"                          "aperm"                         
+ [59] "append"                         "apply"                         
+ [61] "Arg"                            "args"                          
+ [63] "array"                          "arrayInd"                      
+ [65] "as.array"                       "as.call"                       
+ [67] "as.character"                   "as.complex"                    
+ [69] "as.data.frame"                  "as.Date"                       
+ [71] "as.difftime"                    "as.double"                     
+ [73] "as.environment"                 "as.expression"                 
+ [75] "as.factor"                      "as.function"                   
+ [77] "as.hexmode"                     "as.integer"                    
+ [79] "as.list"                        "as.logical"                    
+ [81] "as.matrix"                      "as.name"                       
+ [83] "as.null"                        "as.numeric"                    
+ [85] "as.numeric_version"             "as.octmode"                    
+ [87] "as.ordered"                     "as.package_version"            
+ [89] "as.pairlist"                    "as.POSIXct"                    
+ [91] "as.POSIXlt"                     "as.qr"                         
+ [93] "as.raw"                         "as.single"                     
+ [95] "as.symbol"                      "as.table"                      
+ [97] "as.vector"                      "asin"                          
+ [99] "asinh"                          "asNamespace"                   
+[101] "asplit"                         "asS3"                          
+[103] "asS4"                           "assign"                        
+[105] "atan"                           "atan2"                         
+[107] "atanh"                          "attach"                        
+[109] "attachNamespace"                "attr"                          
+[111] "attr.all.equal"                 "attr&lt;-"                        
+[113] "attributes"                     "attributes&lt;-"                  
+[115] "autoload"                       "autoloader"                    
+[117] "backsolve"                      "baseenv"                       
+[119] "basename"                       "besselI"                       
+[121] "besselJ"                        "besselK"                       
+[123] "besselY"                        "beta"                          
+[125] "bindingIsActive"                "bindingIsLocked"               
+[127] "bindtextdomain"                 "bitwAnd"                       
+[129] "bitwNot"                        "bitwOr"                        
+[131] "bitwShiftL"                     "bitwShiftR"                    
+[133] "bitwXor"                        "body"                          
+[135] "body&lt;-"                         "bquote"                        
+[137] "break"                          "browser"                       
+[139] "browserCondition"               "browserSetDebug"               
+[141] "browserText"                    "builtins"                      
+[143] "by"                             "bzfile"                        
+[145] "c"                              "call"                          
+[147] "callCC"                         "capabilities"                  
+[149] "casefold"                       "cat"                           
+[151] "cbind"                          "ceiling"                       
+[153] "char.expand"                    "character"                     
+[155] "charmatch"                      "charToRaw"                     
+[157] "chartr"                         "check_tzones"                  
+[159] "chkDots"                        "chol"                          
+[161] "chol2inv"                       "choose"                        
+[163] "class"                          "class&lt;-"                       
+[165] "clearPushBack"                  "close"                         
+[167] "closeAllConnections"            "col"                           
+[169] "colMeans"                       "colnames"                      
+[171] "colnames&lt;-"                     "colSums"                       
+[173] "commandArgs"                    "comment"                       
+[175] "comment&lt;-"                      "complex"                       
+[177] "computeRestarts"                "conditionCall"                 
+[179] "conditionMessage"               "conflictRules"                 
+[181] "conflicts"                      "Conj"                          
+[183] "contributors"                   "cos"                           
+[185] "cosh"                           "cospi"                         
+[187] "crossprod"                      "Cstack_info"                   
+[189] "cummax"                         "cummin"                        
+[191] "cumprod"                        "cumsum"                        
+[193] "curlGetHeaders"                 "cut"                           
+[195] "data.class"                     "data.frame"                    
+[197] "data.matrix"                    "date"                          
+[199] "debug"                          "debuggingState"                
+[201] "debugonce"                      "default.stringsAsFactors"      
+[203] "delayedAssign"                  "deparse"                       
+[205] "deparse1"                       "det"                           
+[207] "detach"                         "determinant"                   
+[209] "dget"                           "diag"                          
+[211] "diag&lt;-"                         "diff"                          
+[213] "difftime"                       "digamma"                       
+[215] "dim"                            "dim&lt;-"                         
+[217] "dimnames"                       "dimnames&lt;-"                    
+[219] "dir"                            "dir.create"                    
+[221] "dir.exists"                     "dirname"                       
+[223] "do.call"                        "dontCheck"                     
+[225] "double"                         "dput"                          
+[227] "dQuote"                         "drop"                          
+[229] "droplevels"                     "dump"                          
+[231] "duplicated"                     "dyn.load"                      
+[233] "dyn.unload"                     "dynGet"                        
+[235] "eapply"                         "eigen"                         
+[237] "emptyenv"                       "enc2native"                    
+[239] "enc2utf8"                       "encodeString"                  
+[241] "Encoding"                       "Encoding&lt;-"                    
+[243] "endsWith"                       "enquote"                       
+[245] "env.profile"                    "environment"                   
+[247] "environment&lt;-"                  "environmentIsLocked"           
+[249] "environmentName"                "errorCondition"                
+[251] "eval"                           "eval.parent"                   
+[253] "evalq"                          "exists"                        
+[255] "exp"                            "expand.grid"                   
+[257] "expm1"                          "expression"                    
+[259] "extSoftVersion"                 "factor"                        
+[261] "factorial"                      "fifo"                          
+[263] "file"                           "file.access"                   
+[265] "file.append"                    "file.choose"                   
+[267] "file.copy"                      "file.create"                   
+[269] "file.exists"                    "file.info"                     
+[271] "file.link"                      "file.mode"                     
+[273] "file.mtime"                     "file.path"                     
+[275] "file.remove"                    "file.rename"                   
+[277] "file.show"                      "file.size"                     
+[279] "file.symlink"                   "Filter"                        
+[281] "Find"                           "find.package"                  
+[283] "findInterval"                   "findPackageEnv"                
+[285] "findRestart"                    "floor"                         
+[287] "flush"                          "for"                           
+[289] "force"                          "forceAndCall"                  
+[291] "formals"                        "formals&lt;-"                     
+[293] "format"                         "format.info"                   
+[295] "format.pval"                    "formatC"                       
+[297] "formatDL"                       "forwardsolve"                  
+[299] "function"                       "gamma"                         
+[301] "gc"                             "gc.time"                       
+[303] "gcinfo"                         "gctorture"                     
+[305] "gctorture2"                     "get"                           
+[307] "get0"                           "getAllConnections"             
+[309] "getCallingDLL"                  "getCallingDLLe"                
+[311] "getConnection"                  "getDLLRegisteredRoutines"      
+[313] "getElement"                     "geterrmessage"                 
+[315] "getExportedValue"               "getHook"                       
+[317] "getLoadedDLLs"                  "getNamespace"                  
+[319] "getNamespaceExports"            "getNamespaceImports"           
+[321] "getNamespaceInfo"               "getNamespaceName"              
+[323] "getNamespaceUsers"              "getNamespaceVersion"           
+[325] "getNativeSymbolInfo"            "getOption"                     
+[327] "getRversion"                    "getSrcLines"                   
+[329] "getTaskCallbackNames"           "gettext"                       
+[331] "gettextf"                       "getwd"                         
+[333] "gl"                             "globalCallingHandlers"         
+[335] "globalenv"                      "gregexec"                      
+[337] "gregexpr"                       "grep"                          
+[339] "grepl"                          "grepRaw"                       
+[341] "grouping"                       "gsub"                          
+[343] "gzcon"                          "gzfile"                        
+[345] "I"                              "iconv"                         
+[347] "iconvlist"                      "icuGetCollate"                 
+[349] "icuSetCollate"                  "identical"                     
+[351] "identity"                       "if"                            
+[353] "ifelse"                         "Im"                            
+[355] "importIntoEnv"                  "infoRDS"                       
+[357] "inherits"                       "integer"                       
+[359] "interaction"                    "interactive"                   
+[361] "intersect"                      "intToBits"                     
+[363] "intToUtf8"                      "inverse.rle"                   
+[365] "invisible"                      "invokeRestart"                 
+[367] "invokeRestartInteractively"     "is.array"                      
+[369] "is.atomic"                      "is.call"                       
+[371] "is.character"                   "is.complex"                    
+[373] "is.data.frame"                  "is.double"                     
+[375] "is.element"                     "is.environment"                
+[377] "is.expression"                  "is.factor"                     
+[379] "is.finite"                      "is.function"                   
+[381] "is.infinite"                    "is.integer"                    
+[383] "is.language"                    "is.list"                       
+[385] "is.loaded"                      "is.logical"                    
+[387] "is.matrix"                      "is.na"                         
+[389] "is.na&lt;-"                        "is.name"                       
+[391] "is.nan"                         "is.null"                       
+[393] "is.numeric"                     "is.numeric_version"            
+[395] "is.object"                      "is.ordered"                    
+[397] "is.package_version"             "is.pairlist"                   
+[399] "is.primitive"                   "is.qr"                         
+[401] "is.R"                           "is.raw"                        
+[403] "is.recursive"                   "is.single"                     
+[405] "is.symbol"                      "is.table"                      
+[407] "is.unsorted"                    "is.vector"                     
+[409] "isa"                            "isatty"                        
+[411] "isBaseNamespace"                "isdebugged"                    
+[413] "isFALSE"                        "isIncomplete"                  
+[415] "isNamespace"                    "isNamespaceLoaded"             
+[417] "ISOdate"                        "ISOdatetime"                   
+[419] "isOpen"                         "isRestart"                     
+[421] "isS4"                           "isSeekable"                    
+[423] "isSymmetric"                    "isTRUE"                        
+[425] "jitter"                         "julian"                        
+[427] "kappa"                          "kronecker"                     
+[429] "l10n_info"                      "La_library"                    
+[431] "La_version"                     "La.svd"                        
+[433] "labels"                         "lapply"                        
+[435] "lazyLoad"                       "lazyLoadDBexec"                
+[437] "lazyLoadDBfetch"                "lbeta"                         
+[439] "lchoose"                        "length"                        
+[441] "length&lt;-"                       "lengths"                       
+[443] "levels"                         "levels&lt;-"                      
+[445] "lfactorial"                     "lgamma"                        
+[447] "libcurlVersion"                 "library"                       
+[449] "library.dynam"                  "library.dynam.unload"          
+[451] "licence"                        "license"                       
+[453] "list"                           "list.dirs"                     
+[455] "list.files"                     "list2DF"                       
+[457] "list2env"                       "load"                          
+[459] "loadedNamespaces"               "loadingNamespaceInfo"          
+[461] "loadNamespace"                  "local"                         
+[463] "lockBinding"                    "lockEnvironment"               
+[465] "log"                            "log10"                         
+[467] "log1p"                          "log2"                          
+[469] "logb"                           "logical"                       
+[471] "lower.tri"                      "ls"                            
+[473] "make.names"                     "make.unique"                   
+[475] "makeActiveBinding"              "Map"                           
+[477] "mapply"                         "margin.table"                  
+[479] "marginSums"                     "mat.or.vec"                    
+[481] "match"                          "match.arg"                     
+[483] "match.call"                     "match.fun"                     
+[485] "matrix"                         "max"                           
+[487] "max.col"                        "mean"                          
+[489] "mem.maxNSize"                   "mem.maxVSize"                  
+[491] "memCompress"                    "memDecompress"                 
+[493] "memory.profile"                 "merge"                         
+[495] "message"                        "mget"                          
+[497] "min"                            "missing"                       
+[499] "Mod"                            "mode"                          
+[501] "mode&lt;-"                         "months"                        
+[503] "mostattributes&lt;-"               "names"                         
+[505] "names&lt;-"                        "namespaceExport"               
+[507] "namespaceImport"                "namespaceImportClasses"        
+[509] "namespaceImportFrom"            "namespaceImportMethods"        
+[511] "nargs"                          "nchar"                         
+[513] "ncol"                           "NCOL"                          
+[515] "Negate"                         "new.env"                       
+[517] "next"                           "NextMethod"                    
+[519] "ngettext"                       "nlevels"                       
+[521] "noquote"                        "norm"                          
+[523] "normalizePath"                  "nrow"                          
+[525] "NROW"                           "nullfile"                      
+[527] "numeric"                        "numeric_version"               
+[529] "numToBits"                      "numToInts"                     
+[531] "nzchar"                         "objects"                       
+[533] "oldClass"                       "oldClass&lt;-"                    
+[535] "OlsonNames"                     "on.exit"                       
+[537] "open"                           "options"                       
+[539] "order"                          "ordered"                       
+[541] "outer"                          "package_version"               
+[543] "packageEvent"                   "packageHasNamespace"           
+[545] "packageNotFoundError"           "packageStartupMessage"         
+[547] "packBits"                       "pairlist"                      
+[549] "parent.env"                     "parent.env&lt;-"                  
+[551] "parent.frame"                   "parse"                         
+[553] "parseNamespaceFile"             "paste"                         
+[555] "paste0"                         "path.expand"                   
+[557] "path.package"                   "pcre_config"                   
+[559] "pipe"                           "plot"                          
+[561] "pmatch"                         "pmax"                          
+[563] "pmax.int"                       "pmin"                          
+[565] "pmin.int"                       "polyroot"                      
+[567] "pos.to.env"                     "Position"                      
+[569] "pretty"                         "prettyNum"                     
+[571] "print"                          "prmatrix"                      
+[573] "proc.time"                      "prod"                          
+[575] "prop.table"                     "proportions"                   
+[577] "provideDimnames"                "psigamma"                      
+[579] "pushBack"                       "pushBackLength"                
+[581] "q"                              "qr"                            
+[583] "qr.coef"                        "qr.fitted"                     
+[585] "qr.Q"                           "qr.qty"                        
+[587] "qr.qy"                          "qr.R"                          
+[589] "qr.resid"                       "qr.solve"                      
+[591] "qr.X"                           "quarters"                      
+[593] "quit"                           "quote"                         
+[595] "R_system_version"               "R.home"                        
+[597] "R.Version"                      "range"                         
+[599] "rank"                           "rapply"                        
+[601] "raw"                            "rawConnection"                 
+[603] "rawConnectionValue"             "rawShift"                      
+[605] "rawToBits"                      "rawToChar"                     
+[607] "rbind"                          "rcond"                         
+[609] "Re"                             "read.dcf"                      
+[611] "readBin"                        "readChar"                      
+[613] "readline"                       "readLines"                     
+[615] "readRDS"                        "readRenviron"                  
+[617] "Recall"                         "Reduce"                        
+[619] "reg.finalizer"                  "regexec"                       
+[621] "regexpr"                        "registerS3method"              
+[623] "registerS3methods"              "regmatches"                    
+[625] "regmatches&lt;-"                   "remove"                        
+[627] "removeTaskCallback"             "rep"                           
+[629] "rep_len"                        "rep.int"                       
+[631] "repeat"                         "replace"                       
+[633] "replicate"                      "require"                       
+[635] "requireNamespace"               "restartDescription"            
+[637] "restartFormals"                 "retracemem"                    
+[639] "return"                         "returnValue"                   
+[641] "rev"                            "rle"                           
+[643] "rm"                             "RNGkind"                       
+[645] "RNGversion"                     "round"                         
+[647] "row"                            "row.names"                     
+[649] "row.names&lt;-"                    "rowMeans"                      
+[651] "rownames"                       "rownames&lt;-"                    
+[653] "rowsum"                         "rowSums"                       
+[655] "sample"                         "sample.int"                    
+[657] "sapply"                         "save"                          
+[659] "save.image"                     "saveRDS"                       
+[661] "scale"                          "scan"                          
+[663] "search"                         "searchpaths"                   
+[665] "seek"                           "seq"                           
+[667] "seq_along"                      "seq_len"                       
+[669] "seq.int"                        "sequence"                      
+[671] "serialize"                      "serverSocket"                  
+[673] "set.seed"                       "setdiff"                       
+[675] "setequal"                       "setHook"                       
+[677] "setNamespaceInfo"               "setSessionTimeLimit"           
+[679] "setTimeLimit"                   "setwd"                         
+[681] "showConnections"                "shQuote"                       
+[683] "sign"                           "signalCondition"               
+[685] "signif"                         "simpleCondition"               
+[687] "simpleError"                    "simpleMessage"                 
+[689] "simpleWarning"                  "simplify2array"                
+[691] "sin"                            "single"                        
+[693] "sinh"                           "sink"                          
+[695] "sink.number"                    "sinpi"                         
+[697] "slice.index"                    "socketAccept"                  
+[699] "socketConnection"               "socketSelect"                  
+[701] "socketTimeout"                  "solve"                         
+[703] "sort"                           "sort.int"                      
+[705] "sort.list"                      "source"                        
+[707] "split"                          "split&lt;-"                       
+[709] "sprintf"                        "sqrt"                          
+[711] "sQuote"                         "srcfile"                       
+[713] "srcfilealias"                   "srcfilecopy"                   
+[715] "srcref"                         "standardGeneric"               
+[717] "startsWith"                     "stderr"                        
+[719] "stdin"                          "stdout"                        
+[721] "stop"                           "stopifnot"                     
+[723] "storage.mode"                   "storage.mode&lt;-"                
+[725] "str2expression"                 "str2lang"                      
+[727] "strftime"                       "strptime"                      
+[729] "strrep"                         "strsplit"                      
+[731] "strtoi"                         "strtrim"                       
+[733] "structure"                      "strwrap"                       
+[735] "sub"                            "subset"                        
+[737] "substitute"                     "substr"                        
+[739] "substr&lt;-"                       "substring"                     
+[741] "substring&lt;-"                    "sum"                           
+[743] "summary"                        "suppressMessages"              
+[745] "suppressPackageStartupMessages" "suppressWarnings"              
+[747] "suspendInterrupts"              "svd"                           
+[749] "sweep"                          "switch"                        
+[751] "sys.call"                       "sys.calls"                     
+[753] "Sys.chmod"                      "Sys.Date"                      
+[755] "sys.frame"                      "sys.frames"                    
+[757] "sys.function"                   "Sys.getenv"                    
+[759] "Sys.getlocale"                  "Sys.getpid"                    
+[761] "Sys.glob"                       "Sys.info"                      
+[763] "sys.load.image"                 "Sys.localeconv"                
+[765] "sys.nframe"                     "sys.on.exit"                   
+[767] "sys.parent"                     "sys.parents"                   
+[769] "Sys.readlink"                   "sys.save.image"                
+[771] "Sys.setenv"                     "Sys.setFileTime"               
+[773] "Sys.setlocale"                  "Sys.sleep"                     
+[775] "sys.source"                     "sys.status"                    
+[777] "Sys.time"                       "Sys.timezone"                  
+[779] "Sys.umask"                      "Sys.unsetenv"                  
+[781] "Sys.which"                      "system"                        
+[783] "system.file"                    "system.time"                   
+[785] "system2"                        "t"                             
+[787] "table"                          "tabulate"                      
+[789] "tan"                            "tanh"                          
+[791] "tanpi"                          "tapply"                        
+[793] "taskCallbackManager"            "tcrossprod"                    
+[795] "tempdir"                        "tempfile"                      
+[797] "textConnection"                 "textConnectionValue"           
+[799] "tolower"                        "topenv"                        
+[801] "toString"                       "toupper"                       
+[803] "trace"                          "traceback"                     
+[805] "tracemem"                       "tracingState"                  
+[807] "transform"                      "trigamma"                      
+[809] "trimws"                         "trunc"                         
+[811] "truncate"                       "try"                           
+[813] "tryCatch"                       "tryInvokeRestart"              
+[815] "typeof"                         "unclass"                       
+[817] "undebug"                        "union"                         
+[819] "unique"                         "units"                         
+[821] "units&lt;-"                        "unix.time"                     
+[823] "unlink"                         "unlist"                        
+[825] "unloadNamespace"                "unlockBinding"                 
+[827] "unname"                         "unserialize"                   
+[829] "unsplit"                        "untrace"                       
+[831] "untracemem"                     "unz"                           
+[833] "upper.tri"                      "url"                           
+[835] "UseMethod"                      "utf8ToInt"                     
+[837] "validEnc"                       "validUTF8"                     
+[839] "vapply"                         "vector"                        
+[841] "Vectorize"                      "warning"                       
+[843] "warningCondition"               "warnings"                      
+[845] "weekdays"                       "which"                         
+[847] "which.max"                      "which.min"                     
+[849] "while"                          "with"                          
+[851] "withAutoprint"                  "withCallingHandlers"           
+[853] "within"                         "withRestarts"                  
+[855] "withVisible"                    "write"                         
+[857] "write.dcf"                      "writeBin"                      
+[859] "writeChar"                      "writeLines"                    
+[861] "xor"                            "xpdrows.data.frame"            
+[863] "xtfrm"                          "xzfile"                        
+[865] "zapsmall"                      </code></pre>
+</div>
+</div>
+</details>
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>For the definition of a standard library, see: <a href="https://en.wikipedia.org/wiki/Standard_library">https://en.wikipedia.org/wiki/Standard_library</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
