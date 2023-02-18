@@ -1,0 +1,161 @@
+---
+title: "Base R from A to Z: Introduction (1)"
+description: "Overview of preinstalled packages"
+date: "2023-02-18"
+categories: [R]
+toc: true
+toc-depth: 4
+---
+
+### Introduction
+
+R has quite a rich standard library^[For the definition of a standard library, see: [https://en.wikipedia.org/wiki/Standard_library](https://en.wikipedia.org/wiki/Standard_library)], not just to process text, read and work with files, do parallel computing, but also a whole load of statistical functions, including simple neural networks, additive models, survival analysis, and three whole packages for plotting and graphics (`graphics` for base graphics, `grid`, and `lattice`). You can read about all functions in the R's standard library in the [R reference manual](https://cran.r-project.org/doc/manuals/r-release/fullrefman.pdf).
+
+The disadvantage is that while R has a very large standard library, it doesn't use namespaces.
+Don't get me wrong, R has namespaces. Every package has a namespace. And R comes with a bunch of preinstalled packages.
+But while some specialized statistical functions are in aptly named packages (`survival` for survival analysis), often a group of unrelated functions are grouped into a single namespace.
+This presents a significant barrier when it comes to the discoverability of these functions.
+For instance, consider Python. If you want to work with paths, you know that the functions will be in the [os.path](https://docs.python.org/3/library/os.path.html) module or in the [pathlib](https://docs.python.org/3/library/pathlib.html) module, if you want to go for an object-oriented way of handling paths. Additionally, Python's [documentation](https://docs.python.org/3/library/index.html) groups functions according to their usage.
+Compare this to the R's reference manual linked above.
+So if you want to, for instance, know all the functions for text parsing, well good luck.
+You will have to do a lot of contextualized searches through R's help system or find a book that does this for you.
+But while there are books about some popular user-created packages, for instance, the [R markdown](https://bookdown.org/yihui/rmarkdown/) book, or books that serve as an in-depth exploration of R, such as [Advanced R](https://adv-r.hadley.nz/) or [R packages](https://r-pkgs.org/), there is no in-depth exploration of functions available in base R.
+This often means that a lot of people will keep reinventing wheels or coming up with complicated solutions requiring one or even multiple packages when there is a more performant one-liner in base R available.
+
+The purpose of this series is to explore functions in base R and later perhaps to create a book that will serve as additional documentation of functionalities available in base R.
+
+### Preinstalled packages
+R comes with a number of preinstalled packages, they are labelled as *base* and *recommended*:
+```{r}
+packages = installed.packages()[,c(1,4)] |>
+    as.data.frame() |> unique() |>
+    split(formula("~Priority"))
+sapply(packages, nrow)
+```
+The `r packages$base |> nrow()` *base* packages are usually the main workhorse of R, while the `r packages$recommended |> nrow()` *recommended* packages are predominantly of statistical nature. Do not expect the latest, fastest and most feature-full implementation of them, but it also means that if you need something like k-nearest-neighbours, you will find it in the R standard library, which is something that is not typically true for most programming languages.
+
+Because of this, the packages have quite a variable number of objects.
+Here we don't count only functions, but also included example datasets or pre-set variables. For example `T` is an alias for `TRUE`, but you can easily change it such as by setting `T=FALSE`. So please don't use `T` in your scripts, interactive usage only.
+
+Before we show the number of objects in each package, we define some helper functions, that way the code will be more readable.
+```{r}
+# get object names from a package
+getObjects = function(name, all=TRUE){
+    getNamespace(name) |> ls(all.names=all)
+    }
+
+# count the number of objects in a package
+countObjects = function(name, all=TRUE){
+    getObjects(name) |> length()
+    }
+
+# apply the countObjects on the `packages` objects defined above
+n_objects = sapply(packages, function(x){
+    x[,1] |> sapply(countObjects) |> sort(decreasing=TRUE)
+    })
+n_objects
+```
+
+For the packages labelled as `base`, the `base` package leads with `r n_objects$base["base"]` objects. The majority of common operations are implemented in this package, from file-system operations, and text-parsing functions, but also mathematical functions like `min`, `mean` or set operations.
+The second largest package is `stats`, which implements a large number of mathematical and statistical functions. The bread and butter statistical functions like `t.test`, `anova`, `lm` or a general-purpose optimization algorithm `optim` or functions to work with time-series data are all included in this package.
+The third largest package is the `grid` package with `r n_objects$base["grid"]` objects. `grid` is one of the alternatives to base graphics, which are implemented in the `graphics` package.
+Surprisingly, the `graphics` package has only `r n_objects$base["graphics"]` objects.
+Outside of `base`, `stats`, `tools` and `utils`, the packages starts to be more specialized and also smaller.
+The packages `utils` and especially `tools` are already supposed to be specialized for making packages, but since making packages requires a lot of tooling, and this tooling often has quite a lot of utility, you might occasionally use functions from `tools`. `utils` on the other hand has kind of everything, from functions to make packages, download packages, spellchecker, but also functions like `help`, `head`, `read.table`. Classical *if you don't know where to put it, put it into utils*.
+
+If we look at the packages labelled as `recommended`, the largest package is the `Matrix` package, which is the third overall package by size out of preinstalled packages.
+The `Matrix` package implements several kinds of sparse matrices and operations on them. This is very important in linear algebra and statistics, as the solution of many statistical models often relies on eigenvalues.
+
+#### Exported functions
+You might have noticed that I have shown objects using `ls()`.
+This way, all objects, whether they are exported or not, are counted.
+After all, I don't remember reading about `r n_objects$base["parallel"]` functions in the `parallel` documentation, so something is off.
+
+If we look only at exported objects, the situation would be like this:
+
+```{r}
+n_exported_objects = sapply(packages, function(x){
+    x[,1] |> sapply(\(y){
+        getNamespaceExports(y) |> length()
+        }) |> sort(decreasing=TRUE)
+    })
+n_exported_objects
+```
+We can see that the number of objects changes drastically, although the `base` package remained unaltered.
+Interestingly, the package `datasets` doesn't have a single exported object.
+This is because `datasets` consist only of datasets, which are loaded lazily.
+That is until you use the dataset, it does not occupy the computer memory.
+
+Now, let's move to the core of the series, the `base` package.
+ 
+### Base R
+We have explored the number of objects across preinstalled packages, but how many functions are in the *base* package? The core of *base R*?
+```{r}
+# You can see a similar code in ?Filter examples
+funs = Filter(is.function, sapply(ls(baseenv(), all.names=TRUE), get, baseenv()))
+length(funs)
+```
+
+Quite a lot, `r length(funs)` functions. However, a great deal of them are S3 methods.
+For instance, there are 36 methods just for the S3 generic `print`.
+
+```{r}
+grep("print.", baseenv() |> ls(all.names=TRUE), value=TRUE, fixed=TRUE) |> length()
+```
+
+These methods are very important to seamlessly work with different S3 classes.
+After all, no one wants to call `print.foo(x)` and `print.bar(y)`, when we can just type `print(z)`.
+This reduces typing for sure, but also decreases mental overload.
+In fact, many R users do not know about S3 system, but the dispatch of various methods still work like magic.
+But enough about S3. For the purpose of this exercise, these are not very interesting.
+Maybe in the future, we will explore what kind of S3 classes are defined in base R.
+
+To filter the S3 methods, we can use `isS3method`. The only issue is that this function fails for any object starting with a dot. Bummer. Objects starting with a dot are typically considered hidden objects, which should not be used unless you know what you are doing (such as `.C` or `.Call`, which are important tools when writing packages). 
+```{r}
+
+# this would fail:
+# isS3method(".C")
+
+visible = grep("^\\.", names(funs), value=TRUE, invert=TRUE)
+
+normal = Filter(Negate(isS3method), visible)
+normal |> length()
+```
+This means that to explore all the functions in `base` package, we need to go through `r normal |> length()` functions.
+
+There is a small caveat we have talked about before. `ls()` does not distinguish whether the functions are or are not exported.
+Luckily for us, we saw that all the functions in the `base` package are exported.
+But just to be sure:
+```{r}
+# helper, take a string instead of a function object
+is_function = function(name, env=baseenv()){
+    f = get(name, envir=env)
+    is.function(f)
+    }
+
+normal = getNamespaceExports("base") |>
+    Filter(f=is_function) |>
+    grep(pattern="^\\.", value=TRUE, invert=TRUE) |>
+    Filter(f=Negate(isS3method)) |> sort()
+normal |> length()
+```
+Using slightly different calls, we have arrived at the same number. Great!
+
+### What can you expect next?
+In the following part of the series, we will start going through the functions alphabetically.
+Although when we will find a group of similar or related functions, we will describe them together, such as `sub` and `gsub`.
+
+We will start with the special symbols or **operators**, make a small segway about different types of functions in R, like `.Primitive`, `.Internal`, and we will have to talk a bit more about the generics.
+
+I hope that you have found this small exploration of the preinstalled packages interesting and that you are as excited as me about continuing in this series.
+ 
+### List of functions in the `base` package
+We will end with a list of all functions that we will go through in this series:
+
+<details>
+    <summary> Click to unroll </summary>
+```{r}
+#| echo: FALSE
+normal
+```
+</details>
