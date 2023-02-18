@@ -27,8 +27,10 @@ The purpose of this series is to explore functions in base R and later perhaps t
 ### Preinstalled packages
 R comes with a number of preinstalled packages, they are labelled as *base* and *recommended*:
 ```{r}
-packages = installed.packages()[,c(1,4)] |>
-    as.data.frame() |> unique() |>
+packages = installed.packages() |>
+    as.data.frame() |>
+    subset(select=c("Package", "Priority")) |>
+    unique() |>
     split(formula("~Priority"))
 sapply(packages, nrow)
 ```
@@ -39,14 +41,14 @@ Here we don't count only functions, but also included example datasets or pre-se
 
 Before we show the number of objects in each package, we define some helper functions, that way the code will be more readable.
 ```{r}
-# get object names from a package
+# get object names from a packageright  
 getObjects = function(name, all=TRUE){
     getNamespace(name) |> ls(all.names=all)
     }
 
 # count the number of objects in a package
 countObjects = function(name, all=TRUE){
-    getObjects(name) |> length()
+    getObjects(name, all=all) |> length()
     }
 
 # apply the countObjects on the `packages` objects defined above
@@ -92,7 +94,9 @@ Now, let's move to the core of the series, the `base` package.
 We have explored the number of objects across preinstalled packages, but how many functions are in the *base* package? The core of *base R*?
 ```{r}
 # You can see a similar code in ?Filter examples
-funs = Filter(is.function, sapply(ls(baseenv(), all.names=TRUE), get, baseenv()))
+funs = Filter(is.function, sapply(
+    ls(baseenv(), all.names=TRUE), get, baseenv()
+    ))
 length(funs)
 ```
 
@@ -100,7 +104,8 @@ Quite a lot, `r length(funs)` functions. However, a great deal of them are S3 me
 For instance, there are 36 methods just for the S3 generic `print`.
 
 ```{r}
-grep("print.", baseenv() |> ls(all.names=TRUE), value=TRUE, fixed=TRUE) |> length()
+grep("print.", baseenv() |> ls(all.names=TRUE),
+    value=TRUE, fixed=TRUE) |> length()
 ```
 
 These methods are very important to seamlessly work with different S3 classes.
