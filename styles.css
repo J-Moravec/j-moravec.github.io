@@ -10,3 +10,11 @@ a {
 .listing-description, .listing-author, .listing-date {
     font-weight: normal;
 }
+
+.nav-link {
+    font-weight: normal;
+}
+
+.menu-text {
+    font-weight: bold;
+}
