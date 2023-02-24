@@ -2,26 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://J-Moravec.github.io/j-moravec.github.io/software.html</loc>
-    <lastmod>2023-02-18T19:04:41.323Z</lastmod>
+    <lastmod>2023-02-24T20:51:45.424Z</lastmod>
   </url>
   <url>
     <loc>https://J-Moravec.github.io/j-moravec.github.io/publications.html</loc>
-    <lastmod>2023-02-18T19:04:41.739Z</lastmod>
+    <lastmod>2023-02-24T20:51:45.812Z</lastmod>
   </url>
   <url>
     <loc>https://J-Moravec.github.io/j-moravec.github.io/index.html</loc>
-    <lastmod>2023-02-18T19:04:42.087Z</lastmod>
+    <lastmod>2023-02-24T20:51:46.176Z</lastmod>
   </url>
   <url>
     <loc>https://J-Moravec.github.io/j-moravec.github.io/about.html</loc>
-    <lastmod>2023-02-18T19:04:42.375Z</lastmod>
+    <lastmod>2023-02-24T20:51:46.492Z</lastmod>
+  </url>
+  <url>
+    <loc>https://J-Moravec.github.io/j-moravec.github.io/posts/baseR_AZ/1_introduction.html</loc>
+    <lastmod>2023-02-24T20:51:47.160Z</lastmod>
+  </url>
+  <url>
+    <loc>https://J-Moravec.github.io/j-moravec.github.io/posts/baseR_AZ/2_functions.html</loc>
+    <lastmod>2023-02-24T20:51:48.596Z</lastmod>
   </url>
   <url>
     <loc>https://J-Moravec.github.io/j-moravec.github.io/posts/hello_world/index.html</loc>
-    <lastmod>2023-02-18T19:04:42.671Z</lastmod>
-  </url>
-  <url>
-    <loc>https://J-Moravec.github.io/j-moravec.github.io/posts/baseR_1/index.html</loc>
-    <lastmod>2023-02-18T19:04:43.363Z</lastmod>
+    <lastmod>2023-02-24T20:51:48.880Z</lastmod>
   </url>
 </urlset>
