@@ -41,7 +41,7 @@ Here we don't count only functions, but also included example datasets or pre-se
 
 Before we show the number of objects in each package, we define some helper functions, that way the code will be more readable.
 ```{r}
-# get object names from a packageright  
+# get object names from a package  
 getObjects = function(name, all=TRUE){
     getNamespace(name) |> ls(all.names=all)
     }

@@ -1,0 +1,230 @@
+---
+title: "Base R from A to Z: Types of functions (2)"
+description: "Closures, primitives and internals"
+date: "2023-02-21"
+categories: [R]
+toc: true
+toc-depth: 4
+---
+
+## Introduction
+
+In the second part of the series about the base R, I wanted originally to talk about operators.
+But to talk about properators properly, I wanted to explore how operators are defined first and the difference between classical functions and something called primitives. In the end, the *small segway* got a bit too big, so I decided to release it as an independent article.
+
+## Types of functions
+
+> To understand computations in R, two slogans are helpful:
+>
+> * Everything that exists is an object.
+> * Everything that happens is a function call.
+>
+>     -- John Chambers (author of S, coauthor of R)
+
+As per the quote, everything that happens in R is a function call. Operators are construct similar to functions, but with special syntax or semantics.
+But you might have realized that not every function is the same and that R has different types of functions.
+
+For instance, when you write the name of a standard function, you will print their code.
+This doesn't work with operators and other language elements. To operate with them, you need to escape them, either with quotation marks `"` or backticks `` ` ``. Backticks typically work in most occassions. For instance, we can use backticks to print help of `+`, print the body of `-` or call `*` as if it was a function:
+
+```{r}
+?`+` # prints a help-page of +
+`-` # prints the body of -
+`*`(3,5) # call as if * was a normal function
+```
+
+Operators are special kind of functions, but so are other language elements like `for`, `return`, or in fact even `(` and `{`. But unlike with operators, calling language elements like a function doesn't work. We will talk about these language elements in detail some other time.
+
+These special functions are called *primitives*. Primitives are special in many ways. Outside of primitives, all other functions are standard functions that either call R code, or call a compiled C or Fortran code through the interfaces `.Internal`, `.External`, `.C`, `.Call` or `.Fortran`.
+
+To explore these function types in `base`, we will define a helper functions.
+And because there would be a lot of repeated code, we will construct these functions with a function factory.
+```{r}
+is_function_type_factory = function(pattern, fixed=TRUE){
+    force(fixed) # force evaluation
+
+    function(x){
+        if(!is.function(x))
+            return(FALSE)
+        
+        body = body(x)
+        if(is.null(body))
+            return(FALSE) # primitives don't have body
+
+        deparse(body) |> grep(pattern=pattern, fixed=fixed) |> any()
+        }
+    }
+
+is.internal = is_function_type_factory(".Internal")
+is.external = is_function_type_factory(".External")
+is.ccall    = is_function_type_factory(".C") # will match .C and .Call
+is.fortran  = is_function_type_factory(".Fortran")
+
+# Get all functions from base, we did this before
+functions = Filter(is.function, sapply(ls(baseenv()), get, baseenv()))
+```
+So out of `r length(functions)`, there are `r Filter(is.primitive, functions) |> length()` primitives, `r Filter(is.internal, functions) |> length()` internals, `r Filter(is.external, functions) |> length()` external calls, `r Filter(is.ccall, functions) |> length()` calls using the `.C` or `.Call` interface, `r Filter(is.fortran, functions) |> length()` calls to Fortran, with the rest being pure R functions.
+
+### Primitives
+Primitives are special functions that form the core of R language. Normal functions (called *closures* in R) have a list of arguments called *formals*, a *body*, and an enclosing *environment* (thus called *closures*).
+```{r}
+# formals, body and environment of `is.internal`
+not_null = Negate(is.null)
+has_fbe = function(x){c(
+    "formals"     = formals(x) |> not_null(),
+    "body"        = body(x) |> not_null(),
+    "environment" = environment(x) |> not_null()
+    )}
+    
+has_fbe(is.internal)
+```
+Compared to normal functions, primitives do not have any *formals*, *body*, or enclosing *environment*.
+```{r}
+has_fbe(`-`)
+```
+
+This is why we put an additional check for `body(x) |> is.null()` in our function factory.
+So what about the printed body of `-` that we saw before? It was a fake! R is lying to us here.
+
+```{r}
+`-` # output of this is fake
+```{r}
+minus = function(e1, e2) .Primitive("-")
+minus
+```
+See the extra space in the original `-`? Now watch this. Calling `minus(1,2)` just prints the original `-`.
+```{r}
+minus(1,2) # just prints the original `-`
+```
+To get the correct result, we need to call `minus()(1,2)`.
+```{r}
+minus()(1,2)
+```
+This is because our function returns the `.Primitive("-")` which then performs the actual call to the `-` primitive.
+
+All the special language elements like `for`, `(` are primitives, so are the functions like `.Internal` or `.Call` that communicate with the internal or external libraries. Finally, there is also a performance consideration, many non-special functions are primitives because these call need to be performant.
+
+### Generics
+One reason why I am talking about these types of functions is because of generics.
+Generics^[For a more broad description of related ideas, see [https://en.wikipedia.org/wiki/Generic_programming](https://en.wikipedia.org/wiki/Generic_programming)] are types of functions that when called, they dispatch a function specific to the type of input object. Typically, the type of object is called a *class*, and the specific function is called a *method*. This is the core of the S3 object-oriented system. For instance, in most cases you don't need to worry what kind of object you are working with and call `print` anyway, which will then dispatch an appropriate method based for the class of the object, such as `print.data.frame` or `print.Date`. This makes interactive use quite convenient, but also allows you to write a more generic code.
+For instance, instead of having to expect every single possible class in your function, you can rest assured that `as.character` will provide you a reasonable output.
+
+Typical S3 generic functions would look like this:
+```{r}
+#| echo = FALSE
+print
+```
+Just a single call to `UseMethod("print")` alternatively `UseMethod("print", x)` to make the object for which the method will be dispatched (`x` in this case) explicit. Notice that no other argument parsing is happening there, this is done behind the curtain.
+
+### Generic primitives
+Primitives can be generics as well, even without the use of `UseMethod`.
+There are a few ways how this is achieved.
+
+First of all, there are S3 prototype functions in the `.GenericsArgsEnv` environment.
+They look like your standard S3 generic function, just a call to `UseMethod`.
+```{r}
+get_objects = function(x){
+    if(is.character(x))
+        x = getNamespace(x)
+
+    sapply(x |> ls(), get, x)
+    }
+
+primitive_generics = get_objects(.GenericArgsEnv)
+primitive_generics[1]
+
+primitive_generics |> names() |> head(10)
+```
+However, I am not sure if they are actually used during calls or are there for other reason, such as documentation. There is a similar environment `.ArgsEnv` that contains primitives that are not generics.
+```{r}
+primitive_not_generic = get_objects(.ArgsEnv)
+
+primitive_not_generic[["seq_len"]]
+```
+These functions, when executed, just return `NULL`.
+
+```{r}
+primitive_not_generic[["seq_len"]](5)
+```
+Compare this to a standard call to `seq_len`
+```{r}
+seq_len(5)
+```
+
+This suggests that these functions, likely both `.GenericsArgsEnv` and `.ArgsEnv` are not involved in the function dispatch, or if they are, they are involved much later after the `.Primitive()` call is evaluated.
+
+This brings us to the second way how primitives can be generic.
+But this dispatch is being performed directly in the internal C code using either the `DispatchOrEval` call or `DispatchGeneric`. I will stop here and won't got deeper, because the situation is quickly getting complicated. For instance, despite the manual saying that something called group generics are using the `DispatchGeneric`, this is not actually the case and this function doesn't exist in the C code. Instead, many generics are grouped, thus *called group*, have a complex system of dispatching based utilizing `DispatchGroup` (instead of `DispatchGeneric`), `switch` and integer values likely related to the functions in the `src/main/names.c` source code.
+
+You can see which functions are *group generics* in two ways, reading the help file for `?groupGeneric` (it has no associated object) or by removing non-group generic functions from all primitive generics:
+```{r}
+setdiff(primitive_generics |> names(), .S3PrimitiveGenerics)
+```
+Note that these lists of functions are not generated from the C source code, so there is no way other than reading the C source code to know if a primitive function is generic or not.
+
+### Operator overloading
+Equations would be quite messy if you had to write a different `+` for scalars, vector and matrices. In case of operators, this is called [operator overloading](https://en.wikipedia.org/wiki/Operator_overloading) and can be a dangerous tool if not done carefully.
+
+The whole point of operator overloading is that you can have quite complex objects and operate with them in a nice and polite manner as long as the semantics of operators make sense. For instance, the `Matrix` package defines sparse matrices. Sparse matrices are matrices where the majority of elements are equal to zero. Because of this, it is quite a bit more efficient if they are respresented not as a standard matrix with `n*m` elements, but with a special representation where you represent only elements that are non-zero. This saves memory and makes some operations faster. At the same time, you want them to behave like standard matrices with operations like addition, multiplication, or subsetting. So in standard S3 way (or S4 in this case), you overload the `+` operator to dispatch a particular function for addition of two standard matrices, one standard and one sparse, or two sparse matrices. From user perspective, nothing has changed and the operation looks the same `M + N` regardless of what types the matrices are summed. In languages like Java, which forgeos operator overloading in favour of heavy object-oriented system, you would have to do something of this sort:
+
+```
+# without operator overloading
+M.add(N)
+```
+You can see that complex equation might look quite messy due to this. At least Java has [function overloading](https://en.wikipedia.org/wiki/Function_overloading).
+Without that, you would have to detect the particular type of objects and dispatch an appropriate function by yourself. This is exactly what the R source code written in C has to do.
+
+Note that this operator overloading does not always work and you can't easily overload operators for basic types. For instance, some languages like to overload the `+` operator for the addition of strings, performing string concatenation. This makes sense in some cases, doesn't in other cases and is another contentious problems, there is a whole discussion about this on the [R mailing list](https://www.stat.math.ethz.ch/pipermail/r-devel/2006-August/038991.html).
+
+```{r}
+#| error = TRUE
+`+.character` = function(x,y){paste0(x,y)}
+"foo" + "bar"
+```
+This is `character` is a basic type, which do not have a class and thus do not immediatelly work with all primitive generics this way. What matters here is the attribute `class` that is added to S3 objects. But if you try to explore this attribute with the `class()`, R will lie to you. You need to use the `oldClass()` function to see the S3 attribute.
+```{r}
+class("foo") # will lie to you
+oldClass("foo")
+```
+This overloading will work well for user-defined S3 classes.
+```{r}
+`+.foobar` = function(x,y){paste0(x,y)}
+structure("foo", class = "foobar") + structure("bar", class = "foobar")
+```
+
+Or you can define the class explicitelly as a `character`.
+```{r}
+`+.character` = function(x,y){paste0(x,y)}
+structure("foo", class = "character") + structure("bar", class = "character")
+```
+But it is better to not due this.
+
+Another way is to overwrite the `+` function with user-defined function, but don't do this either.
+If you think that the `+` semantics makes sense for strings, just define the `%+%` operator:
+```{r}
+`%+%` = function(x,y){paste0(x,y)}
+"foo" %+% "bar"
+```
+
+One famous case of using the operator `+` in a special way is to combine graphical elements in the `ggplot` package. 
+
+Operator overloading is especially useful for the equality operator `=`, but also for various subsetting operators `[` or `[[`, as well as for the replacement operators `[<-`. We will talk about this next time.
+
+### special vs builtin
+And just for completeness, Primitives and internal functions are also divided into *special* and *builtin*.
+```{r}
+primitives = Filter(is.primitive, functions)
+split(primitives |> names(), sapply(primitives, typeof)) |>
+    sapply(head, n=10, simplify=FALSE) # sample of bultin and specials
+```
+The difference between them is that *builtin* functions evaluate all their arguments before being passed to the internal implementation, while *special* don't evaluate their arguments.
+When profiling, *builtin* functions are also counted as a function calls, while *special* aren't.
+Only a small number of functions are trully special :). And while we can look which primitives are builtin or special, we can't do so with internal functions. For instance, according to the documentation, `cbind` is special internal, while `grep` is builtin internal.
+But when you to get their type, all you get is a `closure`.
+```{r}
+c("cbind" = typeof(cbind), "grep" = typeof(grep))
+```
+Unless you want to join the development team of R, you do not need to know about this distinction.
+
+## Summary
+Everything that happen in R is a function call, but for performance and parsing purpose, R has different types of functions. The classic functions in R are *closures*, but there are special kind of functions called *primitives*. Most operators are primitives and some primitives can also be generics, which connects them to the S3 dispatch system. This allows operators to be overloaded for user-defined classes, but not for basic types, despite not being typical S3 generics with `UseMethod()` call.
