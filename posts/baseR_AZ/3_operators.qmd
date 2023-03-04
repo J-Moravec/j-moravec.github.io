@@ -1,181 +1,34 @@
 ---
-title: "Base R from A to Z: Operators (2)"
-description: "Operators and other primitives"
-date: "2023-02-21"
+title: "Base R from A to Z: Operators (3)"
+description: "Par2t one: Arithmetic, Logical and Relational operators"
+date: "2023-03-04"
 categories: [R]
 toc: true
 toc-depth: 4
-draft: true
 ---
 
 ## Introduction
 
-In the second part of the series about the base R, we will talk about **operators**.
-Operators are construct similar to functions, but with special syntax or semantics.
+In the third part of the series about base R, we will talk about **operators**.
+As we have mentioned in the previous part, operators are construct similar to functions, but with special syntax or semantics. While you can call them as a functions, and there are instances where you want to do that, normally you call them in a special way called *infix* notation.
 
-For instance, when you write the name of a standard function, you will print their code.
-This doesn't work with operators and other language elements. To operate with them, you need to escape them, either with quotation marks `"` or backticks `` ` ``. Backticks typically work in most occassions. For instance, we can use backticks to print help of `+`, print the body of `-` or call `*` as if it was a function:
+::: {.callout-note}
+### Infix, prefix and postfix
+Most of us are used to the classical *infix* notation, such as `3 + 5`. However, in some older programming languages, there is also a *prefix* notation ` + 3 5` and postfix notation `3 5 +`. These can be efficiently parsed using a *stack*, and do not require operator precedence.
 
-```{r}
-?`+` # prints a help-page of +
-`-` # prints the body of -
-`*`(3,5) # call as if * was a normal function
-```
-## A small segway about functions
+Technically, R contains a traces of *prefix* notation in the form `"+"(3,5)` (or in fact, any functional call), but unlike in the typical prefix or postfix languages, the parentheses are required. Additionally, `!` is unary, and `-` and `+` have unary form, so they can be considered prefix, such as `-8` or `!a`.
 
-Speaking about operators and their special semantics, you might have realized that R has different types of functions.
-For instance, operators are special kind of functions, but so are other language elements like `for`, `return`, or in fact even `(` and `{`. We will talk about these language elements next time.
-These special functions are called *primitives*. Primitives are special in many ways, we will talk about them in a bit. Outside of primitives, all other functions are standard functions that either call R code, or call a compiled C or Fortran code through the interfaces `.Internal`, `.External`, `.C`, `.Call` or `.Fortran`.
+For more information, see [infix](https://en.wikipedia.org/wiki/Infix_notation), [prefix](https://en.wikipedia.org/wiki/Polish_notation) and [postfix](https://en.wikipedia.org/wiki/Reverse_Polish_notation) on Wikipedia.
+:::
 
-To explore these function types in `base`, we will define a helper functions.
-And because there would be a lot of repeated code, we will construct these functions with a function factory.
-```{r}
-is_function_type_factory = function(pattern, fixed=TRUE){
-    force(fixed) # force evaluation
-
-    function(x){
-        if(!is.function(x))
-            return(FALSE)
-        
-        body = body(x)
-        if(is.null(body))
-            return(FALSE) # primitives don't have body
-
-        deparse(body) |> grep(pattern=pattern, fixed=fixed) |> any()
-        }
-    }
-
-is.internal = is_function_type_factory(".Internal")
-is.external = is_function_type_factory(".External")
-is.ccall    = is_function_type_factory(".C") # will match .C and .Call
-is.fortran  = is_function_type_factory(".Fortran")
-
-# Get all functions from base, we did this before
-functions = Filter(is.function, sapply(ls(baseenv()), get, baseenv()))
-```
-So out of `r length(functions)`, there are `r Filter(is.primitive, functions) |> length()` primitives, `r Filter(is.internal, functions) |> length()` internals, `r Filter(is.external, functions) |> length()` external calls, `r Filter(is.ccall, functions) |> length()` calls using the `.C` or `.Call` interface, `r Filter(is.fortran, functions) |> length()` calls to Fortran, with the rest being pure R functions.
-
-### Primitives
-Primitives are special functions that form the core of R language. Normal functions (called *closures* in R) have a list of arguments called *formals*, a *body*, and an enclosing *environment* (thus called *closures*).
-```{r}
-# formals, body and environment of `is.internal`
-not_null = Negate(is.null)
-has_fbe = function(x){c(
-    "formals"     = formals(x) |> not_null(),
-    "body"        = body(x) |> not_null(),
-    "environment" = environment(x) |> not_null()
-    )}
-    
-has_fbe(is.internal)
-```
-Compared to normal functions, primitives do not have any *formals*, *body*, or enclosing *environment*.
-```{r}
-has_fbe(`-`)
-```
-
-This is why we put an additional check for `body(x) |> is.null()` in our function factory.
-So what about the printed body of `-` that we saw before? It was a fake! R is lying to us here.
-
-```{r}
-`-` # output of this is fake
-```{r}
-minus = function(e1, e2) .Primitive("-")
-minus
-```
-See the extra space in the original `-`? Now watch this. Calling `minus(1,2)` just prints the original `-`.
-```{r}
-minus(1,2) # just prints the original `-`
-```
-To get the correct result, we need to call `minus()(1,2)`.
-```{r}
-minus()(1,2)
-```
-This is because our function returns the `.Primitive("-")` which then performs the actual call to the `-` primitive.
-
-All the special language elements like `for`, `(` are primitives, so are the functions like `.Internal` or `.Call` that communicate with the internal or external libraries. Finally, there is also a performance consideration, many non-special functions are primitives because these call need to be performant.
-
-### Generics
-One reason why I am talking about these types of functions is because of generics.
-Generics^[For a more broad description of related ideas, see [https://en.wikipedia.org/wiki/Generic_programming](https://en.wikipedia.org/wiki/Generic_programming)] are types of functions that when called, they dispatch a function specific to the type of input object. Typically, the type of object is called a *class*, and the specific function is called a *method*. This is the core of the S3 object-oriented system. For instance, in most cases you don't need to worry what kind of object you are working with and call `print` anyway, which will then dispatch an appropriate method based for the class of the object, such as `print.data.frame` or `print.Date`. This makes interactive use quite convenient, but also allows you to write a more generic code.
-For instance, instead of having to expect every single possible class in your function, you can rest assured that `as.character` will provide you a reasonable output.
-
-Typical S3 generic functions would look like this:
-```{r}
-#| echo = FALSE
-print
-```
-Just a single call to `UseMethod("print")` alternatively `UseMethod("print", x)` to make the object for which the method will be dispatched (`x` in this case) explicit. Notice that no other argument parsing is happening there, this is done behind the curtain.
-
-### Generic primitives
-Primitives can be generics as well, even without the use of `UseMethod`.
-There are a few ways how this is achieved.
-
-First of all, there are S3 prototype functions in the `.GenericsArgsEnv` environment.
-They look like your standard S3 generic function, just a call to `UseMethod`.
-```{r}
-get_objects = function(x){
-    if(is.character(x))
-        x = getNamespace(x)
-
-    sapply(x |> ls(), get, x)
-    }
-
-primitive_generics = get_objects(.GenericArgsEnv)
-primitive_generics[1]
-
-primitive_generics |> names() |> head(10)
-```
-However, I am not sure if they are actually used during calls or are there for other reason, such as documentation. There is a similar environment `.ArgsEnv` that contains primitives that are not generics.
-```{r}
-primitive_not_generic = get_objects(.ArgsEnv)
-
-primitive_not_generic[["seq_len"]]
-```
-These functions, when executed, just return `NULL`.
-
-```{r}
-primitive_not_generic[["seq_len"]](5)
-```
-Compare this to a standard call to `seq_len`
-```{r}
-seq_len(5)
-```
-
-This suggests that these functions, likely both `.GenericsArgsEnv` and `.ArgsEnv` are not involved in the function dispatch, or if they are, they are involved much later after the `.Primitive()` call is evaluated.
-
-This brings us to the second way how primitives can be generic.
-But this dispatch is being performed directly in the internal C code using either the `DispatchOrEval` call or `DispatchGeneric`. I will stop here and won't got deeper, because the situation is quickly getting complicated. For instance, despite the manual saying that something called group generics are using the `DispatchGeneric`, this is not actually the case and this function doesn't exist in the C code. Instead, many generics are grouped, thus *called group*, have a complex system of dispatching based utilizing `DispatchGroup` (instead of `DispatchGeneric`), `switch` and integer values likely related to the functions in the `src/main/names.c` source code.
-
-You can see which functions are *group generics* in two ways, reading the help file for `?groupGeneric` (it has no associated object) or by removing non-group generic functions from all primitive generics:
-```{r}
-setdiff(primitive_generics |> names(), .S3PrimitiveGenerics)
-```
-Note that these lists of functions are not generated from the C source code, so there is no way other than reading the C source code to know if a primitive function is generic or not.
-
-### special vs builtin
-And just for completeness, Primitives and internal functions are also divided into *special* and *builtin*.
-```{r}
-primitives = Filter(is.primitive, functions)
-split(primitives |> names(), sapply(primitives, typeof)) |>
-    sapply(head, n=10, simplify=FALSE) # sample of bultin and specials
-```
-The difference between them is that *builtin* functions evaluate all their arguments before being passed to the internal implementation, while *special* don't evaluate their arguments.
-When profiling, *builtin* functions are also counted as a function calls, while *special* aren't.
-Only a small number of functions are trully special :). And while we can look which primitives are builtin or special, we can't do so with internal functions. For instance, according to the documentation, `cbind` is special internal, while `grep` is builtin internal.
-But when you to get their type, all you get is a `closure`.
-```{r}
-c("cbind" = typeof(cbind), "grep" = typeof(grep))
-```
-Unless you want to join the development team of R, you do not need to know about this distinction.
-
-## Operators
-After the not so short segway, let's return to operators. There are something opearators
+R offers a multitude of operators and a way to define new operators through the `%any%` notation.
+Operators can be divided into these groups:
 
 * Arithmetic operators  
     `+`, `-`, `*`, `/`, `^`, `%%`, `%/%`
 * Logical operators  
     `!`, `&`, `&&`, `|`, `||`
-* Relation operatos  
+* Relational operatos  
     `<`, `>`, `<=`, `>=`, `==`, `!=`
 * Subsetting operators  
     `[`, `[[`, `@`, `$`
@@ -196,55 +49,427 @@ After the not so short segway, let's return to operators. There are something op
 * Parentheses and braces  
     `(`, `{`
 
-We will talk about Arithmetic, Logical, Relation, Subsetting, Assigment and Matrix operators, as well as the special operator. Matching operator is just a shorthand for the `match()` function, so we will leave it for later. The sequence operator `:` is a primitive for performance (and parsing) reasons, but we will talk about it together with other sequence functions. The `::` and `:::` complex, so we will talk about them when we go deeper into environments, namespaces and package access, and the `(` and `{` are more of a language features rather than functions, so we skip them for later. Finally, the `?` operator is not part of the *base*, but is in *utils*.
+We will talk about Arithmetic, Logical, Relational, Subsetting, Assigment and Matrix operators, as well as the special operator `%anything%`. Matching operator is just a shorthand for the `match()` function, so we will leave it for later. The sequence operator `:` is a primitive for performance (and parsing) reasons, but we will talk about it together with other sequence-generating functions. The `::` and `:::` are quite complex, so we will talk about them when we go deeper into environments, namespaces and package access, and the `(` and `{` are language features rather than operators or functions, so we skip them for later. Finally, the `?` operator is not part of the *base*, but is in *utils*.
 
-### Operator precedence
+## Operator precedence
+From basic mathematics, we are used to the idea that multiplication precedes addition, so `3 + 5 * 2` is interpreted as `3 + (5 * 2)` without having to use parentheses. These rules are called *operator precedence*. Here I am reproducing the list from the `?Syntax` help command.
 
-### Arithmetic operators
+For listed operators, precedence goes from highest (evaluated first) to lowest.
+Operators with the same precedence are evaluated in the order they are encountered.
 
+* `::`, `:::`
+* `$`, `@`
+* `[`, `[[`
+* `^`
+* `-`, `+` in their unary form (`-3`, `+5`)
+* `:`
+* `%any%`, `|>` (base R pipe)
+* `*`, `/`
+* `+`, `-` in their binary form (`3+5`)
+* `<`, `>`, `<=`, `==`, `!=`
+* `!`
+* `&`, `&&`
+* `|`, `||`
+* `~`
+* `->`, `->>`
+* `<-`, `<<-`
+* `=`
+* `?`
 
+Now for some interesting consequences. With `^` having such high precedence, `-a^2` is interpeted as `-(a^2)` instead of `(-a)^2`, but then `-1:3` is interpeted as `(-1):3` and not `-(1:3)`.
 
-### Operator overloading
-Equations would be quite messy if you had to write a different `+` for scalars, vector and matrices. In case of operators, this is called [operator overloading](https://en.wikipedia.org/wiki/Operator_overloading) and can be a dangerous tool if not done carefully.
+The pipe `|>` has high precedence, which mean you can't do `a + 2 |> ...`, because it is interpeted as `a + (2 |> ...)`. This bites me all the time, when I just want to do some simple division or addition inside pipes.
 
-The whole point of operator overloading is that you can have quite complex objects in a nice and polite manner as long as the semantics of operators make sense. For instance, the `Matrix` package defines sparse matrices. Sparse matrices are matrices where the majority of elements are equal to zero. Because of this, it is quite a bit more efficient if they are respresented not as a standard matrix with `n*m` elements, but with a special representation where you represent only elements that are non-zero. This saves memory and makes some operations faster. At the same time, you want them to behave like standard matrices with operations like addition, multiplication, or subsetting. So in standard S3 way (or S4 in this case), you overload the `+` operator to dispatch a particular function for addition of two standard matrices, one standard and one sparse, or two sparse matrices. From user perspective, nothing has changed and the operation looks the same `M + N` regardless of what types the matrices are summed. In languages like Java, which forgeos operator overloading in favour of heavy object-oriented system, you would have to do something of this sort:
+Finally `=` has lower precedence than `<-`. This shouldn't be an issue since you should use either `=` or `<-` as your assignment operator.
+
+The takeway is that you should not rely on common sense your knowledge of operator precedence rules, but use parentheses to make operations as much explicit as possible.
+
+## Arithmetic operators
+Arithmetic operators are addition `+`, subtraction `-`, multiplication `*`, division `/`, exponentiation `^`, modulo `%%` and integer division `%/%`.
+
+The addition, subtraction, multiplication, division, and exponentiation are well known.
+Module and the integer division are less common, but occasionaly useful in programming.
+Modulo `%%` is the remainder after integer division, so that `5 %% 2 = 1`. The `%/%` is the integer division `5 %/% 2 = 2`. These are used when we want to know how many times something fit in our number, if we need to do something with a certain frequency, or if you want to know if a number is even. But arguably, some of these are displaced by sequence functions, and if we want to fit `k` elements into categories of size `m`, `ceiling(k/m)` gives us exactly that. So personally, I haven't used modulo or integer division very often.
+
+The `+` and `-` operators can be both unary and binary, meaning they accept one or two parameters. The meaning and behaviour, such as operator precedence, are different for the unary and binary version.
+
+```{r}
+#| eval = FALSE
+
++ a # unary `+`
+- a # unary `-`
+
+a + b # binary `+`
+a - b # binary `-`
+```
+
+This is related to how numbers are parsed by the interpreter (see [literals](https://en.wikipedia.org/wiki/Literal_(computer_programming)). Details are not important, just remember that the unary and binary operators are different, and that the unary `-` makes numbers negative. Fun fact, as a consequence of the parsing rules, this is valid R code:
+
+```{r}
++ - + - 5 + - + - + + - - + - 1
+```
+As with most fun facts, you should not ever write a code like this.
+
+::: {.callout-note}
+### Recycling
+A lot of basic operations in R do something called *recycling*. For instance, when you add together two vectors with a different number of elements, the shorter vector is being extended by reusing (recycling) its elements.
+
+For instance, consider multiplying a vector of length 3 with a vector of length 1: `c(1, 2, 3) * 3`. This is identical to `c(1,2,3) * c(3, 3, 3)` because the shorter vector is being recycled. This work well when the length of the longer vector is a multiple of the shorter vector (i.e., `longer %% shorter = 0`), for instance:
+
+```{r}
+c(1, 2, 3, 4, 5, 6) + c(1, 2)
+```
+You can see that the shorter vector was recycled as `c(1,2, 1,2, 1,2)`, because the length of the longer vector is a multiple of the shorter one. If this is not the case, the shorter vector is still recycled, but a warning is thrown.
+
+```{r}
+c(1,2,3) * c(1,2)
+```
+
+Recycling allows you to do some fancy tricks, for example if you want to pick every second element of a vector:
+```{r}
+c(1,2,3,4,5,6)[c(FALSE, TRUE)]
+```
+
+This works because the selection vector is being recycled to the full length using the predefined pattern.
+
+:::
+
+## Logical operators and functions
+Since we are already talking about the logical operators, I thought it might be more useful to look more closely at the *logical* type and functions that operate with it.
+
+Logical operators are negation `!`, which is a unary operator, and binary logical *and* `&` and `&&`, logical *or* `|` and `||`. Aside of these operators, there is also a function `xor()`, helpers `isTRUE()`, `isFALSE()`, useful primitives `all()` and `any()`, and functions for the creation, testing, and conversion to the *logical* type: `logical()`, `is.logical()`, and `as.logical()`.
+
+### Logical operators
+Logical operators are negation `!`, logical *and* `&`, `&&`, and logical *or* `|`, `||`.
+
+The negation `!` operator just makes a `FALSE` value `TRUE` and the other way around. The *and* and *or* operators are more interesting in the way they work on vectors.
+
+The single symbol *and* and *or* operators `&` and `|` work like `+` or `-`, they are applied element-wise and vectors are recycled as required.
+
+```{r}
+c(TRUE, TRUE, FALSE) & c(TRUE, FALSE, FALSE)
+c(TRUE, TRUE, FALSE) | c(TRUE, FALSE, FALSE)
+```
+
+The double-symbol *and* and *or* are not vectorized, they uses only the first element of a vector, while other elements are ignored. Likewise, the output of `&&` and `||` is a single `TRUE` or `FALSE` value.
+This makes `&&` and `||` useful when doing control flow operations with `if(condition){...}`.
+
+```{r}
+c(TRUE, TRUE) && c(TRUE, FALSE) # only the first value is used
+```
+
+### Logical functions
+Now, lets move to the functions. The `isTRUE()` and `isFALSE()` are also useful shorthands for control flow.
+They detect if the condition is exactly `TRUE` or `FALSE` respectively, a good way to avoid pitalls with `NA`, `NULL`, which might arise from some operations and should be processed appropriatelly.
+
+The logical operations `xor()` is elementwise exclusive *or*. It is not an operator, and not a primitive, likely because it is not used very often. You can see that `xor()` is just a shorthand for `(x | y) & !(x & y)`
+
+```{r}
+xor
+```
+
+Very useful if *only* x *or* y are allowed, such as if you are using parameters as a mutually exclusive flags. Consider a function that does either `foo` or `bar`, but can't do both at the same time:
 
 ```
-# without operator overloading
-M.add(N)
+myfunc = function(x, doFoo=FALSE, doBar=FALSE){
+    if(!xor(doFoo, doBar))
+        stop("Must select either doFoo or doBar")
+
+    if(doFoo)
+        return(foo(x))
+    if(doBar)
+        return(bar(x))
+    }
 ```
-You can see that complex equation might look quite messy due to this. At least Java has [function overloading](https://en.wikipedia.org/wiki/Function_overloading).
-Without that, you would have to detect the particular type of objects and dispatch an appropriate function by yourself. This is exactly what the R source code written in C has to do.
+Without `xor`, the function might not behave as expected, not returning anything if either both conditions are `FALSE`, or performing only one operation if both conditions are `TRUE`.
 
-Note that this operator overloading does not always work and you can't easily overload operators for basic types. For instance, some languages like to overload the `+` operator for the addition of strings, performing string concatenation. This makes sense in some cases, doesn't in other cases and is another contentious problems, there is a whole discussion about this on the [R mailing list](https://www.stat.math.ethz.ch/pipermail/r-devel/2006-August/038991.html).
+You can turn `xor()` easily into an *infix* operator `%xor%`.
+```{r}
+`%xor%` = xor
+TRUE %xor% FALSE
+```
 
+Before we start talking about the `logical` type in general, lets quickly mention the `all()` and `any()`. These are vectorized and will tell you if *all* or *any* value of the vector are `TRUE` respectively. For efficiency reason, they are primitives, because they are used quite often for the control flow.
+
+```{r}
+vec = c(TRUE, TRUE, FALSE)
+all(vec) # will be FALSE because not all values are TRUE
+any(vec) # TRUE as at least one value is TRUE
+```
+
+You can define a vectorized variant of `xor` which tells you that there is exactly one `TRUE` rather easily:
+
+```{r}
+one = function(x){
+    sum(x, na.rm=TRUE) == 1
+    }   
+one(c(TRUE, TRUE, FALSE)) # will be FALSE
+one(c(FALSE, TRUE, FALSE)) # will be TRUE
+```
+
+### Conversion rules
+
+This brings us to an important step, conversion. You can apply logical operators not only on the logical `TRUE` and `FALSE` values, but as with many similar operations in R, the values are automatically converted to the correct type.
+
+Conversion is performed internally using the `as.logical` primitive. Valid conversions are from `numeric` (that is, both `integer` and `double`), `complex`, and `character`. For the `numeric` and `complex`, `0` is converted into `FALSE` and non-zero value is converted into `TRUE`:
+
+```{r}
+as.logical(0)
+as.logical(5i+3)
+```
+For the character type, the conversion is a bit more complex. The strings "T", "TRUE", "True" and "true" are converted into `TRUE`, and similarly "F", "FALSE", "False" and "false" are converted into `FALSE`. Everything else, including "TrUe" and similar messy capitalizations, is converted into `NA`.
+
+```{r}
+as.logical(c("T", "TRUE", "True", "true"))
+as.logical(c("F", "FALSE", "False", "false"))
+as.logical(c("1", "0", "truE", "foo"))
+```
+
+The `logical(n)` is a shorthand for `vector("logical", n)` and simply create a logical vector of length `n` with values initialized to `FALSE`.
+
+```{r}
+logical(5)
+```
+
+When converting from logical to numeric, the `TRUE` and `FALSE` converts to `1` and `0` respectively. This allows for the convenient use of `sum` or `mean` to count the number or the percentage of matches. When converting from logical to character, the `TRUE` and `FALSE` gets converted simply to `"TRUE"` and `"FALSE"` strings.
+
+### Raw vectors
+The logical operators `!`, `&` and `|` have another meaning for raw vectors.
+`raw` is a basic type, alongside `integer`, `double`, `list`, and so on.
+It represents raw bytes (from 0 to 255), here printed in a hexadecimal format:
+
+```{r}
+as.raw(c(0, 10, 255))
+```
+
+For these raw vectors, the logical operators have a slightly different bitwise meaning.
+See `bitwNot`, `botwAnd`, and `bitwOr` for `!`, `&`, and `|` respectively.
+We will talk in-depth about raw type and operations on them later in this series.
+
+## Relational operators
+Relational operatos are _smaller than_ `>`, _larger than_ `>`, _smaller or equal_ `<=`, _larger or equal `>=`, equal `==`, and not equal `!=`. For `numeric` (`integer` and `double`) and `logical` (which is converted to numeric), the comparisons are what you might expect, just a standard numerical comparisons.
+
+```{r}
+5L > 2L # integers, the `long` type
+5.3 > 2.8
+TRUE > FALSE
+```
+
+For `raw`, the numeric order is used so the comparisons also behaves as expected, and for `complex`, only the `==` and `!=` comparisons are implemented.
 ```{r}
 #| error = TRUE
-`+.character` = function(x,y){paste0(x,y)}
-"foo" + "bar"
-```
-This is `character` is a basic type, which do not have a class and thus do not immediatelly work with all primitive generics this way. What matters here is the attribute `class` that is added to S3 objects. But if you try to explore this attribute with the `class()`, R will lie to you. You need to use the `oldClass()` function to see the S3 attribute.
-```{r}
-class("foo") # will lie to you
-oldClass("foo")
-```
-This overloading will work well for user-defined S3 classes.
-```{r}
-`+.foobar` = function(x,y){paste0(x,y)}
-structure("foo", class = "foobar") + structure("bar", class = "foobar")
+as.raw(5) > as.raw(2)
+5+1i > 2+1i
 ```
 
-Another way is to overwrite the `+` function with user-defined function, but don't do this.
-If you think that the `+` semantics makes sense for strings, just define the `%+%` operator:
+### String comparisons 
+For `character` strings, the comparisons are quite a bit more complicated. If you consider only standard english alphabet, the problem might feel obvious. But every language has slightly different rules about order of character in their alphabet. Quoting from the R help page:
+
+> Beware of making _any_ assumptions about the
+> collation order: e.g. in Estonian ‘Z’ comes between ‘S’ and ‘T’,
+> and collation is not necessarily character-by-character - in
+> Danish ‘aa’ sorts as a single letter, after ‘z’.  In Welsh ‘ng’
+> may or may not be a single sorting unit: if it is it follows ‘g’.
+
+On top of this, the order is system and locale dependent. This makes sorting extremely unpredictable when comparing strings accross languages.
+
+For more information, see [Microsoft page](https://learn.microsoft.com/en-us/globalization/locale/sorting-and-string-comparison) or [long unicode explanation](http://unicode.org/reports/tr10/).
+
+I am happy that smarter people solved it and I don't need to know the details.
+
+### Floating point comparisons
+There is a caveat when comparing `doubles`. You might remember that computers work in a binary. This means that every number is represented by combination of bits that can be `0` or `1`. You might start sensing that something is off in here. How can I represent a rational number by just combination of `0` and `1`? This is because computers are able to represent perfectly only whole numbers, `integer`. Anything else is represented imperfectly and you get rounding errors. R is trying to hide this imperfection by rounding when printing, but the abstraction will leak if you try to compare for equality.
+
 ```{r}
-`%+%` = function(x,y){paste0(x,y)}
-"foo" %+% "bar"
+(1 - 0.9)
+(1 - 0.9) == 0.1
+```
+The `>` and `<` still works as intended, but when you are comparing floating point numbers, use `all.equal` instead and select an appropriate precision (by default `sqrt(.Machine$double.eps)` is used):
+
+```{r}
+all.equal( (1 - 0.9), 0.1)
 ```
 
+Unlike with string comparison, this is common issue that will significantly influence the performance of your code, especially if you are writing any kind of numerical algorithm. You need to be aware of these issues. See [shorter explanation](https://floating-point-gui.de/) and [longer explanation](https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html) and try to understand them.
 
-<!--```{r}-->
-<!--getObjects = function(name, all=TRUE){-->
-<!--    pkg = getNamespace(name)-->
-<!--    sapply(ls(pkg), get, pkg)-->
-<!--    }-->
-<!--```-->
+## Group generic methods and Ops
+
+Some methods are grouped into groups called *group generics* functions.
+These methods are dispatched when any of the grouped functions are called.
+While it might look strange at first look, this allows for some neat tricks to efficiently define common mathematical operations for a large group of functions.
+
+For instance, consider `Ops.POSIXt` which defines *arithmetic*, *logical* and *relational* operators for the S3 class `POSIXt`.
+
+```{r}
+Ops.POSIXt
+```
+
+First, the function checks if only a single argument was passed, because unary operators are not defined.
+
+Then it uses `switch` statement, which evaluates to `TRUE` if one of `<`, `>`, `==`, `!=`, `<=`, and `>=` matches the `.Generic` variable, which is an automatic variable initialized to the dispatched generics from the `Ops` group. So if the function call was `!POSIXt`, the `.Generic` is the negation operator `!`. The `switch` statement thus works as a check whether a particular operator makes sense for the class, throwing error if the operation was not defined.
+
+This doesn't mean that operators not specified in the switch are undefined. In fact, both `+.POSIXt` and `-.POSIXt` exists.
+
+::: {.callout-note}
+### POSIXt, POSIXlt and POSIXct
+R contains a number of different classes for dates. 
+
+`POSIXct` is a signed number of seconds since the begining of 1970 (UCT time zone), the [Unix time](https://en.wikipedia.org/wiki/Unix_time).
+
+`POSIXlt` is a named list of vectors with `sec`, `min`, `hour`, `mday` and so on.
+
+`POSIXct` is a really simple and convenient way to keep time, but not very human readable (unless you are Unix guru). `POSIXlt` is a nice human-readable format, but not very convenient when you want to store precise times in a `data.frame`
+
+`POSIXt` is a virtual class, both `POSIXct` and `POSIXlt` inherits from it. This means that when you define a method for `POSIXt`, it will automatically work for `POSIXct` and `POSIXlt`.
+:::
+
+Since `POSIXt` is a virtual class, and math with a number of seconds `POSIXct` is simpler than math on a complex data structure `POSIXlt` (see the box), what follows is a conversion into `POSIXct`, and the call to `NextMethod()`, which simply calls the appropriate method for the `.Generic` on the modified parameters. There is nothing simple on `NextMethod()` and we will talk about it later, when we are talking in-depth about the S3 system.
+
+### Double dispatch
+
+Methods in the `Ops` group are special because most of them are binary and they need to do something called [double dispatch](https://en.wikipedia.org/wiki/Double_dispatch). For instance, if you are adding objects of class `foo` and `bar`, you need to dispatch the correct method for this particular addition, taking in account classes of both objects, not just `foo` or `bar` independently. To keep addition comutative, method needs should be identical even if the order of addition is changed (`bar + foo`).
+
+S3 has rather primitive double-dispatch system, the rules are as follows:
+
+1) If neither objects has a method, use internal method.
+2) If only one object has a method, use that method.
+3) If both objects have a method, and the methods:
+    a) are identical, use that method.
+    b) are not identical, throw a warning and use internal methods.
+ 
+To demonstrate this, we define a helper function and methods for the `+` generic for classes `foo` and `bar`. These simply return `NULL` and print a message, which will tell us which method was dispatched.
+```{r}
+# helper to make object less wordy
+obj = function(class){
+    structure(1, class=class)
+    }
+`+.foo` = function(...){message("foo")}
+`+.bar` = function(...){message("bar")}
+```
+
+The first rule is just a normal addition:
+```{r}
+1 + 1
+```
+
+According to the second rule, the `+.foo` method is dispatched:
+```{r}
+1 + obj("foo")
+obj("foo") + 1
+
+obj("foo") + obj("baz") # no method +.baz
+```
+
+According to the third rule, since methods are not identical, we will get a warning.
+```{r}
+obj("foo") + obj("bar")
+obj("bar") + obj("foo")
+```
+
+Finally, if we redefine the `+.foo` and the `+.bar` to be identical, addition works again:
+```{r}
+`+.foo` = function(...){message("foobar")}
+`+.bar` = function(...){message("foobar")}
+obj("foo") + obj("bar")
+```
+
+Notice that if one of the object doesn't have defined an S3 method, we can make the S3 method that is dispatched quite complex and built-in support for different types. But this mechanism will be fragile and once someone defines method for one of the supported types, our method would be ignored and the dispatch would default to an internal method (with warning). For an explicit double dispatch system that can be further extended, we would need to go for S4 classes.
+
+## Example: sparse_vector
+
+As an example, we will create an S3 class `sparse_vector`. There is an S4 class in the `Matrix` package, which is a more reasonable choice since S4 methods can be extended, but we do this only for demonstration purposes.
+
+First, we will define our class, sparse vector is defined by the vector of values `x`, vector of indices `i` and the length of the vector. Normally, we would make a barebone `new_sparse_vector` constructor, and the `sparse_vector` one would be an interface that would also check validity of input parameters, but we will keep it simple.
+
+We also create a method for the `as.vector` generics, so that we can easily unroll our sparse vector into a normal one.
+
+```{r}
+sparse_vector = function(x, i, length){
+    structure(list(
+        x = x,
+        i = i,
+        length = length
+        ), class = "sparse_vector")
+    }
+
+as.vector.sparse_vector = function(x, ...){
+    y = vector(mode=mode(x$x), length=x$length)
+    y[x$i] = x$x
+    y
+    }
+
+print.sparse_vector = function(x, ...){
+    y = rep(".", x$length)
+    y[x$i] = as.character(x$x)
+    print(y, quote=FALSE)
+    }
+
+a = sparse_vector(c(3,5,8), c(2,4,6), 10)
+a
+as.vector(a)
+```
+
+We want to support all operations in the group generics `Ops`.
+
+
+```{r}
+Ops.sparse_vector = function(e1, e2){
+    if(inherits(e1, "sparse_vector"))
+        e1 = as.vector(e1)
+    # If Ops is unary, e2 is missing
+    if(!missing(e2) && inherits(e2, "sparse_vector"))
+        e2 = as.vector(e2)
+    NextMethod(.Generic)
+    }
+
+a + 2
+2 + a
+a * 2
+a == 0
+- a
+```
+
+And essentially for free, we suddenly support all operations.
+But this isn't very efficient if we are summing two sparse vectors, for instance.
+So for some operations, we define their own functions.
+
+```{r}
+`+.sparse_vector` = function(e1, e2){
+    message("+.sparse_vector dispatched")
+    if(nargs() == 1L)
+        return(e1)
+
+    if(inherits(e1, "sparse_vector") && inherits(e2, "sparse_vector")){
+        i = union(e1$i, e2$i) |> sort()
+        j = intersect(e1$i, e2$i) |> sort()
+        l = max(e1$length, e2$length) # ignoring recycling for now
+        y = sparse_vector(rep(0, length(i)), i, l)
+        y$x[i %in% e1$i] = e1$x
+        y$x[i %in% e2$i] = e2$x
+        y$x[i %in% j] = e1$x[e1$i %in% j] + e2$x[e2$i %in% j]
+        return(y)
+        }
+    if(inherits(e1, "sparse_vector")){
+        e2[e1$i] = e2[e1$i] + e1$x
+        return(e2)
+        }
+    if(inherits(e2, "sparse_vector")){
+        e1[e2$i] = e1[e2$i] + e2$x
+        return(e1)
+        }
+    stop("This should be unreachable state")
+    }
+
+b = sparse_vector(c(1, 2, 3), c(1, 4, 6), 10)
++ a
++ b
+a + b
+a + rep(1, 10)
+b + rep(1, 10)
+```
+
+The code isn't perfect, we ignore a lot of recycling, which means operations with matrices will not work correctly, and so on. But as an example of the `Ops` and operator overloading, this should be sufficient. One obvious improvement would be redefining the operator `[` to make subsetting of the vector much easier, and thus the code cleaner. We will look at this in the next article.
+
+## Summary
+
+In this part, we have learned about operators, and more closely explored arithmetic, logical and relational operators. On top of this, we have learned more about group generic functions, double dispatch system, and managed to implement a simple `sparse_vector` class with working arithmetic, logical and relational operators.
