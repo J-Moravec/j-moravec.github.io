@@ -1,6 +1,6 @@
 ---
 title: "Base R from A to Z: Operators (3)"
-description: "Par2t one: Arithmetic, Logical and Relational operators"
+description: "Arithmetic, Logical and Relational operators"
 date: "2023-03-04"
 categories: [R]
 toc: true
