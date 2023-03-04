@@ -6,10 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2023-02-21">
-<meta name="description" content="Operators and other primitives">
+<meta name="dcterms.date" content="2023-03-04">
+<meta name="description" content="Par2t one: Arithmetic, Logical and Relational operators">
 
-<title>Jiří C. Moravec - Base R from A to Z: Operators (2)</title>
+<title>Jiří C. Moravec - Base R from A to Z: Operators (3)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -161,12 +161,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
  <span class="menu-text">Software</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/"><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/J-Moravec/"><i class="bi bi-github" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com"><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://twitter.com/jcmoravec"><i class="bi bi-twitter" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -186,19 +186,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#a-small-segway-about-functions" id="toc-a-small-segway-about-functions" class="nav-link" data-scroll-target="#a-small-segway-about-functions">A small segway about functions</a>
-  <ul>
-  <li><a href="#primitives" id="toc-primitives" class="nav-link" data-scroll-target="#primitives">Primitives</a></li>
-  <li><a href="#generics" id="toc-generics" class="nav-link" data-scroll-target="#generics">Generics</a></li>
-  <li><a href="#generic-primitives" id="toc-generic-primitives" class="nav-link" data-scroll-target="#generic-primitives">Generic primitives</a></li>
-  <li><a href="#special-vs-builtin" id="toc-special-vs-builtin" class="nav-link" data-scroll-target="#special-vs-builtin">special vs builtin</a></li>
-  </ul></li>
-  <li><a href="#operators" id="toc-operators" class="nav-link" data-scroll-target="#operators">Operators</a>
-  <ul>
   <li><a href="#operator-precedence" id="toc-operator-precedence" class="nav-link" data-scroll-target="#operator-precedence">Operator precedence</a></li>
   <li><a href="#arithmetic-operators" id="toc-arithmetic-operators" class="nav-link" data-scroll-target="#arithmetic-operators">Arithmetic operators</a></li>
-  <li><a href="#operator-overloading" id="toc-operator-overloading" class="nav-link" data-scroll-target="#operator-overloading">Operator overloading</a></li>
+  <li><a href="#logical-operators-and-functions" id="toc-logical-operators-and-functions" class="nav-link" data-scroll-target="#logical-operators-and-functions">Logical operators and functions</a>
+  <ul>
+  <li><a href="#logical-operators" id="toc-logical-operators" class="nav-link" data-scroll-target="#logical-operators">Logical operators</a></li>
+  <li><a href="#logical-functions" id="toc-logical-functions" class="nav-link" data-scroll-target="#logical-functions">Logical functions</a></li>
+  <li><a href="#conversion-rules" id="toc-conversion-rules" class="nav-link" data-scroll-target="#conversion-rules">Conversion rules</a></li>
+  <li><a href="#raw-vectors" id="toc-raw-vectors" class="nav-link" data-scroll-target="#raw-vectors">Raw vectors</a></li>
   </ul></li>
+  <li><a href="#relational-operators" id="toc-relational-operators" class="nav-link" data-scroll-target="#relational-operators">Relational operators</a>
+  <ul>
+  <li><a href="#string-comparisons" id="toc-string-comparisons" class="nav-link" data-scroll-target="#string-comparisons">String comparisons</a></li>
+  <li><a href="#floating-point-comparisons" id="toc-floating-point-comparisons" class="nav-link" data-scroll-target="#floating-point-comparisons">Floating point comparisons</a></li>
+  </ul></li>
+  <li><a href="#group-generic-methods-and-ops" id="toc-group-generic-methods-and-ops" class="nav-link" data-scroll-target="#group-generic-methods-and-ops">Group generic methods and Ops</a>
+  <ul>
+  <li><a href="#double-dispatch" id="toc-double-dispatch" class="nav-link" data-scroll-target="#double-dispatch">Double dispatch</a></li>
+  </ul></li>
+  <li><a href="#example-sparse_vector" id="toc-example-sparse_vector" class="nav-link" data-scroll-target="#example-sparse_vector">Example: sparse_vector</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul>
 </nav>
     </div>
@@ -207,7 +214,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Base R from A to Z: Operators (2)</h1>
+<h1 class="title">Base R from A to Z: Operators (3)</h1>
   <div class="quarto-categories">
     <div class="quarto-category">R</div>
   </div>
@@ -215,7 +222,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div>
   <div class="description">
-    Operators and other primitives
+    Par2t one: Arithmetic, Logical and Relational operators
   </div>
 </div>
 
@@ -226,7 +233,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">February 21, 2023</p>
+      <p class="date">March 4, 2023</p>
     </div>
   </div>
   
@@ -238,228 +245,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>In the second part of the series about the base R, we will talk about <strong>operators</strong>. Operators are construct similar to functions, but with special syntax or semantics.</p>
-<p>For instance, when you write the name of a standard function, you will print their code. This doesn’t work with operators and other language elements. To operate with them, you need to escape them, either with quotation marks <code>"</code> or backticks <code>`</code>. Backticks typically work in most occassions. For instance, we can use backticks to print help of <code>+</code>, print the body of <code>-</code> or call <code>*</code> as if it was a function:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>?<span class="st">`</span><span class="at">+</span><span class="st">`</span> <span class="co"># prints a help-page of +</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">-</span><span class="st">`</span> <span class="co"># prints the body of -</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>function (e1, e2)  .Primitive("-")</code></pre>
+<p>In the third part of the series about base R, we will talk about <strong>operators</strong>. As we have mentioned in the previous part, operators are construct similar to functions, but with special syntax or semantics. While you can call them as a functions, and there are instances where you want to do that, normally you call them in a special way called <em>infix</em> notation.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">*</span><span class="st">`</span>(<span class="dv">3</span>,<span class="dv">5</span>) <span class="co"># call as if * was a normal function</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 15</code></pre>
+<div class="callout-caption-container flex-fill">
+Infix, prefix and postfix
 </div>
 </div>
-</section>
-<section id="a-small-segway-about-functions" class="level2">
-<h2 class="anchored" data-anchor-id="a-small-segway-about-functions">A small segway about functions</h2>
-<p>Speaking about operators and their special semantics, you might have realized that R has different types of functions. For instance, operators are special kind of functions, but so are other language elements like <code>for</code>, <code>return</code>, or in fact even <code>(</code> and <code>{</code>. We will talk about these language elements next time. These special functions are called <em>primitives</em>. Primitives are special in many ways, we will talk about them in a bit. Outside of primitives, all other functions are standard functions that either call R code, or call a compiled C or Fortran code through the interfaces <code>.Internal</code>, <code>.External</code>, <code>.C</code>, <code>.Call</code> or <code>.Fortran</code>.</p>
-<p>To explore these function types in <code>base</code>, we will define a helper functions. And because there would be a lot of repeated code, we will construct these functions with a function factory.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>is_function_type_factory <span class="ot">=</span> <span class="cf">function</span>(pattern, <span class="at">fixed=</span><span class="cn">TRUE</span>){</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">force</span>(fixed) <span class="co"># force evaluation</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">function</span>(x){</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.function</span>(x))</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>            <span class="fu">return</span>(<span class="cn">FALSE</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        body <span class="ot">=</span> <span class="fu">body</span>(x)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(<span class="fu">is.null</span>(body))</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>            <span class="fu">return</span>(<span class="cn">FALSE</span>) <span class="co"># primitives don't have body</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">deparse</span>(body) <span class="sc">|&gt;</span> <span class="fu">grep</span>(<span class="at">pattern=</span>pattern, <span class="at">fixed=</span>fixed) <span class="sc">|&gt;</span> <span class="fu">any</span>()</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>is.internal <span class="ot">=</span> <span class="fu">is_function_type_factory</span>(<span class="st">".Internal"</span>)</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>is.external <span class="ot">=</span> <span class="fu">is_function_type_factory</span>(<span class="st">".External"</span>)</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>is.ccall    <span class="ot">=</span> <span class="fu">is_function_type_factory</span>(<span class="st">".C"</span>) <span class="co"># will match .C and .Call</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>is.fortran  <span class="ot">=</span> <span class="fu">is_function_type_factory</span>(<span class="st">".Fortran"</span>)</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Get all functions from base, we did this before</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>functions <span class="ot">=</span> <span class="fu">Filter</span>(is.function, <span class="fu">sapply</span>(<span class="fu">ls</span>(<span class="fu">baseenv</span>()), get, <span class="fu">baseenv</span>()))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>So out of 1242, there are 185 primitives, 415 internals, 0 external calls, 3 calls using the <code>.C</code> or <code>.Call</code> interface, 6 calls to Fortran, with the rest being pure R functions.</p>
-<section id="primitives" class="level3">
-<h3 class="anchored" data-anchor-id="primitives">Primitives</h3>
-<p>Primitives are special functions that form the core of R language. Normal functions (called <em>closures</em> in R) have a list of arguments called <em>formals</em>, a <em>body</em>, and an enclosing <em>environment</em> (thus called <em>closures</em>).</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># formals, body and environment of `is.internal`</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>not_null <span class="ot">=</span> <span class="fu">Negate</span>(is.null)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>has_fbe <span class="ot">=</span> <span class="cf">function</span>(x){<span class="fu">c</span>(</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"formals"</span>     <span class="ot">=</span> <span class="fu">formals</span>(x) <span class="sc">|&gt;</span> <span class="fu">not_null</span>(),</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"body"</span>        <span class="ot">=</span> <span class="fu">body</span>(x) <span class="sc">|&gt;</span> <span class="fu">not_null</span>(),</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"environment"</span> <span class="ot">=</span> <span class="fu">environment</span>(x) <span class="sc">|&gt;</span> <span class="fu">not_null</span>()</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    )}</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">has_fbe</span>(is.internal)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>    formals        body environment 
-       TRUE        TRUE        TRUE </code></pre>
+<div class="callout-body-container callout-body">
+<p>Most of us are used to the classical <em>infix</em> notation, such as <code>3 + 5</code>. However, in some older programming languages, there is also a <em>prefix</em> notation <code>+ 3 5</code> and postfix notation <code>3 5 +</code>. These can be efficiently parsed using a <em>stack</em>, and do not require operator precedence.</p>
+<p>Technically, R contains a traces of <em>prefix</em> notation in the form <code>"+"(3,5)</code> (or in fact, any functional call), but unlike in the typical prefix or postfix languages, the parentheses are required. Additionally, <code>!</code> is unary, and <code>-</code> and <code>+</code> have unary form, so they can be considered prefix, such as <code>-8</code> or <code>!a</code>.</p>
+<p>For more information, see <a href="https://en.wikipedia.org/wiki/Infix_notation">infix</a>, <a href="https://en.wikipedia.org/wiki/Polish_notation">prefix</a> and <a href="https://en.wikipedia.org/wiki/Reverse_Polish_notation">postfix</a> on Wikipedia.</p>
 </div>
 </div>
-<p>Compared to normal functions, primitives do not have any <em>formals</em>, <em>body</em>, or enclosing <em>environment</em>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">has_fbe</span>(<span class="st">`</span><span class="at">-</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>    formals        body environment 
-      FALSE       FALSE       FALSE </code></pre>
-</div>
-</div>
-<p>This is why we put an additional check for <code>body(x) |&gt; is.null()</code> in our function factory. So what about the printed body of <code>-</code> that we saw before? It was a fake! R is lying to us here.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">-</span><span class="st">`</span> <span class="co"># output of this is fake</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>function (e1, e2)  .Primitive("-")</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>minus <span class="ot">=</span> <span class="cf">function</span>(e1, e2) <span class="fu">.Primitive</span>(<span class="st">"-"</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>minus</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>function(e1, e2) .Primitive("-")</code></pre>
-</div>
-</div>
-<p>See the extra space in the original <code>-</code>? Now watch this. Calling <code>minus(1,2)</code> just prints the original <code>-</code>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">minus</span>(<span class="dv">1</span>,<span class="dv">2</span>) <span class="co"># just prints the original `-`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>function (e1, e2)  .Primitive("-")</code></pre>
-</div>
-</div>
-<p>To get the correct result, we need to call <code>minus()(1,2)</code>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">minus</span>()(<span class="dv">1</span>,<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] -1</code></pre>
-</div>
-</div>
-<p>This is because our function returns the <code>.Primitive("-")</code> which then performs the actual call to the <code>-</code> primitive.</p>
-<p>All the special language elements like <code>for</code>, <code>(</code> are primitives, so are the functions like <code>.Internal</code> or <code>.Call</code> that communicate with the internal or external libraries. Finally, there is also a performance consideration, many non-special functions are primitives because these call need to be performant.</p>
-</section>
-<section id="generics" class="level3">
-<h3 class="anchored" data-anchor-id="generics">Generics</h3>
-<p>One reason why I am talking about these types of functions is because of generics. Generics<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> are types of functions that when called, they dispatch a function specific to the type of input object. Typically, the type of object is called a <em>class</em>, and the specific function is called a <em>method</em>. This is the core of the S3 object-oriented system. For instance, in most cases you don’t need to worry what kind of object you are working with and call <code>print</code> anyway, which will then dispatch an appropriate method based for the class of the object, such as <code>print.data.frame</code> or <code>print.Date</code>. This makes interactive use quite convenient, but also allows you to write a more generic code. For instance, instead of having to expect every single possible class in your function, you can rest assured that <code>as.character</code> will provide you a reasonable output.</p>
-<p>Typical S3 generic functions would look like this:</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>function (x, ...) 
-UseMethod("print")
-&lt;bytecode: 0x55e40988ca58&gt;
-&lt;environment: namespace:base&gt;</code></pre>
-</div>
-</div>
-<p>Just a single call to <code>UseMethod("print")</code> alternatively <code>UseMethod("print", x)</code> to make the object for which the method will be dispatched (<code>x</code> in this case) explicit. Notice that no other argument parsing is happening there, this is done behind the curtain.</p>
-</section>
-<section id="generic-primitives" class="level3">
-<h3 class="anchored" data-anchor-id="generic-primitives">Generic primitives</h3>
-<p>Primitives can be generics as well, even without the use of <code>UseMethod</code>. There are a few ways how this is achieved.</p>
-<p>First of all, there are S3 prototype functions in the <code>.GenericsArgsEnv</code> environment. They look like your standard S3 generic function, just a call to <code>UseMethod</code>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>get_objects <span class="ot">=</span> <span class="cf">function</span>(x){</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">is.character</span>(x))</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>        x <span class="ot">=</span> <span class="fu">getNamespace</span>(x)</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sapply</span>(x <span class="sc">|&gt;</span> <span class="fu">ls</span>(), get, x)</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>primitive_generics <span class="ot">=</span> <span class="fu">get_objects</span>(.GenericArgsEnv)</span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>primitive_generics[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>$`-`
-function (e1, e2) 
-UseMethod("-")
-&lt;bytecode: 0x55e4070fbec8&gt;
-&lt;environment: namespace:base&gt;</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>primitive_generics <span class="sc">|&gt;</span> <span class="fu">names</span>() <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] "-"   "!"   "!="  "*"   "/"   "&amp;"   "%/%" "%%"  "^"   "+"  </code></pre>
-</div>
-</div>
-<p>However, I am not sure if they are actually used during calls or are there for other reason, such as documentation. There is a similar environment <code>.ArgsEnv</code> that contains primitives that are not generics.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>primitive_not_generic <span class="ot">=</span> <span class="fu">get_objects</span>(.ArgsEnv)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>primitive_not_generic[[<span class="st">"seq_len"</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>function (length.out) 
-NULL
-&lt;bytecode: 0x55e4070eab20&gt;
-&lt;environment: namespace:base&gt;</code></pre>
-</div>
-</div>
-<p>These functions, when executed, just return <code>NULL</code>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>primitive_not_generic[[<span class="st">"seq_len"</span>]](<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>NULL</code></pre>
-</div>
-</div>
-<p>Compare this to a standard call to <code>seq_len</code></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">seq_len</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 1 2 3 4 5</code></pre>
-</div>
-</div>
-<p>This suggests that these functions, likely both <code>.GenericsArgsEnv</code> and <code>.ArgsEnv</code> are not involved in the function dispatch, or if they are, they are involved much later after the <code>.Primitive()</code> call is evaluated.</p>
-<p>This brings us to the second way how primitives can be generic. But this dispatch is being performed directly in the internal C code using either the <code>DispatchOrEval</code> call or <code>DispatchGeneric</code>. I will stop here and won’t got deeper, because the situation is quickly getting complicated. For instance, despite the manual saying that something called group generics are using the <code>DispatchGeneric</code>, this is not actually the case and this function doesn’t exist in the C code. Instead, many generics are grouped, thus <em>called group</em>, have a complex system of dispatching based utilizing <code>DispatchGroup</code> (instead of <code>DispatchGeneric</code>), <code>switch</code> and integer values likely related to the functions in the <code>src/main/names.c</code> source code.</p>
-<p>You can see which functions are <em>group generics</em> in two ways, reading the help file for <code>?groupGeneric</code> (it has no associated object) or by removing non-group generic functions from all primitive generics:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">setdiff</span>(primitive_generics <span class="sc">|&gt;</span> <span class="fu">names</span>(), .S3PrimitiveGenerics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] "-"        "!"        "!="       "*"        "/"        "&amp;"       
- [7] "%/%"      "%%"       "^"        "+"        "&lt;"        "&lt;="      
-[13] "=="       "&gt;"        "&gt;="       "|"        "abs"      "acos"    
-[19] "acosh"    "all"      "any"      "Arg"      "asin"     "asinh"   
-[25] "atan"     "atanh"    "ceiling"  "Conj"     "cos"      "cosh"    
-[31] "cospi"    "cummax"   "cummin"   "cumprod"  "cumsum"   "digamma" 
-[37] "exp"      "expm1"    "floor"    "gamma"    "Im"       "lgamma"  
-[43] "log"      "log10"    "log1p"    "log2"     "max"      "min"     
-[49] "Mod"      "prod"     "range"    "Re"       "round"    "sign"    
-[55] "signif"   "sin"      "sinh"     "sinpi"    "sqrt"     "sum"     
-[61] "tan"      "tanh"     "tanpi"    "trigamma" "trunc"   </code></pre>
-</div>
-</div>
-<p>Note that these lists of functions are not generated from the C source code, so there is no way other than reading the C source code to know if a primitive function is generic or not.</p>
-</section>
-<section id="special-vs-builtin" class="level3">
-<h3 class="anchored" data-anchor-id="special-vs-builtin">special vs builtin</h3>
-<p>And just for completeness, Primitives and internal functions are also divided into <em>special</em> and <em>builtin</em>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>primitives <span class="ot">=</span> <span class="fu">Filter</span>(is.primitive, functions)</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">split</span>(primitives <span class="sc">|&gt;</span> <span class="fu">names</span>(), <span class="fu">sapply</span>(primitives, typeof)) <span class="sc">|&gt;</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sapply</span>(head, <span class="at">n=</span><span class="dv">10</span>, <span class="at">simplify=</span><span class="cn">FALSE</span>) <span class="co"># sample of bultin and specials</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>$builtin
- [1] "-"   ":"   "!"   "!="  "("   "*"   "/"   "&amp;"   "%*%" "%/%"
-
-$special
- [1] "::"   ":::"  "["    "[["   "[[&lt;-" "[&lt;-"  "{"    "@"    "@&lt;-"  "&amp;&amp;"  </code></pre>
-</div>
-</div>
-<p>The difference between them is that <em>builtin</em> functions evaluate all their arguments before being passed to the internal implementation, while <em>special</em> don’t evaluate their arguments. When profiling, <em>builtin</em> functions are also counted as a function calls, while <em>special</em> aren’t. Only a small number of functions are trully special :). And while we can look which primitives are builtin or special, we can’t do so with internal functions. For instance, according to the documentation, <code>cbind</code> is special internal, while <code>grep</code> is builtin internal. But when you to get their type, all you get is a <code>closure</code>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="st">"cbind"</span> <span class="ot">=</span> <span class="fu">typeof</span>(cbind), <span class="st">"grep"</span> <span class="ot">=</span> <span class="fu">typeof</span>(grep))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>    cbind      grep 
-"closure" "closure" </code></pre>
-</div>
-</div>
-<p>Unless you want to join the development team of R, you do not need to know about this distinction.</p>
-</section>
-</section>
-<section id="operators" class="level2">
-<h2 class="anchored" data-anchor-id="operators">Operators</h2>
-<p>After the not so short segway, let’s return to operators. There are something opearators</p>
+<p>R offers a multitude of operators and a way to define new operators through the <code>%any%</code> notation. Operators can be divided into these groups:</p>
 <ul>
 <li>Arithmetic operators<br>
 <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>^</code>, <code>%%</code>, <code>%/%</code></li>
 <li>Logical operators<br>
 <code>!</code>, <code>&amp;</code>, <code>&amp;&amp;</code>, <code>|</code>, <code>||</code></li>
-<li>Relation operatos<br>
+<li>Relational operatos<br>
 <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>, <code>==</code>, <code>!=</code></li>
 <li>Subsetting operators<br>
 <code>[</code>, <code>[[</code>, <code>@</code>, <code>$</code></li>
@@ -478,73 +286,577 @@ $special
 <li>Parentheses and braces<br>
 <code>(</code>, <code>{</code></li>
 </ul>
-<p>We will talk about Arithmetic, Logical, Relation, Subsetting, Assigment and Matrix operators, as well as the special operator. Matching operator is just a shorthand for the <code>match()</code> function, so we will leave it for later. The sequence operator <code>:</code> is a primitive for performance (and parsing) reasons, but we will talk about it together with other sequence functions. The <code>::</code> and <code>:::</code> complex, so we will talk about them when we go deeper into environments, namespaces and package access, and the <code>(</code> and <code>{</code> are more of a language features rather than functions, so we skip them for later. Finally, the <code>?</code> operator is not part of the <em>base</em>, but is in <em>utils</em>.</p>
-<section id="operator-precedence" class="level3">
-<h3 class="anchored" data-anchor-id="operator-precedence">Operator precedence</h3>
+<p>We will talk about Arithmetic, Logical, Relational, Subsetting, Assigment and Matrix operators, as well as the special operator <code>%anything%</code>. Matching operator is just a shorthand for the <code>match()</code> function, so we will leave it for later. The sequence operator <code>:</code> is a primitive for performance (and parsing) reasons, but we will talk about it together with other sequence-generating functions. The <code>::</code> and <code>:::</code> are quite complex, so we will talk about them when we go deeper into environments, namespaces and package access, and the <code>(</code> and <code>{</code> are language features rather than operators or functions, so we skip them for later. Finally, the <code>?</code> operator is not part of the <em>base</em>, but is in <em>utils</em>.</p>
 </section>
-<section id="arithmetic-operators" class="level3">
-<h3 class="anchored" data-anchor-id="arithmetic-operators">Arithmetic operators</h3>
+<section id="operator-precedence" class="level2">
+<h2 class="anchored" data-anchor-id="operator-precedence">Operator precedence</h2>
+<p>From basic mathematics, we are used to the idea that multiplication precedes addition, so <code>3 + 5 * 2</code> is interpreted as <code>3 + (5 * 2)</code> without having to use parentheses. These rules are called <em>operator precedence</em>. Here I am reproducing the list from the <code>?Syntax</code> help command.</p>
+<p>For listed operators, precedence goes from highest (evaluated first) to lowest. Operators with the same precedence are evaluated in the order they are encountered.</p>
+<ul>
+<li><code>::</code>, <code>:::</code></li>
+<li><code>$</code>, <code>@</code></li>
+<li><code>[</code>, <code>[[</code></li>
+<li><code>^</code></li>
+<li><code>-</code>, <code>+</code> in their unary form (<code>-3</code>, <code>+5</code>)</li>
+<li><code>:</code></li>
+<li><code>%any%</code>, <code>|&gt;</code> (base R pipe)</li>
+<li><code>*</code>, <code>/</code></li>
+<li><code>+</code>, <code>-</code> in their binary form (<code>3+5</code>)</li>
+<li><code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>==</code>, <code>!=</code></li>
+<li><code>!</code></li>
+<li><code>&amp;</code>, <code>&amp;&amp;</code></li>
+<li><code>|</code>, <code>||</code></li>
+<li><code>~</code></li>
+<li><code>-&gt;</code>, <code>-&gt;&gt;</code></li>
+<li><code>&lt;-</code>, <code>&lt;&lt;-</code></li>
+<li><code>=</code></li>
+<li><code>?</code></li>
+</ul>
+<p>Now for some interesting consequences. With <code>^</code> having such high precedence, <code>-a^2</code> is interpeted as <code>-(a^2)</code> instead of <code>(-a)^2</code>, but then <code>-1:3</code> is interpeted as <code>(-1):3</code> and not <code>-(1:3)</code>.</p>
+<p>The pipe <code>|&gt;</code> has high precedence, which mean you can’t do <code>a + 2 |&gt; ...</code>, because it is interpeted as <code>a + (2 |&gt; ...)</code>. This bites me all the time, when I just want to do some simple division or addition inside pipes.</p>
+<p>Finally <code>=</code> has lower precedence than <code>&lt;-</code>. This shouldn’t be an issue since you should use either <code>=</code> or <code>&lt;-</code> as your assignment operator.</p>
+<p>The takeway is that you should not rely on common sense your knowledge of operator precedence rules, but use parentheses to make operations as much explicit as possible.</p>
 </section>
-<section id="operator-overloading" class="level3">
-<h3 class="anchored" data-anchor-id="operator-overloading">Operator overloading</h3>
-<p>Equations would be quite messy if you had to write a different <code>+</code> for scalars, vector and matrices. In case of operators, this is called <a href="https://en.wikipedia.org/wiki/Operator_overloading">operator overloading</a> and can be a dangerous tool if not done carefully.</p>
-<p>The whole point of operator overloading is that you can have quite complex objects in a nice and polite manner as long as the semantics of operators make sense. For instance, the <code>Matrix</code> package defines sparse matrices. Sparse matrices are matrices where the majority of elements are equal to zero. Because of this, it is quite a bit more efficient if they are respresented not as a standard matrix with <code>n*m</code> elements, but with a special representation where you represent only elements that are non-zero. This saves memory and makes some operations faster. At the same time, you want them to behave like standard matrices with operations like addition, multiplication, or subsetting. So in standard S3 way (or S4 in this case), you overload the <code>+</code> operator to dispatch a particular function for addition of two standard matrices, one standard and one sparse, or two sparse matrices. From user perspective, nothing has changed and the operation looks the same <code>M + N</code> regardless of what types the matrices are summed. In languages like Java, which forgeos operator overloading in favour of heavy object-oriented system, you would have to do something of this sort:</p>
-<pre><code># without operator overloading
-M.add(N)</code></pre>
-<p>You can see that complex equation might look quite messy due to this. At least Java has <a href="https://en.wikipedia.org/wiki/Function_overloading">function overloading</a>. Without that, you would have to detect the particular type of objects and dispatch an appropriate function by yourself. This is exactly what the R source code written in C has to do.</p>
-<p>Note that this operator overloading does not always work and you can’t easily overload operators for basic types. For instance, some languages like to overload the <code>+</code> operator for the addition of strings, performing string concatenation. This makes sense in some cases, doesn’t in other cases and is another contentious problems, there is a whole discussion about this on the <a href="https://www.stat.math.ethz.ch/pipermail/r-devel/2006-August/038991.html">R mailing list</a>.</p>
+<section id="arithmetic-operators" class="level2">
+<h2 class="anchored" data-anchor-id="arithmetic-operators">Arithmetic operators</h2>
+<p>Arithmetic operators are addition <code>+</code>, subtraction <code>-</code>, multiplication <code>*</code>, division <code>/</code>, exponentiation <code>^</code>, modulo <code>%%</code> and integer division <code>%/%</code>.</p>
+<p>The addition, subtraction, multiplication, division, and exponentiation are well known. Module and the integer division are less common, but occasionaly useful in programming. Modulo <code>%%</code> is the remainder after integer division, so that <code>5 %% 2 = 1</code>. The <code>%/%</code> is the integer division <code>5 %/% 2 = 2</code>. These are used when we want to know how many times something fit in our number, if we need to do something with a certain frequency, or if you want to know if a number is even. But arguably, some of these are displaced by sequence functions, and if we want to fit <code>k</code> elements into categories of size <code>m</code>, <code>ceiling(k/m)</code> gives us exactly that. So personally, I haven’t used modulo or integer division very often.</p>
+<p>The <code>+</code> and <code>-</code> operators can be both unary and binary, meaning they accept one or two parameters. The meaning and behaviour, such as operator precedence, are different for the unary and binary version.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">+.character</span><span class="st">`</span> <span class="ot">=</span> <span class="cf">function</span>(x,y){<span class="fu">paste0</span>(x,y)}</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="st">"foo"</span> <span class="sc">+</span> <span class="st">"bar"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in "foo" + "bar": non-numeric argument to binary operator</code></pre>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sc">+</span> a <span class="co"># unary `+`</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> a <span class="co"># unary `-`</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>a <span class="sc">+</span> b <span class="co"># binary `+`</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>a <span class="sc">-</span> b <span class="co"># binary `-`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-<p>This is <code>character</code> is a basic type, which do not have a class and thus do not immediatelly work with all primitive generics this way. What matters here is the attribute <code>class</code> that is added to S3 objects. But if you try to explore this attribute with the <code>class()</code>, R will lie to you. You need to use the <code>oldClass()</code> function to see the S3 attribute.</p>
+<p>This is related to how numbers are parsed by the interpreter (see <a href="https://en.wikipedia.org/wiki/Literal_(computer_programming)">literals</a>. Details are not important, just remember that the unary and binary operators are different, and that the unary <code>-</code> makes numbers negative. Fun fact, as a consequence of the parsing rules, this is valid R code:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(<span class="st">"foo"</span>) <span class="co"># will lie to you</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="sc">+</span> <span class="sc">-</span> <span class="sc">+</span> <span class="sc">-</span> <span class="dv">5</span> <span class="sc">+</span> <span class="sc">-</span> <span class="sc">+</span> <span class="sc">-</span> <span class="sc">+</span> <span class="sc">+</span> <span class="sc">-</span> <span class="sc">-</span> <span class="sc">+</span> <span class="sc">-</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "character"</code></pre>
+<pre><code>[1] 4</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oldClass</span>(<span class="st">"foo"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As with most fun facts, you should not ever write a code like this.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Recycling
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A lot of basic operations in R do something called <em>recycling</em>. For instance, when you add together two vectors with a different number of elements, the shorter vector is being extended by reusing (recycling) its elements.</p>
+<p>For instance, consider multiplying a vector of length 3 with a vector of length 1: <code>c(1, 2, 3) * 3</code>. This is identical to <code>c(1,2,3) * c(3, 3, 3)</code> because the shorter vector is being recycled. This work well when the length of the longer vector is a multiple of the shorter vector (i.e., <code>longer %% shorter = 0</code>), for instance:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>) <span class="sc">+</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2 4 4 6 6 8</code></pre>
+</div>
+</div>
+<p>You can see that the shorter vector was recycled as <code>c(1,2, 1,2, 1,2)</code>, because the length of the longer vector is a multiple of the shorter one. If this is not the case, the shorter vector is still recycled, but a warning is thrown.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>) <span class="sc">*</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in c(1, 2, 3) * c(1, 2): longer object length is not a multiple of
+shorter object length</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 4 3</code></pre>
+</div>
+</div>
+<p>Recycling allows you to do some fancy tricks, for example if you want to pick every second element of a vector:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>)[<span class="fu">c</span>(<span class="cn">FALSE</span>, <span class="cn">TRUE</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2 4 6</code></pre>
+</div>
+</div>
+<p>This works because the selection vector is being recycled to the full length using the predefined pattern.</p>
+</div>
+</div>
+</section>
+<section id="logical-operators-and-functions" class="level2">
+<h2 class="anchored" data-anchor-id="logical-operators-and-functions">Logical operators and functions</h2>
+<p>Since we are already talking about the logical operators, I thought it might be more useful to look more closely at the <em>logical</em> type and functions that operate with it.</p>
+<p>Logical operators are negation <code>!</code>, which is a unary operator, and binary logical <em>and</em> <code>&amp;</code> and <code>&amp;&amp;</code>, logical <em>or</em> <code>|</code> and <code>||</code>. Aside of these operators, there is also a function <code>xor()</code>, helpers <code>isTRUE()</code>, <code>isFALSE()</code>, useful primitives <code>all()</code> and <code>any()</code>, and functions for the creation, testing, and conversion to the <em>logical</em> type: <code>logical()</code>, <code>is.logical()</code>, and <code>as.logical()</code>.</p>
+<section id="logical-operators" class="level3">
+<h3 class="anchored" data-anchor-id="logical-operators">Logical operators</h3>
+<p>Logical operators are negation <code>!</code>, logical <em>and</em> <code>&amp;</code>, <code>&amp;&amp;</code>, and logical <em>or</em> <code>|</code>, <code>||</code>.</p>
+<p>The negation <code>!</code> operator just makes a <code>FALSE</code> value <code>TRUE</code> and the other way around. The <em>and</em> and <em>or</em> operators are more interesting in the way they work on vectors.</p>
+<p>The single symbol <em>and</em> and <em>or</em> operators <code>&amp;</code> and <code>|</code> work like <code>+</code> or <code>-</code>, they are applied element-wise and vectors are recycled as required.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>) <span class="sc">&amp;</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  TRUE FALSE FALSE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>) <span class="sc">|</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  TRUE  TRUE FALSE</code></pre>
+</div>
+</div>
+<p>The double-symbol <em>and</em> and <em>or</em> are not vectorized, they uses only the first element of a vector, while other elements are ignored. Likewise, the output of <code>&amp;&amp;</code> and <code>||</code> is a single <code>TRUE</code> or <code>FALSE</code> value. This makes <code>&amp;&amp;</code> and <code>||</code> useful when doing control flow operations with <code>if(condition){...}</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">TRUE</span>) <span class="sc">&amp;&amp;</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>) <span class="co"># only the first value is used</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+</section>
+<section id="logical-functions" class="level3">
+<h3 class="anchored" data-anchor-id="logical-functions">Logical functions</h3>
+<p>Now, lets move to the functions. The <code>isTRUE()</code> and <code>isFALSE()</code> are also useful shorthands for control flow. They detect if the condition is exactly <code>TRUE</code> or <code>FALSE</code> respectively, a good way to avoid pitalls with <code>NA</code>, <code>NULL</code>, which might arise from some operations and should be processed appropriatelly.</p>
+<p>The logical operations <code>xor()</code> is elementwise exclusive <em>or</em>. It is not an operator, and not a primitive, likely because it is not used very often. You can see that <code>xor()</code> is just a shorthand for <code>(x | y) &amp; !(x &amp; y)</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>xor</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>function (x, y) 
+{
+    (x | y) &amp; !(x &amp; y)
+}
+&lt;bytecode: 0x5581b98bbef8&gt;
+&lt;environment: namespace:base&gt;</code></pre>
+</div>
+</div>
+<p>Very useful if <em>only</em> x <em>or</em> y are allowed, such as if you are using parameters as a mutually exclusive flags. Consider a function that does either <code>foo</code> or <code>bar</code>, but can’t do both at the same time:</p>
+<pre><code>myfunc = function(x, doFoo=FALSE, doBar=FALSE){
+    if(!xor(doFoo, doBar))
+        stop("Must select either doFoo or doBar")
+
+    if(doFoo)
+        return(foo(x))
+    if(doBar)
+        return(bar(x))
+    }</code></pre>
+<p>Without <code>xor</code>, the function might not behave as expected, not returning anything if either both conditions are <code>FALSE</code>, or performing only one operation if both conditions are <code>TRUE</code>.</p>
+<p>You can turn <code>xor()</code> easily into an <em>infix</em> operator <code>%xor%</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">%xor%</span><span class="st">`</span> <span class="ot">=</span> xor</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="cn">TRUE</span> <span class="sc">%xor%</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>Before we start talking about the <code>logical</code> type in general, lets quickly mention the <code>all()</code> and <code>any()</code>. These are vectorized and will tell you if <em>all</em> or <em>any</em> value of the vector are <code>TRUE</code> respectively. For efficiency reason, they are primitives, because they are used quite often for the control flow.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>vec <span class="ot">=</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">all</span>(vec) <span class="co"># will be FALSE because not all values are TRUE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">any</span>(vec) <span class="co"># TRUE as at least one value is TRUE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>You can define a vectorized variant of <code>xor</code> which tells you that there is exactly one <code>TRUE</code> rather easily:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>one <span class="ot">=</span> <span class="cf">function</span>(x){</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(x, <span class="at">na.rm=</span><span class="cn">TRUE</span>) <span class="sc">==</span> <span class="dv">1</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    }   </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">one</span>(<span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>)) <span class="co"># will be FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">one</span>(<span class="fu">c</span>(<span class="cn">FALSE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>)) <span class="co"># will be TRUE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+</section>
+<section id="conversion-rules" class="level3">
+<h3 class="anchored" data-anchor-id="conversion-rules">Conversion rules</h3>
+<p>This brings us to an important step, conversion. You can apply logical operators not only on the logical <code>TRUE</code> and <code>FALSE</code> values, but as with many similar operations in R, the values are automatically converted to the correct type.</p>
+<p>Conversion is performed internally using the <code>as.logical</code> primitive. Valid conversions are from <code>numeric</code> (that is, both <code>integer</code> and <code>double</code>), <code>complex</code>, and <code>character</code>. For the <code>numeric</code> and <code>complex</code>, <code>0</code> is converted into <code>FALSE</code> and non-zero value is converted into <code>TRUE</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.logical</span>(<span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.logical</span>(5i<span class="sc">+</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>For the character type, the conversion is a bit more complex. The strings “T”, “TRUE”, “True” and “true” are converted into <code>TRUE</code>, and similarly “F”, “FALSE”, “False” and “false” are converted into <code>FALSE</code>. Everything else, including “TrUe” and similar messy capitalizations, is converted into <code>NA</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.logical</span>(<span class="fu">c</span>(<span class="st">"T"</span>, <span class="st">"TRUE"</span>, <span class="st">"True"</span>, <span class="st">"true"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE TRUE TRUE TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.logical</span>(<span class="fu">c</span>(<span class="st">"F"</span>, <span class="st">"FALSE"</span>, <span class="st">"False"</span>, <span class="st">"false"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE FALSE FALSE FALSE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.logical</span>(<span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"0"</span>, <span class="st">"truE"</span>, <span class="st">"foo"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA NA NA NA</code></pre>
+</div>
+</div>
+<p>The <code>logical(n)</code> is a shorthand for <code>vector("logical", n)</code> and simply create a logical vector of length <code>n</code> with values initialized to <code>FALSE</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">logical</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE FALSE FALSE FALSE FALSE</code></pre>
+</div>
+</div>
+<p>When converting from logical to numeric, the <code>TRUE</code> and <code>FALSE</code> converts to <code>1</code> and <code>0</code> respectively. This allows for the convenient use of <code>sum</code> or <code>mean</code> to count the number or the percentage of matches. When converting from logical to character, the <code>TRUE</code> and <code>FALSE</code> gets converted simply to <code>"TRUE"</code> and <code>"FALSE"</code> strings.</p>
+</section>
+<section id="raw-vectors" class="level3">
+<h3 class="anchored" data-anchor-id="raw-vectors">Raw vectors</h3>
+<p>The logical operators <code>!</code>, <code>&amp;</code> and <code>|</code> have another meaning for raw vectors. <code>raw</code> is a basic type, alongside <code>integer</code>, <code>double</code>, <code>list</code>, and so on. It represents raw bytes (from 0 to 255), here printed in a hexadecimal format:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.raw</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">255</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 00 0a ff</code></pre>
+</div>
+</div>
+<p>For these raw vectors, the logical operators have a slightly different bitwise meaning. See <code>bitwNot</code>, <code>botwAnd</code>, and <code>bitwOr</code> for <code>!</code>, <code>&amp;</code>, and <code>|</code> respectively. We will talk in-depth about raw type and operations on them later in this series.</p>
+</section>
+</section>
+<section id="relational-operators" class="level2">
+<h2 class="anchored" data-anchor-id="relational-operators">Relational operators</h2>
+<p>Relational operatos are <em>smaller than</em> <code>&gt;</code>, <em>larger than</em> <code>&gt;</code>, <em>smaller or equal</em> <code>&lt;=</code>, _larger or equal <code>&gt;=</code>, equal <code>==</code>, and not equal <code>!=</code>. For <code>numeric</code> (<code>integer</code> and <code>double</code>) and <code>logical</code> (which is converted to numeric), the comparisons are what you might expect, just a standard numerical comparisons.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>5L <span class="sc">&gt;</span> 2L <span class="co"># integers, the `long` type</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fl">5.3</span> <span class="sc">&gt;</span> <span class="fl">2.8</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="cn">TRUE</span> <span class="sc">&gt;</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>For <code>raw</code>, the numeric order is used so the comparisons also behaves as expected, and for <code>complex</code>, only the <code>==</code> and <code>!=</code> comparisons are implemented.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.raw</span>(<span class="dv">5</span>) <span class="sc">&gt;</span> <span class="fu">as.raw</span>(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span><span class="sc">+</span>1i <span class="sc">&gt;</span> <span class="dv">2</span><span class="sc">+</span>1i</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in 5 + (0+1i) &gt; 2 + (0+1i): invalid comparison with complex values</code></pre>
+</div>
+</div>
+<section id="string-comparisons" class="level3">
+<h3 class="anchored" data-anchor-id="string-comparisons">String comparisons</h3>
+<p>For <code>character</code> strings, the comparisons are quite a bit more complicated. If you consider only standard english alphabet, the problem might feel obvious. But every language has slightly different rules about order of character in their alphabet. Quoting from the R help page:</p>
+<blockquote class="blockquote">
+<p>Beware of making <em>any</em> assumptions about the collation order: e.g.&nbsp;in Estonian ‘Z’ comes between ‘S’ and ‘T’, and collation is not necessarily character-by-character - in Danish ‘aa’ sorts as a single letter, after ‘z’. In Welsh ‘ng’ may or may not be a single sorting unit: if it is it follows ‘g’.</p>
+</blockquote>
+<p>On top of this, the order is system and locale dependent. This makes sorting extremely unpredictable when comparing strings accross languages.</p>
+<p>For more information, see <a href="https://learn.microsoft.com/en-us/globalization/locale/sorting-and-string-comparison">Microsoft page</a> or <a href="http://unicode.org/reports/tr10/">long unicode explanation</a>.</p>
+<p>I am happy that smarter people solved it and I don’t need to know the details.</p>
+</section>
+<section id="floating-point-comparisons" class="level3">
+<h3 class="anchored" data-anchor-id="floating-point-comparisons">Floating point comparisons</h3>
+<p>There is a caveat when comparing <code>doubles</code>. You might remember that computers work in a binary. This means that every number is represented by combination of bits that can be <code>0</code> or <code>1</code>. You might start sensing that something is off in here. How can I represent a rational number by just combination of <code>0</code> and <code>1</code>? This is because computers are able to represent perfectly only whole numbers, <code>integer</code>. Anything else is represented imperfectly and you get rounding errors. R is trying to hide this imperfection by rounding when printing, but the abstraction will leak if you try to compare for equality.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>(<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>(<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.9</span>) <span class="sc">==</span> <span class="fl">0.1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+</div>
+<p>The <code>&gt;</code> and <code>&lt;</code> still works as intended, but when you are comparing floating point numbers, use <code>all.equal</code> instead and select an appropriate precision (by default <code>sqrt(.Machine$double.eps)</code> is used):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>( (<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.9</span>), <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>Unlike with string comparison, this is common issue that will significantly influence the performance of your code, especially if you are writing any kind of numerical algorithm. You need to be aware of these issues. See <a href="https://floating-point-gui.de/">shorter explanation</a> and <a href="https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html">longer explanation</a> and try to understand them.</p>
+</section>
+</section>
+<section id="group-generic-methods-and-ops" class="level2">
+<h2 class="anchored" data-anchor-id="group-generic-methods-and-ops">Group generic methods and Ops</h2>
+<p>Some methods are grouped into groups called <em>group generics</em> functions. These methods are dispatched when any of the grouped functions are called. While it might look strange at first look, this allows for some neat tricks to efficiently define common mathematical operations for a large group of functions.</p>
+<p>For instance, consider <code>Ops.POSIXt</code> which defines <em>arithmetic</em>, <em>logical</em> and <em>relational</em> operators for the S3 class <code>POSIXt</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>Ops.POSIXt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>function (e1, e2) 
+{
+    if (nargs() == 1L) 
+        stop(gettextf("unary '%s' not defined for \"POSIXt\" objects", 
+            .Generic), domain = NA)
+    boolean &lt;- switch(.Generic, `&lt;` = , `&gt;` = , `==` = , `!=` = , 
+        `&lt;=` = , `&gt;=` = TRUE, FALSE)
+    if (!boolean) 
+        stop(gettextf("'%s' not defined for \"POSIXt\" objects", 
+            .Generic), domain = NA)
+    if (inherits(e1, "POSIXlt") || is.character(e1)) 
+        e1 &lt;- as.POSIXct(e1)
+    if (inherits(e2, "POSIXlt") || is.character(e2)) 
+        e2 &lt;- as.POSIXct(e2)
+    check_tzones(e1, e2)
+    NextMethod(.Generic)
+}
+&lt;bytecode: 0x5581bc403cb8&gt;
+&lt;environment: namespace:base&gt;</code></pre>
+</div>
+</div>
+<p>First, the function checks if only a single argument was passed, because unary operators are not defined.</p>
+<p>Then it uses <code>switch</code> statement, which evaluates to <code>TRUE</code> if one of <code>&lt;</code>, <code>&gt;</code>, <code>==</code>, <code>!=</code>, <code>&lt;=</code>, and <code>&gt;=</code> matches the <code>.Generic</code> variable, which is an automatic variable initialized to the dispatched generics from the <code>Ops</code> group. So if the function call was <code>!POSIXt</code>, the <code>.Generic</code> is the negation operator <code>!</code>. The <code>switch</code> statement thus works as a check whether a particular operator makes sense for the class, throwing error if the operation was not defined.</p>
+<p>This doesn’t mean that operators not specified in the switch are undefined. In fact, both <code>+.POSIXt</code> and <code>-.POSIXt</code> exists.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+POSIXt, POSIXlt and POSIXct
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>R contains a number of different classes for dates.</p>
+<p><code>POSIXct</code> is a signed number of seconds since the begining of 1970 (UCT time zone), the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix time</a>.</p>
+<p><code>POSIXlt</code> is a named list of vectors with <code>sec</code>, <code>min</code>, <code>hour</code>, <code>mday</code> and so on.</p>
+<p><code>POSIXct</code> is a really simple and convenient way to keep time, but not very human readable (unless you are Unix guru). <code>POSIXlt</code> is a nice human-readable format, but not very convenient when you want to store precise times in a <code>data.frame</code></p>
+<p><code>POSIXt</code> is a virtual class, both <code>POSIXct</code> and <code>POSIXlt</code> inherits from it. This means that when you define a method for <code>POSIXt</code>, it will automatically work for <code>POSIXct</code> and <code>POSIXlt</code>.</p>
+</div>
+</div>
+<p>Since <code>POSIXt</code> is a virtual class, and math with a number of seconds <code>POSIXct</code> is simpler than math on a complex data structure <code>POSIXlt</code> (see the box), what follows is a conversion into <code>POSIXct</code>, and the call to <code>NextMethod()</code>, which simply calls the appropriate method for the <code>.Generic</code> on the modified parameters. There is nothing simple on <code>NextMethod()</code> and we will talk about it later, when we are talking in-depth about the S3 system.</p>
+<section id="double-dispatch" class="level3">
+<h3 class="anchored" data-anchor-id="double-dispatch">Double dispatch</h3>
+<p>Methods in the <code>Ops</code> group are special because most of them are binary and they need to do something called <a href="https://en.wikipedia.org/wiki/Double_dispatch">double dispatch</a>. For instance, if you are adding objects of class <code>foo</code> and <code>bar</code>, you need to dispatch the correct method for this particular addition, taking in account classes of both objects, not just <code>foo</code> or <code>bar</code> independently. To keep addition comutative, method needs should be identical even if the order of addition is changed (<code>bar + foo</code>).</p>
+<p>S3 has rather primitive double-dispatch system, the rules are as follows:</p>
+<ol type="1">
+<li>If neither objects has a method, use internal method.</li>
+<li>If only one object has a method, use that method.</li>
+<li>If both objects have a method, and the methods:
+<ol type="a">
+<li>are identical, use that method.</li>
+<li>are not identical, throw a warning and use internal methods.</li>
+</ol></li>
+</ol>
+<p>To demonstrate this, we define a helper function and methods for the <code>+</code> generic for classes <code>foo</code> and <code>bar</code>. These simply return <code>NULL</code> and print a message, which will tell us which method was dispatched.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># helper to make object less wordy</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">=</span> <span class="cf">function</span>(class){</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">structure</span>(<span class="dv">1</span>, <span class="at">class=</span>class)</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">+.foo</span><span class="st">`</span> <span class="ot">=</span> <span class="cf">function</span>(...){<span class="fu">message</span>(<span class="st">"foo"</span>)}</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">+.bar</span><span class="st">`</span> <span class="ot">=</span> <span class="cf">function</span>(...){<span class="fu">message</span>(<span class="st">"bar"</span>)}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The first rule is just a normal addition:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+</div>
+<p>According to the second rule, the <code>+.foo</code> method is dispatched:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="fu">obj</span>(<span class="st">"foo"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>foo</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>NULL</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">obj</span>(<span class="st">"foo"</span>) <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>foo</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>NULL</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">obj</span>(<span class="st">"foo"</span>) <span class="sc">+</span> <span class="fu">obj</span>(<span class="st">"baz"</span>) <span class="co"># no method +.baz</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>foo</code></pre>
+</div>
 <div class="cell-output cell-output-stdout">
 <pre><code>NULL</code></pre>
 </div>
 </div>
-<p>This overloading will work well for user-defined S3 classes.</p>
+<p>According to the third rule, since methods are not identical, we will get a warning.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">+.foobar</span><span class="st">`</span> <span class="ot">=</span> <span class="cf">function</span>(x,y){<span class="fu">paste0</span>(x,y)}</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">structure</span>(<span class="st">"foo"</span>, <span class="at">class =</span> <span class="st">"foobar"</span>) <span class="sc">+</span> <span class="fu">structure</span>(<span class="st">"bar"</span>, <span class="at">class =</span> <span class="st">"foobar"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">obj</span>(<span class="st">"foo"</span>) <span class="sc">+</span> <span class="fu">obj</span>(<span class="st">"bar"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Incompatible methods ("+.foo", "+.bar") for "+"</code></pre>
+</div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "foobar"</code></pre>
+<pre><code>[1] 2
+attr(,"class")
+[1] "foo"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">obj</span>(<span class="st">"bar"</span>) <span class="sc">+</span> <span class="fu">obj</span>(<span class="st">"foo"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Incompatible methods ("+.bar", "+.foo") for "+"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2
+attr(,"class")
+[1] "bar"</code></pre>
 </div>
 </div>
-<p>Another way is to overwrite the <code>+</code> function with user-defined function, but don’t do this. If you think that the <code>+</code> semantics makes sense for strings, just define the <code>%+%</code> operator:</p>
+<p>Finally, if we redefine the <code>+.foo</code> and the <code>+.bar</code> to be identical, addition works again:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">%+%</span><span class="st">`</span> <span class="ot">=</span> <span class="cf">function</span>(x,y){<span class="fu">paste0</span>(x,y)}</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="st">"foo"</span> <span class="sc">%+%</span> <span class="st">"bar"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">+.foo</span><span class="st">`</span> <span class="ot">=</span> <span class="cf">function</span>(...){<span class="fu">message</span>(<span class="st">"foobar"</span>)}</span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">+.bar</span><span class="st">`</span> <span class="ot">=</span> <span class="cf">function</span>(...){<span class="fu">message</span>(<span class="st">"foobar"</span>)}</span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a><span class="fu">obj</span>(<span class="st">"foo"</span>) <span class="sc">+</span> <span class="fu">obj</span>(<span class="st">"bar"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>foobar</code></pre>
+</div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "foobar"</code></pre>
+<pre><code>NULL</code></pre>
 </div>
 </div>
-<!--```{r}-->
-<!--getObjects = function(name, all=TRUE){-->
-<!--    pkg = getNamespace(name)-->
-<!--    sapply(ls(pkg), get, pkg)-->
-<!--    }-->
-<!--```-->
+<p>Notice that if one of the object doesn’t have defined an S3 method, we can make the S3 method that is dispatched quite complex and built-in support for different types. But this mechanism will be fragile and once someone defines method for one of the supported types, our method would be ignored and the dispatch would default to an internal method (with warning). For an explicit double dispatch system that can be further extended, we would need to go for S4 classes.</p>
+</section>
+</section>
+<section id="example-sparse_vector" class="level2">
+<h2 class="anchored" data-anchor-id="example-sparse_vector">Example: sparse_vector</h2>
+<p>As an example, we will create an S3 class <code>sparse_vector</code>. There is an S4 class in the <code>Matrix</code> package, which is a more reasonable choice since S4 methods can be extended, but we do this only for demonstration purposes.</p>
+<p>First, we will define our class, sparse vector is defined by the vector of values <code>x</code>, vector of indices <code>i</code> and the length of the vector. Normally, we would make a barebone <code>new_sparse_vector</code> constructor, and the <code>sparse_vector</code> one would be an interface that would also check validity of input parameters, but we will keep it simple.</p>
+<p>We also create a method for the <code>as.vector</code> generics, so that we can easily unroll our sparse vector into a normal one.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>sparse_vector <span class="ot">=</span> <span class="cf">function</span>(x, i, length){</span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">structure</span>(<span class="fu">list</span>(</span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> x,</span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">i =</span> i,</span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">length =</span> length</span>
+<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a>        ), <span class="at">class =</span> <span class="st">"sparse_vector"</span>)</span>
+<span id="cb83-7"><a href="#cb83-7" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb83-8"><a href="#cb83-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-9"><a href="#cb83-9" aria-hidden="true" tabindex="-1"></a>as.vector.sparse_vector <span class="ot">=</span> <span class="cf">function</span>(x, ...){</span>
+<span id="cb83-10"><a href="#cb83-10" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">=</span> <span class="fu">vector</span>(<span class="at">mode=</span><span class="fu">mode</span>(x<span class="sc">$</span>x), <span class="at">length=</span>x<span class="sc">$</span>length)</span>
+<span id="cb83-11"><a href="#cb83-11" aria-hidden="true" tabindex="-1"></a>    y[x<span class="sc">$</span>i] <span class="ot">=</span> x<span class="sc">$</span>x</span>
+<span id="cb83-12"><a href="#cb83-12" aria-hidden="true" tabindex="-1"></a>    y</span>
+<span id="cb83-13"><a href="#cb83-13" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb83-14"><a href="#cb83-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-15"><a href="#cb83-15" aria-hidden="true" tabindex="-1"></a>print.sparse_vector <span class="ot">=</span> <span class="cf">function</span>(x, ...){</span>
+<span id="cb83-16"><a href="#cb83-16" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">=</span> <span class="fu">rep</span>(<span class="st">"."</span>, x<span class="sc">$</span>length)</span>
+<span id="cb83-17"><a href="#cb83-17" aria-hidden="true" tabindex="-1"></a>    y[x<span class="sc">$</span>i] <span class="ot">=</span> <span class="fu">as.character</span>(x<span class="sc">$</span>x)</span>
+<span id="cb83-18"><a href="#cb83-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(y, <span class="at">quote=</span><span class="cn">FALSE</span>)</span>
+<span id="cb83-19"><a href="#cb83-19" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb83-20"><a href="#cb83-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-21"><a href="#cb83-21" aria-hidden="true" tabindex="-1"></a>a <span class="ot">=</span> <span class="fu">sparse_vector</span>(<span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">8</span>), <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">6</span>), <span class="dv">10</span>)</span>
+<span id="cb83-22"><a href="#cb83-22" aria-hidden="true" tabindex="-1"></a>a</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] . 3 . 5 . 8 . . . .</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.vector</span>(a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 0 3 0 5 0 8 0 0 0 0</code></pre>
+</div>
+</div>
+<p>We want to support all operations in the group generics <code>Ops</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>Ops.sparse_vector <span class="ot">=</span> <span class="cf">function</span>(e1, e2){</span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">inherits</span>(e1, <span class="st">"sparse_vector"</span>))</span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>        e1 <span class="ot">=</span> <span class="fu">as.vector</span>(e1)</span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If Ops is unary, e2 is missing</span></span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">missing</span>(e2) <span class="sc">&amp;&amp;</span> <span class="fu">inherits</span>(e2, <span class="st">"sparse_vector"</span>))</span>
+<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a>        e2 <span class="ot">=</span> <span class="fu">as.vector</span>(e2)</span>
+<span id="cb87-7"><a href="#cb87-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">NextMethod</span>(.Generic)</span>
+<span id="cb87-8"><a href="#cb87-8" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb87-9"><a href="#cb87-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-10"><a href="#cb87-10" aria-hidden="true" tabindex="-1"></a>a <span class="sc">+</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  2  5  2  7  2 10  2  2  2  2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">+</span> a</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  2  5  2  7  2 10  2  2  2  2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>a <span class="sc">*</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  0  6  0 10  0 16  0  0  0  0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>a <span class="sc">==</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> a</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  0 -3  0 -5  0 -8  0  0  0  0</code></pre>
+</div>
+</div>
+<p>And essentially for free, we suddenly support all operations. But this isn’t very efficient if we are summing two sparse vectors, for instance. So for some operations, we define their own functions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">+.sparse_vector</span><span class="st">`</span> <span class="ot">=</span> <span class="cf">function</span>(e1, e2){</span>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">"+.sparse_vector dispatched"</span>)</span>
+<span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">nargs</span>() <span class="sc">==</span> 1L)</span>
+<span id="cb97-4"><a href="#cb97-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(e1)</span>
+<span id="cb97-5"><a href="#cb97-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb97-6"><a href="#cb97-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">inherits</span>(e1, <span class="st">"sparse_vector"</span>) <span class="sc">&amp;&amp;</span> <span class="fu">inherits</span>(e2, <span class="st">"sparse_vector"</span>)){</span>
+<span id="cb97-7"><a href="#cb97-7" aria-hidden="true" tabindex="-1"></a>        i <span class="ot">=</span> <span class="fu">union</span>(e1<span class="sc">$</span>i, e2<span class="sc">$</span>i) <span class="sc">|&gt;</span> <span class="fu">sort</span>()</span>
+<span id="cb97-8"><a href="#cb97-8" aria-hidden="true" tabindex="-1"></a>        j <span class="ot">=</span> <span class="fu">intersect</span>(e1<span class="sc">$</span>i, e2<span class="sc">$</span>i) <span class="sc">|&gt;</span> <span class="fu">sort</span>()</span>
+<span id="cb97-9"><a href="#cb97-9" aria-hidden="true" tabindex="-1"></a>        l <span class="ot">=</span> <span class="fu">max</span>(e1<span class="sc">$</span>length, e2<span class="sc">$</span>length) <span class="co"># ignoring recycling for now</span></span>
+<span id="cb97-10"><a href="#cb97-10" aria-hidden="true" tabindex="-1"></a>        y <span class="ot">=</span> <span class="fu">sparse_vector</span>(<span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">length</span>(i)), i, l)</span>
+<span id="cb97-11"><a href="#cb97-11" aria-hidden="true" tabindex="-1"></a>        y<span class="sc">$</span>x[i <span class="sc">%in%</span> e1<span class="sc">$</span>i] <span class="ot">=</span> e1<span class="sc">$</span>x</span>
+<span id="cb97-12"><a href="#cb97-12" aria-hidden="true" tabindex="-1"></a>        y<span class="sc">$</span>x[i <span class="sc">%in%</span> e2<span class="sc">$</span>i] <span class="ot">=</span> e2<span class="sc">$</span>x</span>
+<span id="cb97-13"><a href="#cb97-13" aria-hidden="true" tabindex="-1"></a>        y<span class="sc">$</span>x[i <span class="sc">%in%</span> j] <span class="ot">=</span> e1<span class="sc">$</span>x[e1<span class="sc">$</span>i <span class="sc">%in%</span> j] <span class="sc">+</span> e2<span class="sc">$</span>x[e2<span class="sc">$</span>i <span class="sc">%in%</span> j]</span>
+<span id="cb97-14"><a href="#cb97-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(y)</span>
+<span id="cb97-15"><a href="#cb97-15" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb97-16"><a href="#cb97-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">inherits</span>(e1, <span class="st">"sparse_vector"</span>)){</span>
+<span id="cb97-17"><a href="#cb97-17" aria-hidden="true" tabindex="-1"></a>        e2[e1<span class="sc">$</span>i] <span class="ot">=</span> e2[e1<span class="sc">$</span>i] <span class="sc">+</span> e1<span class="sc">$</span>x</span>
+<span id="cb97-18"><a href="#cb97-18" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(e2)</span>
+<span id="cb97-19"><a href="#cb97-19" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb97-20"><a href="#cb97-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">inherits</span>(e2, <span class="st">"sparse_vector"</span>)){</span>
+<span id="cb97-21"><a href="#cb97-21" aria-hidden="true" tabindex="-1"></a>        e1[e2<span class="sc">$</span>i] <span class="ot">=</span> e1[e2<span class="sc">$</span>i] <span class="sc">+</span> e2<span class="sc">$</span>x</span>
+<span id="cb97-22"><a href="#cb97-22" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(e1)</span>
+<span id="cb97-23"><a href="#cb97-23" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb97-24"><a href="#cb97-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">"This should be unreachable state"</span>)</span>
+<span id="cb97-25"><a href="#cb97-25" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb97-26"><a href="#cb97-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb97-27"><a href="#cb97-27" aria-hidden="true" tabindex="-1"></a>b <span class="ot">=</span> <span class="fu">sparse_vector</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">6</span>), <span class="dv">10</span>)</span>
+<span id="cb97-28"><a href="#cb97-28" aria-hidden="true" tabindex="-1"></a><span class="sc">+</span> a</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>+.sparse_vector dispatched</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] . 3 . 5 . 8 . . . .</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="sc">+</span> b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>+.sparse_vector dispatched</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 1 . . 2 . 3 . . . .</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a>a <span class="sc">+</span> b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>+.sparse_vector dispatched</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 1  3  .  7  .  11 .  .  .  . </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>a <span class="sc">+</span> <span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>+.sparse_vector dispatched</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 1 4 1 6 1 9 1 1 1 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>b <span class="sc">+</span> <span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>+.sparse_vector dispatched</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 2 1 1 3 1 4 1 1 1 1</code></pre>
+</div>
+</div>
+<p>The code isn’t perfect, we ignore a lot of recycling, which means operations with matrices will not work correctly, and so on. But as an example of the <code>Ops</code> and operator overloading, this should be sufficient. One obvious improvement would be redefining the operator <code>[</code> to make subsetting of the vector much easier, and thus the code cleaner. We will look at this in the next article.</p>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>In this part, we have learned about operators, and more closely explored arithmetic, logical and relational operators. On top of this, we have learned more about group generic functions, double dispatch system, and managed to implement a simple <code>sparse_vector</code> class with working arithmetic, logical and relational operators.</p>
 
 
 </section>
-</section>
 
-
-<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
-
-<ol>
-<li id="fn1"><p>For a more broad description of related ideas, see <a href="https://en.wikipedia.org/wiki/Generic_programming">https://en.wikipedia.org/wiki/Generic_programming</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol>
-</section></div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

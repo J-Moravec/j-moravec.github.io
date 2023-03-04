@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/baseR_AZ/3_operators.html",
       "/posts/baseR_AZ/2_functions.html",
       "/posts/baseR_AZ/1_introduction.html",
       "/posts/hello_world/index.html"
