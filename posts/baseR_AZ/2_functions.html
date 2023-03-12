@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2023-02-21">
+<meta name="dcterms.date" content="2023-02-25">
 <meta name="description" content="Closures, primitives and internals">
 
 <title>Jiří C. Moravec - Base R from A to Z: Types of functions (2)</title>
@@ -222,7 +222,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">February 21, 2023</p>
+      <p class="date">February 25, 2023</p>
     </div>
   </div>
   
@@ -352,7 +352,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell-output cell-output-stdout">
 <pre><code>function (x, ...) 
 UseMethod("print")
-&lt;bytecode: 0x55926d523a58&gt;
+&lt;bytecode: 0x558f238a6c58&gt;
 &lt;environment: namespace:base&gt;</code></pre>
 </div>
 </div>
@@ -376,7 +376,7 @@ UseMethod("print")
 <pre><code>$`-`
 function (e1, e2) 
 UseMethod("-")
-&lt;bytecode: 0x55926ad92ec8&gt;
+&lt;bytecode: 0x558f21115ed8&gt;
 &lt;environment: namespace:base&gt;</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>primitive_generics <span class="sc">|&gt;</span> <span class="fu">names</span>() <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -392,7 +392,7 @@ UseMethod("-")
 <div class="cell-output cell-output-stdout">
 <pre><code>function (length.out) 
 NULL
-&lt;bytecode: 0x55926ad81b20&gt;
+&lt;bytecode: 0x558f21104b30&gt;
 &lt;environment: namespace:base&gt;</code></pre>
 </div>
 </div>
