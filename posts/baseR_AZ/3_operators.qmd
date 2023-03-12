@@ -134,6 +134,23 @@ This works because the selection vector is being recycled to the full length usi
 
 :::
 
+#### The strange case of **
+In some languages such as Python, `**` is a power operator. This is also supported in R:
+
+```{r}
+2 ^ 3
+
+2 ** 3
+```
+Strangely, `**` is not documented, `**` is not a primitive, and when you type bare `**` in R, you will get a curious error:
+
+```{r}
+#| error = TRUE
+**
+```
+
+There is a small note in the `?Arithmetic`. Apparently, `**` existed in S (the precedesors of R) but was deprecated. For backward compatibility, the R parser kept this functionality and translates `**` into `^`. Since it is undocumented and not part of the official language specification, do not use `**`.
+
 ## Logical operators and functions
 Since we are already talking about the logical operators, I thought it might be more useful to look more closely at the *logical* type and functions that operate with it.
 
@@ -157,6 +174,70 @@ This makes `&&` and `||` useful when doing control flow operations with `if(cond
 ```{r}
 c(TRUE, TRUE) && c(TRUE, FALSE) # only the first value is used
 ```
+
+#### Short-circuting
+In addition, the `&&` and `||` [short-circuits](https://en.wikipedia.org/wiki/Short-circuit_evaluation), the second expression is evaluated only if it is required. For instance, in the expression:
+
+```
+a || b
+```
+If `a` evaluates to `TRUE`, the whole expression evaluates to `TRUE` regardless of `b`.
+This means that if `a = TRUE`, `b` doesn't have to be evaluated and in fact isn't evaluated.
+So if the `b` was a function call with some side effects, the side effects (reading file, printing, increasing a counter) are never evaluated. For instance, consider an expression that prints `foo` and returns `TRUE`:
+
+```
+{print("foo"); TRUE}
+```
+
+If we use two of these expression with `||`, only single `foo` will be printed:
+
+```{r}
+{print("foo"); TRUE} || {print("foo"); TRUE}
+```
+
+Contrast this with the `&` or `|` which do not short-curcuit:
+
+```{r}
+{print("foo"); TRUE} | {print("foo"); TRUE}
+```
+
+In some languages, this is used as a control structure, since this behaviour can be transformed into:
+
+```
+if a then a, else b
+```
+
+But I haven't seen this being used in R.
+Since the R code is typically light on side-effects, I don't think there is a much value in trying to be cheeky in this way.
+
+#### NA behaviour
+`NA` or *not available* is a peculiar value (or values, since there is `NA_character_`, `NA_integer_` atp.) that symbolize a missing value. Most programing languages do not have this (usually, they only have `NULL`), but R was designed as a domain-specific language for data-analysis and unknown values are a common problem.
+
+Typically, any numerical calculation involving `NA` typically results in `NA`.
+```{r}
+3 + NA
+5 * NA
+```
+
+Logical operations are slightly different and result in `NA` only if the expression depends on it.
+You can intepret this dependence in a similar manner as short-circuting, but this works even for the non-short-circuiting operators `|` and `||`.
+
+For example, in the `x | NA`, if `x` is `TRUE`, the whole expression is also `TRUE`. But if `x` is `FALSE`, the whole expression depends on the unknown value `NA`, which means that the expression evaluates to `NA`.
+```{r}
+TRUE | NA
+
+FALSE | NA
+```
+
+Similarly, in the `x & NA`, if `x` is `FALSE`, the whole expression is `FALSE`. But if `x` is `TRUE`, the result of the expression depends on the `NA` and the expression evaluates to `NA`.
+
+```{r}
+FALSE & NA
+
+TRUE & NA
+```
+
+In the same manner, the `!NA` depends on the `NA` so it evaluates to `NA` and so on.
 
 ### Logical functions
 Now, lets move to the functions. The `isTRUE()` and `isFALSE()` are also useful shorthands for control flow.
