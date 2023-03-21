@@ -10,13 +10,13 @@ toc: true
 toc-depth: 4
 ---
 
-In this blogpost, we will look at the most popular names in New Zealand and build a relational database out of them. We will go through database design, such as first, second and third normal form, consider how the database will be used, how the data will be queries, and how to try to de-duplicate any information.
+In this blogpost, we will look at the most popular names in New Zealand and build a relational database out of them. We will go through database design, such as first, second and third normal form, consider how the database will be used, how the data will be queried, and how to try to de-duplicate any information.
 
-**Note of warning:** I am not an expert on a database design or SQL, I am just learning and trying to put a theoretical knowledge of a few books into a practice using an interesting project that is a more than just a toy example.
+**Note of warning:** I am not an expert on database design or SQL, I am just learning and trying to put the theoretical knowledge of a few books into practice using an interesting project that is more than just a toy example.
 
 ## The Data
 
-The data we will be working with comes from the [Department of Internal Affairs](https://www.dia.govt.nz/diawebsite.nsf/wpg_URL/Services-Births-Deaths-and-Marriages-Most-Popular-Male-and-Female-First-Names). It contain the 100 most popular male and female names from 1954 to 2022.
+The data we will be working with comes from the [Department of Internal Affairs](https://www.dia.govt.nz/diawebsite.nsf/wpg_URL/Services-Births-Deaths-and-Marriages-Most-Popular-Male-and-Female-First-Names). It contains the 100 most popular male and female names from 1954 to 2022.
 The data is presented as a series of columns containing a tuple `(name, count)`, with male and female names separated into their own tables.
 
 | Rank | 1954 | - | 1955 | - | 1956 | - |
@@ -26,13 +26,13 @@ The data is presented as a series of columns containing a tuple `(name, count)`,
 | 2    | Susan | 735 | Christine | 689 | Christine | 754 |
 | 3    | Margaret | 562 | Margaret | 559 | Karen | 615 |
 
-For following database design, there are some considerations:
+For the following database design, there are some considerations:
 
 * Each column contains 100 names, but that doesn't mean that we are operating with only 100 names. Some names popular in 1960 might not be popular in 2000.
-* The data covers names over the period of 69 years, but we would like to make adding new data (new years) easy.
-* Some names are unisex and may appear in both girl and boy table. For instance, Ashley used to be popular unisex name in 1980s.
+* The data covers names over 69 years, but we would like to make adding new data (new years) easy.
+* Some names are unisex and may appear in both girl and boy tables. For instance, Ashley used to be a popular unisex name in the 1980s.
 
-The data is presented in what would one call the *wide format*. We could go even wider by including a sex column and merging the tables into a single wide table, moving each name into its own row and removing rank, and so on.
+The data is presented in what would one call the *wide format*. We could go even wider by including a sex column and merging the tables into a single wide table, moving each name into its row and removing rank, and so on.
 
 Consider a much simpler row-oriented *long format*:
 
@@ -45,36 +45,36 @@ Consider a much simpler row-oriented *long format*:
 | Christine | 1955 | 689
 | Margaret | 1955 | 559 |
 
-We could easily add an additional column for sex and represent the whole data with just 4 columns. Or 5, if we also include rank, but rank feels like a derived variable. We can imagine that a new data, such as a newly discovered book from a now defunct hospital could bring information about a few more births such that historical rank would change. We would have to recalculate rank.
+We could easily add an additional column for sex and represent the whole data with just 4 columns. Or 5, if we also include rank, but rank feels like a derived variable. We can imagine that new data, such as a newly discovered book from a now-defunct hospital could bring information about a few more births such that historical rank would change. We would have to recalculate the rank.
 
-In data-science, the long format is especially popular because it is easy to work with.
-And from my experience, it is much easier for software to grog milion of rows rather than a milion of columns.
+In data science, the long format is especially popular because it is easy to work with.
+And from my experience, it is much easier for software to grog a million rows rather than a million columns.
 
-Both of these forms are _flat file_ representation, something you would get in a CSV file (and loaded in an R or such).
+Both of these forms are _flat file_ representations, something you would get in a CSV file (and loaded in an R or such).
 
 ## The Design
 
 When designing the SQL table, we want to consider a few issues:
 
 * how the data will be queried
-* design database to prevent duplication
-* design database to prevent adding invalid data
+* design a database to prevent duplication
+* design a database to prevent adding invalid data
 
-Invalid data and duplication is prevented by normalizing the database schema, the famous first, second and third normal forms. *Database in Depth* from C. J. Date mentions fourth, fifth normal forms and more, but that book feels to me very theoretical, it will probably make more sense to me once I am bit more familiar with practice.
+Invalid data and duplication is prevented by normalizing the database schema, the famous first, second and third normal forms. *Database in Depth* from C. J. Date mentions fourth and fifth normal forms and more, but that book feels to me very theoretical, it will probably make more sense to me once I am a bit more familiar with the practice.
 
-On the other hand, the practical usage of the database might sometimes run against the normalization. Apparently there is a lot of discussion about the need of normalization or, on the other hand, considering the normalization as a _common sense_.
+On the other hand, the practical usage of the database might sometimes run against normalization. Apparently, there is a lot of discussion about the need for normalization or, on the other hand, considering normalization as _common sense_.
 
-First of all, the wide format. If we had only a few columns, it would be incredible easy to define a _names_ table, to serve as a foreign key, and then a table for every year, such as _year1954_, _year1955_ and so on. Querying data and joining tables would be relatively easy. And since there is no relationship between years, they all would depend only on the _names_ table, adding an additional year table would be relatively easy.
+First of all, the wide format. If we had only a few columns, it would be incredibly easy to define a _names_ table, to serve as a foreign key, and then a table for every year, such as _year1954_, _year1955_ and so on. Querying data and joining tables would be relatively easy. And since there is no relationship between years, they all would depend only on the _names_ table, adding an additional year table would be relatively easy.
 
 ![Example of a database design using the wide format.](example_wide.svg)
 
-However, most databases are optimized towards rows, not columns. Adding a new table is a relatively expensive operation compared to adding an additional row. This way, we would end with a 69 tables for each year, with more tables every year. That is quite a lot of tables!
+However, most databases are optimized towards rows, not columns. Adding a new table is a relatively expensive operation compared to adding an additional row. This way, we would end with 69 tables for each year, with more tables every year. That is quite a lot of tables!
 Additionally, if we would like to know the most common name since 1954, we would have to query every single table.
 
-Yet, this approach have some advantages. Typically, old tables are not modified and tables are populated only once. New tables are added only once a year as the data are obtained.
-The database structure would be simple, every name could occur in every year table only once, giving it a simple constrain.
+Yet, this approach has some advantages. Typically, old tables are not modified and tables are populated only once. New tables are added only once a year as the data are obtained.
+The database structure would be simple, every name could occur in every year table only once, giving it a simple constraint.
 
-What I think would be a better and a more traditional approach is to model this relationship as a one-to-many, one name to many years. We would have a _name_ table, _years_ table, and a _value_ table. The first two tables are a simple tables containing names or years respectively.
+What I think would be a better and more traditional approach is to model this relationship as one-to-many, one name to many years. We would have a _name_ table, _years_ table, and a _value_ table. The first two tables are simple tables containing names or years respectively.
 
 ![Example of a database design using the long format.](example_long.svg)
 
@@ -82,10 +82,10 @@ And this is the database we will implement.
 
 ## The Implementation
 
-The _primary key_ is a contraint that uniquely identifies every row of a table.
-Each table can have only single primary key. This is an incredibly powerfull tool to enforce integrity of a table.
+The _primary key_ is a constraint that uniquely identifies every row of a table.
+Each table can have only a single primary key. This is an incredibly powerful tool to enforce the integrity of a table.
 
-Similarly, the _foreign key_ is field that refers to a primary key of another table, this enforces referential integrity.
+Similarly, the _foreign key_ is a field that refers to a primary key of another table, this enforces referential integrity.
 
 A common practice is to create an ID that serves as a primary key, but we do not need that.
 We might need it if we allowed for varied spelling and treated all instances of that as a single unique name.
@@ -102,7 +102,7 @@ CREATE TABLE Years (
 );
 ```
 
-The `_counts_` table is more interesting. We know that we can have any combination of a name and a year, but each combination can be in a table only once. We can enforce this my creating a primary key from a tuple of `(name, year)`, while enforcing that both of these values depend on the `Names` and `Years` table through foreign keys.
+The `_counts_` table is more interesting. We know that we can have any combination of a name and a year, but each combination can be in a table only once. We can enforce this by creating a primary key from a tuple of `(name, year)` while enforcing that both of these values depend on the `Names` and `Years` table through foreign keys.
 
 ```
 CREATE TABLE Counts (
@@ -130,9 +130,9 @@ INSERT INTO Names(name) VALUES("Margaret");
 INSERT INTO Counts (name, year, count) VALUES ("Margaret", 1954, 562);
 ```
 
-The `Names` table is a bit extra, but gives us referential integrity.
-It protects us against typos, gives us an option to include a potential `Rank` table, and would allow us to add alternative speling, translation and other features.
-It gives us also a clearly visible list of all names. All these advantages are, I think, worth a little more pain when populating tables.
+The `Names` table is a bit extra but gives us referential integrity.
+It protects us against typos, gives us the option to include a potential `Rank` table, and would allow us to add alternative spelling, translation and other features.
+It gives us also a visible list of all names. All these advantages are, I think, worth a little more pain when populating tables.
 
 Now, populating tables manually is a pain, so here we do it in R using the `DBI` and `RSQLite` packages.
 
@@ -854,10 +854,10 @@ The best book for beginners is [The Manga Guide to Databases](https://nostarch.c
 
 Next, I would suggest [SQL Antipatterns](https://pragprog.com/titles/bksqla/sql-antipatterns/). It introduces you to some patterns and anti-patterns in SQL and database design. Easy to read, comprehensive and quite practical if you want to get into designing databases.
 
-The [Seven Databases in Seven Weeks](https://www.oreilly.com/library/view/seven-databases-in/9781680505962/) would be next in line. Unlike the previous ones, it doesn't teach you about database design or SQL tricks. Instead, it is an overview of different database types and products, not just relational databases and not just SQL. It is not in-depth introduction to SQL or relational databases, so do not make this the first book you read, instead this book will introduce you to multitude of other solutions.
+The [Seven Databases in Seven Weeks](https://www.oreilly.com/library/view/seven-databases-in/9781680505962/) would be next in line. Unlike the previous ones, it doesn't teach you about database design or SQL tricks. Instead, it is an overview of different database types and products, not just relational databases and not just SQL. It is not an in-depth introduction to SQL or relational databases, so do not make this the first book you read, instead, this book will introduce you to a multitude of other solutions.
 
-Finally, there is a gold standard [Database in Depth](https://www.oreilly.com/library/view/database-in-depth/0596100124/). It already assumes that you know quite a lot about databases, doesn't talk much about the SQL, instead it introduces language D, the perfect relational language, and talks more about the theory. Unlike other theory books I have read on other topics, this one seems to be quite fluffy. I have read 30 pages and I think that information could be condensed into 10. But then, you don't need to stare into a single equation with no accompanying explanation for 2 hours to understand it, like in those very dense theory books, because there is a 10 page explanation. So fluffiness might not be disadvantageous.
+Finally, there is a gold standard [Database in Depth](https://www.oreilly.com/library/view/database-in-depth/0596100124/). It already assumes that you know quite a lot about databases, and doesn't talk much about SQL, instead, it introduces language D, the perfect relational language, and talks more about the theory. Unlike other theory books I have read on other topics, this one seems to be quite fluffy. I have read 30 pages and I think that information could be condensed into 10. But then, you don't need to stare into a single equation with no accompanying explanation for 2 hours to understand it, like in those very dense theory books, because there is a 10-page explanation. So fluffiness might not be disadvantageous.
 
 ## The Summary
-We have picked dataset and went over some ideas and thoughts on how to convert it into database.
-We have then implemented the database using SQLite, populated it through R, and queried a bunch of interesting data. I hope you enjoyed this journey as I did. I will try to explore the dataset a bit more because I think there is a story hidden inside.
+We have picked a dataset and gone over some ideas and thoughts on how to convert it into a database.
+We then implemented the database using SQLite, populated it through R and queried a bunch of interesting data. The database we designed was not the most exciting, since the structure of the dataset was quite simple. Yet, I have learned quite a lot. I hope you enjoyed this journey as I did. I will try to explore the dataset a bit more because I think there is a story hidden inside.
