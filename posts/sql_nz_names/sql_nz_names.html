@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2023-03-22">
+<meta name="description" content="SQL, database design and the most popular names in New Zealand">
+
+<title>Jiří C. Moravec - Learn SQL with me: NZ names</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Jiří C. Moravec</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications.html">
+ <span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../software.html">
+ <span class="menu-text">Software</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/J-Moravec/"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/jcmoravec"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-data" id="toc-the-data" class="nav-link active" data-scroll-target="#the-data">The Data</a></li>
+  <li><a href="#the-design" id="toc-the-design" class="nav-link" data-scroll-target="#the-design">The Design</a></li>
+  <li><a href="#the-implementation" id="toc-the-implementation" class="nav-link" data-scroll-target="#the-implementation">The Implementation</a></li>
+  <li><a href="#the-querying" id="toc-the-querying" class="nav-link" data-scroll-target="#the-querying">The Querying</a></li>
+  <li><a href="#the-books" id="toc-the-books" class="nav-link" data-scroll-target="#the-books">The Books</a></li>
+  <li><a href="#the-summary" id="toc-the-summary" class="nav-link" data-scroll-target="#the-summary">The Summary</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Learn SQL with me: NZ names</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">sql</div>
+    <div class="quarto-category">NZ names</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    SQL, database design and the most popular names in New Zealand
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 22, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p>In this blogpost, we will look at the most popular names in New Zealand and build a relational database out of them. We will go through database design, such as first, second and third normal form, consider how the database will be used, how the data will be queries, and how to try to de-duplicate any information.</p>
+<p><strong>Note of warning:</strong> I am not an expert on a database design or SQL, I am just learning and trying to put a theoretical knowledge of a few books into a practice using an interesting project that is a more than just a toy example.</p>
+<section id="the-data" class="level2">
+<h2 class="anchored" data-anchor-id="the-data">The Data</h2>
+<p>The data we will be working with comes from the <a href="https://www.dia.govt.nz/diawebsite.nsf/wpg_URL/Services-Births-Deaths-and-Marriages-Most-Popular-Male-and-Female-First-Names">Department of Internal Affairs</a>. It contain the 100 most popular male and female names from 1954 to 2022. The data is presented as a series of columns containing a tuple <code>(name, count)</code>, with male and female names separated into their own tables.</p>
+<table class="table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 17%">
+<col style="width: 8%">
+<col style="width: 17%">
+<col style="width: 8%">
+<col style="width: 17%">
+<col style="width: 8%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Rank</th>
+<th>1954</th>
+<th style="text-align: right;">-</th>
+<th>1955</th>
+<th style="text-align: right;">-</th>
+<th>1956</th>
+<th style="text-align: right;">-</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>-</td>
+<td><strong>Name</strong></td>
+<td style="text-align: right;"><strong>Count</strong></td>
+<td><strong>Name</strong></td>
+<td style="text-align: right;"><strong>Count</strong></td>
+<td><strong>Name</strong></td>
+<td style="text-align: right;"><strong>Count</strong></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>Christine</td>
+<td style="text-align: right;">779</td>
+<td>Susan</td>
+<td style="text-align: right;">743</td>
+<td>Susan</td>
+<td style="text-align: right;">851</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>Susan</td>
+<td style="text-align: right;">735</td>
+<td>Christine</td>
+<td style="text-align: right;">689</td>
+<td>Christine</td>
+<td style="text-align: right;">754</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>Margaret</td>
+<td style="text-align: right;">562</td>
+<td>Margaret</td>
+<td style="text-align: right;">559</td>
+<td>Karen</td>
+<td style="text-align: right;">615</td>
+</tr>
+</tbody>
+</table>
+<p>For following database design, there are some considerations:</p>
+<ul>
+<li>Each column contains 100 names, but that doesn’t mean that we are operating with only 100 names. Some names popular in 1960 might not be popular in 2000.</li>
+<li>The data covers names over the period of 69 years, but we would like to make adding new data (new years) easy.</li>
+<li>Some names are unisex and may appear in both girl and boy table. For instance, Ashley used to be popular unisex name in 1980s.</li>
+</ul>
+<p>The data is presented in what would one call the <em>wide format</em>. We could go even wider by including a sex column and merging the tables into a single wide table, moving each name into its own row and removing rank, and so on.</p>
+<p>Consider a much simpler row-oriented <em>long format</em>:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th style="text-align: right;">Year</th>
+<th style="text-align: right;">Count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Christine</td>
+<td style="text-align: right;">1954</td>
+<td style="text-align: right;">779</td>
+</tr>
+<tr class="even">
+<td>Susan</td>
+<td style="text-align: right;">1954</td>
+<td style="text-align: right;">735</td>
+</tr>
+<tr class="odd">
+<td>Margaret</td>
+<td style="text-align: right;">1954</td>
+<td style="text-align: right;">562</td>
+</tr>
+<tr class="even">
+<td>Susan</td>
+<td style="text-align: right;">1955</td>
+<td style="text-align: right;">743</td>
+</tr>
+<tr class="odd">
+<td>Christine</td>
+<td style="text-align: right;">1955</td>
+<td style="text-align: right;">689</td>
+</tr>
+<tr class="even">
+<td>Margaret</td>
+<td style="text-align: right;">1955</td>
+<td style="text-align: right;">559</td>
+</tr>
+</tbody>
+</table>
+<p>We could easily add an additional column for sex and represent the whole data with just 4 columns. Or 5, if we also include rank, but rank feels like a derived variable. We can imagine that a new data, such as a newly discovered book from a now defunct hospital could bring information about a few more births such that historical rank would change. We would have to recalculate rank.</p>
+<p>In data-science, the long format is especially popular because it is easy to work with. And from my experience, it is much easier for software to grog milion of rows rather than a milion of columns.</p>
+<p>Both of these forms are <em>flat file</em> representation, something you would get in a CSV file (and loaded in an R or such).</p>
+</section>
+<section id="the-design" class="level2">
+<h2 class="anchored" data-anchor-id="the-design">The Design</h2>
+<p>When designing the SQL table, we want to consider a few issues:</p>
+<ul>
+<li>how the data will be queried</li>
+<li>design database to prevent duplication</li>
+<li>design database to prevent adding invalid data</li>
+</ul>
+<p>Invalid data and duplication is prevented by normalizing the database schema, the famous first, second and third normal forms. <em>Database in Depth</em> from C. J. Date mentions fourth, fifth normal forms and more, but that book feels to me very theoretical, it will probably make more sense to me once I am bit more familiar with practice.</p>
+<p>On the other hand, the practical usage of the database might sometimes run against the normalization. Apparently there is a lot of discussion about the need of normalization or, on the other hand, considering the normalization as a <em>common sense</em>.</p>
+<p>First of all, the wide format. If we had only a few columns, it would be incredible easy to define a <em>names</em> table, to serve as a foreign key, and then a table for every year, such as <em>year1954</em>, <em>year1955</em> and so on. Querying data and joining tables would be relatively easy. And since there is no relationship between years, they all would depend only on the <em>names</em> table, adding an additional year table would be relatively easy.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="example_wide.svg" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Example of a database design using the wide format.</figcaption><p></p>
+</figure>
+</div>
+<p>However, most databases are optimized towards rows, not columns. Adding a new table is a relatively expensive operation compared to adding an additional row. This way, we would end with a 69 tables for each year, with more tables every year. That is quite a lot of tables! Additionally, if we would like to know the most common name since 1954, we would have to query every single table.</p>
+<p>Yet, this approach have some advantages. Typically, old tables are not modified and tables are populated only once. New tables are added only once a year as the data are obtained. The database structure would be simple, every name could occur in every year table only once, giving it a simple constrain.</p>
+<p>What I think would be a better and a more traditional approach is to model this relationship as a one-to-many, one name to many years. We would have a <em>name</em> table, <em>years</em> table, and a <em>value</em> table. The first two tables are a simple tables containing names or years respectively.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="example_long.svg" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Example of a database design using the long format.</figcaption><p></p>
+</figure>
+</div>
+<p>And this is the database we will implement.</p>
+</section>
+<section id="the-implementation" class="level2">
+<h2 class="anchored" data-anchor-id="the-implementation">The Implementation</h2>
+<p>The <em>primary key</em> is a contraint that uniquely identifies every row of a table. Each table can have only single primary key. This is an incredibly powerfull tool to enforce integrity of a table.</p>
+<p>Similarly, the <em>foreign key</em> is field that refers to a primary key of another table, this enforces referential integrity.</p>
+<p>A common practice is to create an ID that serves as a primary key, but we do not need that. We might need it if we allowed for varied spelling and treated all instances of that as a single unique name.</p>
+<pre><code>CREATE TABLE Names (
+    name varchar(50),
+    PRIMARY KEY (name)
+);
+
+CREATE TABLE Years (
+    year int,
+    PRIMARY KEY (year)
+);</code></pre>
+<p>The <code>_counts_</code> table is more interesting. We know that we can have any combination of a name and a year, but each combination can be in a table only once. We can enforce this my creating a primary key from a tuple of <code>(name, year)</code>, while enforcing that both of these values depend on the <code>Names</code> and <code>Years</code> table through foreign keys.</p>
+<pre><code>CREATE TABLE Counts (
+    name varchar(50) NOT NULL,
+    year int NOT NULL,
+    count int NOT NULL,
+    PRIMARY KEY (name, year),
+    FOREIGN KEY (name) REFERENCES Names(name),
+    FOREIGN KEY (year) REFERENCES Years(year)
+);</code></pre>
+<p>Now we can populate tables:</p>
+<pre><code>INSERT INTO Years(year) VALUES (1954);
+
+INSERT INTO Names(name) VALUES ("Christine");
+INSERT INTO Counts (name, year, count) VALUES ("Christine", 1954, 779);
+
+INSERT INTO Names(name) VALUES ("Susan");
+INSERT INTO Counts (name, year, count) VALUES ("Susan", 1954, 735);
+
+INSERT INTO Names(name) VALUES("Margaret");
+INSERT INTO Counts (name, year, count) VALUES ("Margaret", 1954, 562);</code></pre>
+<p>The <code>Names</code> table is a bit extra, but gives us referential integrity. It protects us against typos, gives us an option to include a potential <code>Rank</code> table, and would allow us to add alternative speling, translation and other features. It gives us also a clearly visible list of all names. All these advantages are, I think, worth a little more pain when populating tables.</p>
+<p>Now, populating tables manually is a pain, so here we do it in R using the <code>DBI</code> and <code>RSQLite</code> packages.</p>
+<details>
+<summary>
+Click to unroll
+</summary>
+<p>First, we need to parse the file and get data for boys and girls:</p>
+<pre><code>library("openxlsx")
+file = "Top-100-girls-and-boys-names-since-1954.xlsx"
+
+
+get_name_table = function(file, sheet){
+    # The raw data has rather complex structure:
+    #  * 4 rows are noise/empty
+    #  * 2 rows of headers (year and name/number)
+    #  * 1 empty row
+    #  * 100 rows of data
+    #   * 3 rows are noise/empty
+    # Helper function
+    get_year_table = function(data, cols, year){
+        data.frame("Name" = data[,cols[1]],
+                   "Year" = as.integer(year),
+                   "Count" = data[,cols[2]])
+        }
+
+    data = openxlsx::read.xlsx(
+        file, sheet=sheet,
+        skipEmptyCols=FALSE, skipEmptyRows=FALSE,
+        colNames=FALSE
+        )
+
+    # Automatic skipEmptyCols and skipEmptyRows does not work properly in this case
+    data = data[-(1:4),] # 4 rows are noise
+    data = head(data, n=-3) # last 3 rows of noise
+    data = data[,-(1:2)] # First two columns are noise/rank
+
+    # convert to numeric first to remove any NAs that would turn into "NA" string otherwise
+    years = as.numeric(data[1,]) |&gt; na.omit() |&gt; c() |&gt; as.character()
+
+    # Now we can remove the 2 rows of header and one empty row
+    data = data[-(1:3),]
+
+    # First year is formed by two column (name, value)
+    res = list()
+    res[[years[1]]] = get_year_table(data, c(1,2), years[1])
+
+    # Every other year is formed by three column (empty, name, value)
+    for(i in seq(2, length(years))){
+        cols = 2:3+3*(i-2)+2
+        year = years[i]
+        res[[year]] = get_year_table(data, cols, year)
+        }
+
+    res = do.call(rbind, res)
+    rownames(res) = NULL
+
+    res
+    }
+
+girls = get_name_table(file, 1)
+boys = get_name_table(file, 2)</code></pre>
+<p>Then we create tables as shown before:</p>
+<pre><code>library("RSQLite")
+library("DBI")
+library("glue") # for better multiline strings
+database = dbConnect(RSQLite::SQLite(), "nznames.db")
+
+# Names and counts splitted according to gender
+dbExecute(database, "PRAGMA foreign_keys = ON;") |&gt; invisible()
+dbExecute(database, glue("
+    CREATE TABLE GirlNames (
+        name varchar(50),
+        PRIMARY KEY (name)
+    );")) |&gt; invisible()
+
+dbExecute(database, glue("
+    CREATE TABLE BoyNames (
+        name varchar(50),
+        PRIMARY KEY (name)
+    );")) |&gt; invisible()
+
+dbExecute(database, glue("
+    CREATE TABLE Years (
+        year int,
+        PRIMARY KEY (year)
+    );")) |&gt; invisible()
+
+dbExecute(database, glue("
+    CREATE TABLE GirlCounts (
+        name varchar(50) NOT NULL,
+        year int NOT NULL,
+        count int NOT NULL,
+        PRIMARY KEY (name, year),
+        FOREIGN KEY (name) REFERENCES GirlNames(name),
+        FOREIGN KEY (year) REFERENCES Years(year)
+    );")) |&gt; invisible()
+
+dbExecute(database, glue("
+    CREATE TABLE BoyCounts (
+        name varchar(50) NOT NULL,
+        year int NOT NULL,
+        count int NOT NULL,
+        PRIMARY KEY (name, year),
+        FOREIGN KEY (name) REFERENCES BoyNames(name),
+        FOREIGN KEY (year) REFERENCES Years(year)
+    );")) |&gt; invisible()</code></pre>
+<p>And now we can populate tables:</p>
+<pre><code>years = data.frame("year"=union(girls$Year, boys$Year) |&gt; sort())
+girl_names = data.frame("name" = girls$Name |&gt; unique())
+boy_names = data.frame("name" = boys$Name |&gt; unique())
+
+dbAppendTable(database, "Years", years)
+dbAppendTable(database, "GirlNames", girl_names)
+dbAppendTable(database, "BoyNames", boy_names)
+dbAppendTable(database, "GirlCounts", girls)
+dbAppendTable(database, "BoyCounts", boys)</code></pre>
+<p>Interestingly, the last statement fails because a primary key would be duplicated. How so? Turns out someone typed <code>Michael</code> twice!</p>
+<pre><code>any(duplicated(boys[,1:2]))
+
+find_duplicated = function(x, cols){
+    x[duplicated(x[,cols]) | duplicated(x[,cols], fromLast=TRUE),]
+    }
+find_duplicated(boys, 1:2)</code></pre>
+<p>In 1989, 741 boys were named Michael. And somehow also 52 boys. This is surely wrong and given the popularity of Michael, the second occurence is surely wrong. Unfortunately, we don’t know what the true value should be. Maybe if they used properly designed database like we did, it would warn them about this typo!</p>
+<p>So we clean the data and rerun the statement.</p>
+<pre><code>boys = boys[-anyDuplicated(boys[,1:2]),]
+dbAppendTable(database, "BoyCounts", boys)
+dbDisconnect(database)</code></pre>
+</details>
+<p>Now that we have the database, we can construct queries!</p>
+</section>
+<section id="the-querying" class="level2">
+<h2 class="anchored" data-anchor-id="the-querying">The Querying</h2>
+<p>Select the most popular girl name since 2010:</p>
+<pre><code>SELECT name, MAX(count),year
+FROM GirlCounts
+WHERE year &gt;= 2010
+GROUP BY year;</code></pre>
+<details>
+<summary>
+Click to unroll
+</summary>
+<pre><code>Ruby|335|2011
+Olivia|312|2012
+Charlotte|303|2013
+Charlotte|255|2014
+Olivia|268|2015
+Olivia|266|2016
+Charlotte|277|2017
+Charlotte|233|2018
+Amelia|255|2019
+Isla|243|2020
+Charlotte|227|2021
+Isla|246|2022</code></pre>
+</details>
+<p>Charlotte seems to be quite popular, how popular was the name historically?</p>
+<pre><code>SELECT count, year
+FROM GirlCounts
+WHERE name == "Charlotte";</code></pre>
+<details>
+<summary>
+Click to unroll
+</summary>
+<pre><code>65|1974
+65|1975
+75|1976
+106|1977
+93|1978
+95|1979
+88|1980
+85|1981
+93|1982
+111|1983
+87|1984
+106|1985
+135|1986
+123|1987
+118|1988
+158|1989
+149|1990
+155|1991
+175|1992
+155|1993
+160|1994
+130|1995
+140|1996
+138|1997
+133|1998
+150|1999
+149|2000
+152|2001
+201|2002
+243|2003
+330|2004
+278|2005
+324|2006
+263|2007
+269|2008
+257|2009
+305|2010
+258|2011
+285|2012
+303|2013
+255|2014
+260|2015
+262|2016
+277|2017
+233|2018
+248|2019
+222|2020
+227|2021
+208|2022</code></pre>
+</details>
+<p>Charlotte started to be popular since 1974 and steadily increase till 2010, after which it begun to drop slightly.</p>
+<p>Another interesting question would be to find names that are steadily popular over the 69 year period. This means names that occur multiple times in our table.</p>
+<pre><code>SELECT name, count(name)
+FROM GirlCounts
+GROUP BY name
+ORDER BY COUNT(name) DESC;</code></pre>
+<details>
+<summary>
+Click to unroll
+</summary>
+<pre><code>Elizabeth|69
+Anna|63
+Sarah|62
+Maria|56
+Emma|54
+Victoria|50
+Charlotte|49
+Jennifer|49
+Emily|48
+Stephanie|47
+Olivia|46
+Rebecca|46
+Catherine|45
+Hannah|45
+Alice|44
+Amber|44
+Megan|44
+Hayley|43
+Jessica|43
+Michelle|43
+Jasmine|42
+Kate|42
+Lucy|42
+Natalie|42
+Rachel|42
+Katherine|41
+Kathryn|41
+Louise|41
+Angela|40
+Nicola|40
+Nicole|39
+Sophie|39
+Amy|38
+Amanda|37
+Amelia|37
+Christina|37
+Christine|37
+Helen|37
+Holly|37
+Katie|37
+Mary|37
+Samantha|37
+Grace|36
+Leah|36
+Lisa|36
+Melissa|36
+Chloe|35
+Jade|35
+Natasha|35
+Zoe|35
+Claire|34
+Jane|34
+Lauren|34
+Georgia|33
+Jacqueline|33
+Joanne|33
+Julie|33
+Karen|33
+Andrea|32
+Fiona|32
+Tracey|32
+Abigail|31
+Deborah|31
+Donna|31
+Ruby|31
+Toni|31
+Laura|30
+Paige|30
+Susan|30
+Alexandra|29
+Brooke|29
+Caroline|29
+Danielle|29
+Ella|29
+Julia|29
+Kayla|29
+Kelly|29
+Madison|29
+Melanie|29
+Renee|29
+Tania|29
+Vanessa|29
+Aimee|28
+Eden|28
+Isabella|28
+Kim|28
+Sharon|28
+Teresa|28
+Wendy|28
+Heather|27
+Maddison|27
+Paula|27
+Phoebe|27
+Rose|27
+Sophia|27
+Suzanne|27
+Alison|26
+Ashley|26
+Katrina|26
+Lily|26
+Marie|26
+Rachael|26
+Sally|26
+Shannon|26
+Caitlin|25
+Linda|25
+Shelley|25
+Summer|25
+Tracy|25
+Bronwyn|24
+Carolyn|24
+Gemma|24
+Joanna|24
+Maia|24
+Margaret|24
+Monique|24
+Sandra|24
+Stacey|24
+Kirsty|23
+Leanne|23
+Molly|23
+Patricia|23
+Penelope|23
+Vicki|23
+Zara|23
+Bridget|22
+Mia|22
+Robyn|22
+Stella|22
+Tessa|22
+Anita|21
+Brenda|21
+Courtney|21
+Erin|21
+Eva|21
+Isabelle|21
+Janine|21
+Kerry|21
+Rochelle|21
+Taylor|21
+Ashleigh|20
+Ava|20
+Bella|20
+Chelsea|20
+Denise|20
+Diane|20
+Kathleen|20
+Mackenzie|20
+Maree|20
+Mikayla|20
+Philippa|20
+Rebekah|20
+Ruth|20
+Aaliyah|19
+Anne|19
+Annette|19
+Debra|19
+Isla|19
+Kylie|19
+Nikita|19
+Tina|19
+Carol|18
+Casey|18
+Lilly|18
+Pauline|18
+Poppy|18
+Raewyn|18
+Scarlett|18
+Sienna|18
+Tayla|18
+Alana|17
+Barbara|17
+Cheryl|17
+Judith|17
+Kimberley|17
+Lynda|17
+Lynette|17
+Pamela|17
+Tanya|17
+Ann|16
+Aria|16
+Brooklyn|16
+Debbie|16
+Jamie|16
+Jessie|16
+Madeleine|16
+Millie|16
+Riley|16
+Sara|16
+Sheryl|16
+Alyssa|15
+Ayla|15
+Dianne|15
+Faith|15
+Frances|15
+Hazel|15
+Jan|15
+Kirsten|15
+Piper|15
+Sofia|15
+Yvonne|15
+Belinda|14
+Cherie|14
+Crystal|14
+Gabrielle|14
+Georgina|14
+Gillian|14
+Shona|14
+Addison|13
+Janet|13
+Jillian|13
+Layla|13
+Matilda|13
+Maya|13
+Mila|13
+Olive|13
+Rosemary|13
+Violet|13
+Willow|13
+Alexis|12
+Angel|12
+Colleen|12
+Diana|12
+Ellie|12
+Evelyn|12
+Ivy|12
+Jenna|12
+Jordan|12
+Kay|12
+Keira|12
+Lesley|12
+Lorraine|12
+Lynne|12
+Peyton|12
+Alicia|11
+Annabelle|11
+Ariana|11
+Brianna|11
+Brittany|11
+Claudia|11
+Gail|11
+Harper|11
+Indie|11
+Isabel|11
+Janice|11
+Jeanette|11
+Krystal|11
+Maureen|11
+Michele|11
+Morgan|11
+Nevaeh|11
+Nina|11
+Shirley|11
+Aurora|10
+Evie|10
+Florence|10
+Heidi|10
+Justine|10
+Kelsey|10
+Vivienne|10
+Abby|9
+Ashlee|9
+Beverley|9
+Caitlyn|9
+Daisy|9
+Freya|9
+Harriet|9
+Imogen|9
+Lola|9
+Pippa|9
+Savannah|9
+Thea|9
+Adrienne|8
+Cassandra|8
+Charlie|8
+Eleanor|8
+Emilia|8
+Frankie|8
+Glenda|8
+Josephine|8
+Michaela|8
+Quinn|8
+Sadie|8
+Sonya|8
+Tara|8
+Tiana|8
+Zoey|8
+Elsie|7
+Jocelyn|7
+Kaitlyn|7
+Lydia|7
+Naomi|7
+Paris|7
+Trinity|7
+Billie|6
+Cheyenne|6
+Harmony|6
+Jill|6
+Jodie|6
+Jorja|6
+Joy|6
+Karyn|6
+Katelyn|6
+Luna|6
+Mya|6
+Tegan|6
+Amaia|5
+Carla|5
+Elaine|5
+Gina|5
+Glenys|5
+Jolene|5
+Kiara|5
+Lucia|5
+Tamara|5
+Valerie|5
+Ada|4
+Dorothy|4
+Esther|4
+Harlow|4
+Jemma|4
+Lois|4
+Madeline|4
+Maisie|4
+Manaia|4
+Marilyn|4
+Marion|4
+Sonia|4
+Anahera|3
+Bailey|3
+Carmen|3
+Destiny|3
+Eliza|3
+Haley|3
+Hope|3
+Joan|3
+Kaia|3
+Kaye|3
+Kristy|3
+Lynley|3
+Maeve|3
+Margot|3
+Rosie|3
+Shania|3
+Sharlene|3
+Sheree|3
+Vicky|3
+Aleisha|2
+Amara|2
+Athena|2
+Bonnie|2
+Cora|2
+Delilah|2
+Ellen|2
+Eloise|2
+Gabriella|2
+Gloria|2
+Irene|2
+Isobel|2
+Khloe|2
+Kiri|2
+Kora|2
+Lynnette|2
+Marley|2
+Nadine|2
+Ngaire|2
+Rhonda|2
+Skye|2
+Skyla|2
+Tyla|2
+Abbey|1
+Angelina|1
+Anika|1
+April|1
+Arabella|1
+Aroha|1
+Briana|1
+Britney|1
+Chantelle|1
+Cindy|1
+Clara|1
+Clare|1
+Cleo|1
+Dawn|1
+Eilish|1
+Eliana|1
+Elise|1
+Gaylene|1
+Indi|1
+Iris|1
+Jaime|1
+Janette|1
+Jean|1
+Jodi|1
+Kaitlin|1
+Karla|1
+Kellie|1
+Kyla|1
+Leonie|1
+Libby|1
+Lynn|1
+MacKenzie|1
+Marian|1
+Mikaela|1
+Monica|1
+Niamh|1
+Nikki|1
+Payton|1
+Rachelle|1
+Sasha|1
+Shakira|1
+Sinead|1
+Skylar|1
+Tori|1
+Virginia|1
+Whitney|1</code></pre>
+</details>
+<p>Only a single name, <em>Elizabeth</em>, was steadily popular over the 69 year period, occuring among the top 100 names every single year.</p>
+<p>Finally, I said that we don’t need rank table, because we can calculate the ranks from counts. We can do that using advanced SQL commands as well!</p>
+<p>Here we look at 5 most popular names since 2020</p>
+<pre><code>SELECT name, year, count_rank, count
+FROM
+    (SELECT
+        name,
+        year,
+        count,
+        RANK() OVER (PARTITION BY year ORDER BY count DESC) count_rank
+    FROM GirlCounts
+    )
+WHERE count_rank &lt;= 5 AND YEAR &gt;= 2020;</code></pre>
+<details>
+<summary>
+Click to unroll
+</summary>
+<pre><code>Isla|2020|1|243
+Charlotte|2020|2|222
+Amelia|2020|3|213
+Olivia|2020|4|208
+Willow|2020|5|184
+Charlotte|2021|1|227
+Isla|2021|2|214
+Amelia|2021|3|206
+Olivia|2021|4|185
+Ava|2021|5|184
+Isla|2022|1|246
+Amelia|2022|2|210
+Charlotte|2022|3|208
+Mila|2022|4|182
+Lily|2022|5|180</code></pre>
+</details>
+</section>
+<section id="the-books" class="level2">
+<h2 class="anchored" data-anchor-id="the-books">The Books</h2>
+<p>Finally, if you would like to learn more about SQL as I did, here is a small review of books.</p>
+<p>The best book for beginners is <a href="https://nostarch.com/mg_databases.htm">The Manga Guide to Databases</a>. It is the most comprehensive introduction to databases, database design, and SQL. Every other book I have read assumes you already know about databases or SQL, so they often skip over important details.</p>
+<p>Next, I would suggest <a href="https://pragprog.com/titles/bksqla/sql-antipatterns/">SQL Antipatterns</a>. It introduces you to some patterns and anti-patterns in SQL and database design. Easy to read, comprehensive and quite practical if you want to get into designing databases.</p>
+<p>The <a href="https://www.oreilly.com/library/view/seven-databases-in/9781680505962/">Seven Databases in Seven Weeks</a> would be next in line. Unlike the previous ones, it doesn’t teach you about database design or SQL tricks. Instead, it is an overview of different database types and products, not just relational databases and not just SQL. It is not in-depth introduction to SQL or relational databases, so do not make this the first book you read, instead this book will introduce you to multitude of other solutions.</p>
+<p>Finally, there is a gold standard <a href="https://www.oreilly.com/library/view/database-in-depth/0596100124/">Database in Depth</a>. It already assumes that you know quite a lot about databases, doesn’t talk much about the SQL, instead it introduces language D, the perfect relational language, and talks more about the theory. Unlike other theory books I have read on other topics, this one seems to be quite fluffy. I have read 30 pages and I think that information could be condensed into 10. But then, you don’t need to stare into a single equation with no accompanying explanation for 2 hours to understand it, like in those very dense theory books, because there is a 10 page explanation. So fluffiness might not be disadvantageous.</p>
+</section>
+<section id="the-summary" class="level2">
+<h2 class="anchored" data-anchor-id="the-summary">The Summary</h2>
+<p>We have picked dataset and went over some ideas and thoughts on how to convert it into database. We have then implemented the database using SQLite, populated it through R, and queried a bunch of interesting data. I hope you enjoyed this journey as I did. I will try to explore the dataset a bit more because I think there is a story hidden inside.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
