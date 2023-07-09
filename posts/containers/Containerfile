@@ -1,0 +1,48 @@
+FROM ubuntu:22.04
+
+# you can add multiple labels in a field=value format
+LABEL maintainer="Jiří Moravec"
+
+RUN apt-get update && apt-get install -y \
+    git automake autopoint autoconf autoconf-archive g++ make \
+    libsdl2-dev libenet-dev libopenal-dev libcurl4-openssl-dev gettext \
+    imagemagick wget libfuse2 file
+
+RUN git clone https://github.com/the3dfxdude/7kaa /home/7kaa
+
+WORKDIR /home/7kaa
+
+RUN ./autogen.sh && \
+    ./configure && \
+    make install DESTDIR=/home/7kaa/AppDir && \
+    mv AppDir/usr/local/* AppDir/usr/ && \
+    rm -r AppDir/usr/local
+
+RUN convert src/7k.ico 7k.png && \
+    echo '#!/bin/env sh' > AppDir/usr/bin/7krun && \
+    echo '' AppDir/usr/bin/7krun && \
+    chmod +x AppDir/usr/bin/7krun && \
+    echo 'SKDATA=share/7kaa/ 7kaa' >> AppDir/usr/bin/7krun && \
+    echo '[Desktop Entry]' > 7kaa.desktop && \
+    echo 'Type=Application' >> 7kaa.desktop && \
+    echo 'Name=7kaa' >> 7kaa.desktop && \
+    echo 'Comment=Seven Kingdoms: Ancient Adversaries' >> 7kaa.desktop && \
+    echo 'Path=/usr/bin' >> 7kaa.desktop && \
+    echo 'Exec=7krun' >> 7kaa.desktop && \
+    echo 'Icon=7k' >> 7kaa.desktop && \
+    echo 'Categories=Game;' >> 7kaa.desktop
+
+RUN wget -nv -c -4 https://www.7kfans.com/downloads/7kaa-music-2.15.tar.bz2 && \
+    tar -xf 7kaa-music-2.15.tar.bz2 && \
+    mv 7kaa-music/MUSIC/ AppDir/usr/share/7kaa/
+
+RUN wget -nv -c https://github.com/AppImage/AppImageKit/releases/download/13/AppRun-x86_64 -O AppDir/AppRun && \
+    chmod +x AppDir/AppRun && \
+    wget -nv -c https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20220822-1/linuxdeploy-x86_64.AppImage && \
+    chmod +x linuxdeploy-x86_64.AppImage && \
+    VERSION=dev ./linuxdeploy-x86_64.AppImage \
+        --appimage-extract-and-run \
+        --appdir AppDir \
+        -d 7kaa.desktop \
+        -i 7k.png \
+        --output appimage
