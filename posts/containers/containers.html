@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2023-07-09">
+<meta name="description" content="Solving unhelpful errors in build systems with containerization">
+
+<title>Jiří C. Moravec - Errors, builds, and containers</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Jiří C. Moravec</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications.html">
+ <span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../software.html">
+ <span class="menu-text">Software</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/J-Moravec/"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/jcmoravec"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
+  <ul>
+  <li><a href="#unhelpful-errors" id="toc-unhelpful-errors" class="nav-link" data-scroll-target="#unhelpful-errors">Unhelpful errors</a></li>
+  <li><a href="#complex-build-systems" id="toc-complex-build-systems" class="nav-link" data-scroll-target="#complex-build-systems">Complex build systems</a></li>
+  <li><a href="#dependencies" id="toc-dependencies" class="nav-link" data-scroll-target="#dependencies">Dependencies</a></li>
+  </ul></li>
+  <li><a href="#podman" id="toc-podman" class="nav-link" data-scroll-target="#podman">Podman</a>
+  <ul>
+  <li><a href="#installing-podman" id="toc-installing-podman" class="nav-link" data-scroll-target="#installing-podman">Installing podman</a></li>
+  <li><a href="#setting-up-container" id="toc-setting-up-container" class="nav-link" data-scroll-target="#setting-up-container">Setting up container</a></li>
+  <li><a href="#writing-a-containerfile" id="toc-writing-a-containerfile" class="nav-link" data-scroll-target="#writing-a-containerfile">Writing a Containerfile</a></li>
+  </ul></li>
+  <li><a href="#appimage" id="toc-appimage" class="nav-link" data-scroll-target="#appimage">AppImage</a>
+  <ul>
+  <li><a href="#installing-into-appdir" id="toc-installing-into-appdir" class="nav-link" data-scroll-target="#installing-into-appdir">Installing into AppDir</a></li>
+  <li><a href="#converting-icon-to-png" id="toc-converting-icon-to-png" class="nav-link" data-scroll-target="#converting-icon-to-png">Converting icon to png</a></li>
+  <li><a href="#creating-desktop-file" id="toc-creating-desktop-file" class="nav-link" data-scroll-target="#creating-desktop-file">Creating desktop file</a></li>
+  <li><a href="#running-linuxdeploy" id="toc-running-linuxdeploy" class="nav-link" data-scroll-target="#running-linuxdeploy">Running linuxdeploy</a></li>
+  <li><a href="#pointing-7kaa-to-its-data" id="toc-pointing-7kaa-to-its-data" class="nav-link" data-scroll-target="#pointing-7kaa-to-its-data">Pointing 7kaa to its data</a></li>
+  <li><a href="#adding-music" id="toc-adding-music" class="nav-link" data-scroll-target="#adding-music">Adding music</a></li>
+  <li><a href="#putting-it-all-together" id="toc-putting-it-all-together" class="nav-link" data-scroll-target="#putting-it-all-together">Putting it all together:</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Errors, builds, and containers</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">others</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Solving unhelpful errors in build systems with containerization
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 9, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<section id="unhelpful-errors" class="level3">
+<h3 class="anchored" data-anchor-id="unhelpful-errors">Unhelpful errors</h3>
+<p>You have probably experienced it more then once. You try to run some code and instead of result, you get a strange error saying that something is broken. You are scratching your head, because the error doesn’t say clearly what is broken, but points to some esoteric part of the code that should be right, or points very deep into subsystem or dependency, which points to another, only for you to discover in the end that the issue is in completely different part.</p>
+<p>Previously, this happened to me with <code>devtools</code> or <code>testthat</code>, when both packages added another dependency (or their depedency added a dependency) <code>cli</code>, which incorectly handled version string of one of the most common terminals on one of the most common linux distro. What was more infuriating is finding that it was supposed to be fixed 6 months ago. Why the main branch wasn’t patched, and the bugged version was released on CRAN instead is a mystery to me.</p>
+<p>Anyway, enough of this rant, this blogpost is not about this, nor it is about R, but about another completely different issue.</p>
+</section>
+<section id="complex-build-systems" class="level3">
+<h3 class="anchored" data-anchor-id="complex-build-systems">Complex build systems</h3>
+<p>In the begining, well I don’t know since I wasn’t there, but much later then that we had <code>GNU make</code> to build C code. But the build became more and more complex, so more complex tools were developed. And these tools became, and still are, more and more complex. From my tiny experience, it was easier to write a package in Java, then to write and setup an ant or gradle from scratch. But this might be due to my inexperience, I write code frequently, although in compiled langauges, but I don’t write build scripts often enough.</p>
+</section>
+<section id="dependencies" class="level3">
+<h3 class="anchored" data-anchor-id="dependencies">Dependencies</h3>
+<p>You can encounter a similar issue if you want to build existing code as well. For instance, <a href="https://github.com/the3dfxdude/7kaa/">7kaa</a>, a commercial game that was open-sourced by Enlight, uses <code>autotools</code>. As you might get from the name, autotools is not a single tool, but a collection of tools. And if you don’t have any of those installed, you will get strange errors, especially if you didn’t notice a single warning at the start of the very long log file.</p>
+<p>In the end, I managed to solve this issue by installing dependencies and potentially poluting my system. But what if I wanted to do this next time again? Would I remember what did I do wrong and how I solved the issue? Can I do something better to isolate the dependency issue in a testable and replicable way so that a completely new clean system can be guranteed to succeed?</p>
+</section>
+</section>
+<section id="podman" class="level2">
+<h2 class="anchored" data-anchor-id="podman">Podman</h2>
+<p><a href="https://podman.io/">podman</a> is a lesser known cousin of Docker. The advantage of Podman is that it allows creation of so called rootles containers. This makes it a little easier to work with.</p>
+<p>But what are Podman/Docker containers? Simply said, containers are packages containing an application, including dependencies and even OS. This means that with containers, you can create a replicable installation and deployment of applications on a clean systems, which are isolated from your host system by the Docker/Podman engine.</p>
+<section id="installing-podman" class="level3">
+<h3 class="anchored" data-anchor-id="installing-podman">Installing podman</h3>
+<p>On my system (Ubuntu 22.04), <code>podman</code> is easy to install:</p>
+<p><code>sudo apt install podman</code></p>
+<p>However, there is a currently a <a href="https://github.com/containers/podman/issues/8896">bug</a>, the config in <code>/etc/containers/registries.conf</code> does not come with correct presets. In fact, it does not come with any presets at all, it only contains documentation. This means that it is not connected to any repository, and the commands mentioned in tutorial, such as:</p>
+<pre><code>podman search [search term]</code></pre>
+<p>do not output anything.</p>
+<p>To fix this, we need to append:</p>
+<pre><code>unqualified-search-registries = ["docker.io"]
+
+[[registry]]
+location = "docker.io</code></pre>
+<p>to the <code>/etc/containers/registries.conf</code>. This will allow us to reach the <code>docker.io</code> repository.</p>
+<p>For instance, to find an <code>ubuntu</code> image, we can now do:</p>
+<pre><code>podman search ubuntu --limit 5</code></pre>
+</section>
+<section id="setting-up-container" class="level3">
+<h3 class="anchored" data-anchor-id="setting-up-container">Setting up container</h3>
+<p>First, we download an image:</p>
+<pre><code>podman pull docker.io/library/ubuntu</code></pre>
+<p>Now we can run the container. We run it with the detach <code>-d</code> option, as otherwise the container would just execute all required code and stopped working. We also run the container with <code>-t</code> option, to enable tty, or terminal. For repeatability, we provide a custom name with the <code>--name</code> command. After that, we <code>attach</code> to the container.</p>
+<pre><code>podman run  --name "test" -dt docker.io/library/ubuntu:latest
+podman attach "test"
+
+# to clean the container after finishing, run:
+podman rm "test"</code></pre>
+<p>We are now inside of the container, a brand new and clean Ubuntu 22.04 install, and we can start installing dependencies and building our app. After a few tries trying to find out required libraries and dependencies, I reached to this:</p>
+<pre><code># update apt
+apt update
+
+# install build tools
+apt install -y git automake autopoint autoconf autoconf-archive g++ make
+
+# install dependencies
+apt install -y libsdl2-dev libenet-dev libopenal-dev libcurl4-openssl-dev gettext
+
+# clone repo and build binary
+git clone https://github.com/the3dfxdude/7kaa/ home/7kaa
+cd home/7kaa
+./autogen.sh &amp;&amp; ./configure &amp;&amp; make</code></pre>
+<p>All we need now is to copy the binary and data with <code>podman container cp [source] [dest]</code></p>
+</section>
+<section id="writing-a-containerfile" class="level3">
+<h3 class="anchored" data-anchor-id="writing-a-containerfile">Writing a Containerfile</h3>
+<p>We have commands that we want to run, but having to run them manually is annoying. To automate this, we can write a <code>Containerfile</code>! Or <code>Dockerfile</code>, as Docker calls it, but the syntax is identical.</p>
+<p>Most container files consist of <code>FROM</code>, which specify the image one is working with, <code>RUN</code> which runs various commands used to build the container, <code>COPY</code> which allows to copy content to or from the container, and <code>CMD</code> which is then used to launch the applications themselves.</p>
+<pre><code># Containerfile
+FROM ubuntu:22.04
+
+# you can add multiple labels in a field=value format
+LABEL maintainer="j-moravec"
+
+
+RUN apt-get update &amp;&amp; apt-get install -y \
+    git automake autopoint autoconf autoconf-archive g++ make \
+    libsdl2-dev libenet-dev libopenal-dev libcurl4-openssl-dev gettext
+
+RUN git clone https://github.com/the3dfxdude/7kaa /home/7kaa
+
+WORKDIR /home/7kaa
+RUN ./autogen.sh &amp;&amp; ./configure &amp;&amp; make</code></pre>
+<p>Build this image with <code>podman -t "7kaa" -f Containerfile</code>.</p>
+</section>
+</section>
+<section id="appimage" class="level2">
+<h2 class="anchored" data-anchor-id="appimage">AppImage</h2>
+<p>We have a replicable way to build a binary. The issue is that it is build against a particular version of Ubuntu and against a particular version of SDL2, Enet, OpenAL and Curl, so the binary won’t work on every system. One way to bundle these dependencies is with AppImage.</p>
+<p>Note that to run AppImages, you need to have <code>libfuse2</code> installed. Also, I will be using <code>wget</code> to download some files, so make sure you have it installed as well. Everything will be provided in the final containerfile.</p>
+<p>To create AppImage, we need to create <code>AppDir</code> directory with pre-specified format either manually, or with the help of the <a href="https://docs.appimage.org/packaging-guide/from-source/linuxdeploy-user-guide.html#">linuxdeploy</a> tool. Linuxdeploy is a tool to create AppImages, so it not only creates required directory structure, but also copies dependencies for provided binary, compiles provided icon and desktop file (which are required), and also creates AppImage itself. To make an AppImage with linuxdeploy, we need to:</p>
+<ul>
+<li>create <code>AppDir</code> structure</li>
+<li>create binary, icon and desktop files in pre-specified format</li>
+<li>create AppImage</li>
+</ul>
+<p>Linuxdeploy allows working in iterative format. That basically means that you mess around until it works. When you do this, note that provided binary, icon, and desktop file are currently not updated with repeated runs, so the iterative approach does not work completely. Alas, after mocking around for a bit and trying to figure it out since the documentation is not great and in many areas resemble stump, this is what we will do:</p>
+<ul>
+<li>Install 7kaa into <code>AppDir</code></li>
+<li>convert icon 7k.ico to the png format</li>
+<li>create desktop file</li>
+<li>run linuxdeploy to put it all together and create AppImage</li>
+</ul>
+<section id="installing-into-appdir" class="level3">
+<h3 class="anchored" data-anchor-id="installing-into-appdir">Installing into AppDir</h3>
+<p>First, we need to build the application in a way that it is installed. But we do not want to actually install it into the image filesytem, but into the <code>AppDir</code>:</p>
+<pre><code>make install  DESTDIR=/home/7kaa/AppDir</code></pre>
+<p>Note that due to the way the build system for 7kaa is setup, with multiple makefiles for various subsystems, we need to specify AppDir with an absolute path instead of relative.</p>
+<p>Another thing that we need to do is move everything from <code>/usr/local/</code> to <code>/usr/</code>. While both are valid locations, and in fact <code>/usr/local/</code> is more suitable from administrative perspective, linuxdeploy does not recognize binary in <code>/usr/local/bin/</code></p>
+<pre><code>mv AppDir/usr/local/* AppDir/usr/
+rm -r AppDir/usr/local</code></pre>
+</section>
+<section id="converting-icon-to-png" class="level3">
+<h3 class="anchored" data-anchor-id="converting-icon-to-png">Converting icon to png</h3>
+<p>The icon that we have is in <code>ico</code> format, which comes from Windows and is not supported by the XDG Linux desktop specification, which accepts only png, svg and xpm.</p>
+<p>We can use imagemagick to convert it with:</p>
+<pre><code>convert src/7k.ico 7k.png</code></pre>
+<p>But its another dependency we need to include in our containerfile.</p>
+</section>
+<section id="creating-desktop-file" class="level3">
+<h3 class="anchored" data-anchor-id="creating-desktop-file">Creating desktop file</h3>
+<p>Desktop files are files that allow integration of your program/binary with your desktop, and they are required to create an AppImage. An example can be found on <a href="https://wiki.archlinux.org/title/Desktop_entries">archlinux wiki</a>, with full specification on <a href="https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html#recognized-keys">freedesktop.org</a>. Note that quite a few elements appear to be required by the linuxdeploy.</p>
+<p>A sample desktop file <code>7kaa.desktop</code> might look like this:</p>
+<pre><code>[Desktop Entry]
+Type=Application
+Name=7kaa
+Comment=Seven Kingdoms: Ancient Adversaries
+Path=/usr/bin
+Exec=7kaa
+Icon=7k # should not contain extension
+Categories=Game; # one of a several categories in specification</code></pre>
+</section>
+<section id="running-linuxdeploy" class="level3">
+<h3 class="anchored" data-anchor-id="running-linuxdeploy">Running linuxdeploy</h3>
+<p>Now, all we need to do is to run <a href="https://docs.appimage.org/packaging-guide/from-source/linuxdeploy-user-guide.html#">linuxdeploy</a>, which will copy dependencies required by our binary (such as SDL2), and output an AppImage.</p>
+<pre><code>wget -nv https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20220822-1/linuxdeploy-x86_64.AppImage -o linuxdeploy.AppImage
+chmod +x linuxdeploy.AppImage
+VERSION=dev ./linuxdeploy.AppImage --appdir AppDir -d 7kaa.desktop -i 7k.png --output appimage</code></pre>
+<p>We have also set a version of the resulting appimage to <code>dev</code> by specifying the recognized environment variable <code>VERSION</code>.</p>
+</section>
+<section id="pointing-7kaa-to-its-data" class="level3">
+<h3 class="anchored" data-anchor-id="pointing-7kaa-to-its-data">Pointing 7kaa to its data</h3>
+<p>Normally, this is all we would have to do. But if you try to run the AppImage, you will find out that the binary can’t find the data, this is because the binary is not in the same directory and the <code>SKDATA</code> environment variable is empty. We need to run the <code>7kaa</code> binary in the same way that we run the <code>linuxdeploy.AppImage</code>, which essentially mean we need to write our own runner script.</p>
+<p>There are two ways how we can do it, either run a complex bash script that does some environment parsing and settings as required for AppImage, like <a href="https://github.com/KurtPfeifle/ImageMagick/blob/master/appimage/AppRun">imagemagick</a> does, or we use just a simple runner script and use provided <a href="https://github.com/AppImage/AppImageKit/releases">AppRun</a>, which is a simple binary that does what we need and also parses the desktop file.</p>
+<p>First, create a <code>AppDir/usr/bin/7krun</code></p>
+<pre><code>#!/bin/env sh
+
+SKDATA=share/7kaa/ 7kaa</code></pre>
+<p>and don’t forget to make it executable with <code>chmod +x AppDir/usr/bin/7krun</code>.</p>
+<p>Then download the <code>AppRun</code> binary:</p>
+<pre><code>wget -nv https://github.com/AppImage/AppImageKit/releases/download/13/AppRun-x86_64 -o AppDir/AppRun</code></pre>
+<p>and modify the desktop file so it executes <code>7krun</code> instead of <code>7kaa</code>:</p>
+<pre><code>[Desktop Entry]
+Type=Application
+Name=7kaa
+Comment=Seven Kingdoms: Ancient Adversaries
+Path=/usr/bin
+Exec=7krun
+Icon=7k
+Categories=Game;</code></pre>
+<p>and now just build the AppImage!</p>
+<pre><code>VERSION=dev ./linuxdeploy.AppImage --appdir AppDir -d 7kaa.desktop -i 7k.png --output appimage</code></pre>
+<p>and test with:</p>
+<pre><code>./7kaa-dev-x86_64.AppImage</code></pre>
+</section>
+<section id="adding-music" class="level3">
+<h3 class="anchored" data-anchor-id="adding-music">Adding music</h3>
+<p>Due to copyright reasons, music is distributed separately. In fact, one of the motivation for creating an AppImage was that on some Linux distributions, music is not distributed at all due to it not being FOSS.</p>
+<p>The music is available at the <a href="https://www.7kfans.com/downloads">7kfans website</a> as a separate download. We will download the archive, unpack it, transfer the music into the <code>DATA</code> directory and rebuild the AppImage.</p>
+<pre><code># force IPv4, the default IPv6 seems to be broken and just hang on
+wget -nv -c -4 https://www.7kfans.com/downloads/7kaa-music-2.15.tar.bz2
+tar -xf 7kaa-music-2.15.tar.bz2
+mv 7kaa-music/MUSIC/ AppDir/usr/share/7kaa/
+
+VERSION=dev ./linuxdeploy.AppImage --appdir AppDir -d 7kaa.desktop -i 7k.png --output appimage</code></pre>
+<p>and test with:</p>
+<pre><code>./7kaa-dev-x86_64.AppImage</code></pre>
+</section>
+<section id="putting-it-all-together" class="level3">
+<h3 class="anchored" data-anchor-id="putting-it-all-together">Putting it all together:</h3>
+<p>In the end, we will get this containerfile:</p>
+<pre><code>FROM ubuntu:22.04
+
+# you can add multiple labels in a field=value format
+LABEL maintainer="j-moravec"
+
+
+RUN apt-get update &amp;&amp; apt-get install -y \
+    git automake autopoint autoconf autoconf-archive g++ make \
+    libsdl2-dev libenet-dev libopenal-dev libcurl4-openssl-dev gettext \
+    imagemagick wget libfuse2 file
+
+RUN git clone https://github.com/the3dfxdude/7kaa /home/7kaa
+
+WORKDIR /home/7kaa
+
+RUN ./autogen.sh &amp;&amp; \
+    ./configure &amp;&amp; \
+    make install DESTDIR=/home/7kaa/AppDir &amp;&amp; \
+    mv AppDir/usr/local/* AppDir/usr/ &amp;&amp; \
+    rm -r AppDir/usr/local
+
+RUN convert src/7k.ico 7k.png &amp;&amp; \
+    echo '#!/bin/env sh' &gt; AppDir/usr/bin/7krun &amp;&amp; \
+    echo '' AppDir/usr/bin/7krun &amp;&amp; \
+    chmod +x AppDir/usr/bin/7krun &amp;&amp; \
+    echo 'SKDATA=share/7kaa/ 7kaa' &gt;&gt; AppDir/usr/bin/7krun &amp;&amp; \
+    echo '[Desktop Entry]' &gt; 7kaa.desktop &amp;&amp; \
+    echo 'Type=Application' &gt;&gt; 7kaa.desktop &amp;&amp; \
+    echo 'Name=7kaa' &gt;&gt; 7kaa.desktop &amp;&amp; \
+    echo 'Comment=Seven Kingdoms: Ancient Adversaries' &gt;&gt; 7kaa.desktop &amp;&amp; \
+    echo 'Path=/usr/bin' &gt;&gt; 7kaa.desktop &amp;&amp; \
+    echo 'Exec=7krun' &gt;&gt; 7kaa.desktop &amp;&amp; \
+    echo 'Icon=7k' &gt;&gt; 7kaa.desktop &amp;&amp; \
+    echo 'Categories=Game;' &gt;&gt; 7kaa.desktop
+
+RUN wget -nv -c -4 https://www.7kfans.com/downloads/7kaa-music-2.15.tar.bz2 &amp;&amp; \
+    tar -xf 7kaa-music-2.15.tar.bz2 &amp;&amp; \
+    mv 7kaa-music/MUSIC/ AppDir/usr/share/7kaa/
+
+RUN wget -nv -c https://github.com/AppImage/AppImageKit/releases/download/13/AppRun-x86_64 -O AppDir/AppRun &amp;&amp; \
+    chmod +x AppDir/AppRun &amp;&amp; \
+    wget -nv -c https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20220822-1/linuxdeploy-x86_64.AppImage &amp;&amp; \
+    chmod +x linuxdeploy-x86_64.AppImage &amp;&amp; \
+    VERSION=dev ./linuxdeploy-x86_64.AppImage \
+        --appimage-extract-and-run \
+        --appdir AppDir \
+        -d 7kaa.desktop \
+        -i 7k.png \
+        --output appimage</code></pre>
+<p>Note that I did some minor tweeks to iron out potential issues.</p>
+<p>Now we should be able to run:</p>
+<pre><code>podman build -t 7kaa -f Containerfile</code></pre>
+<p>And half an hour later, when the image is finally build:</p>
+<pre><code>podman create --name 7kaaAppImage 7kaa
+podman cp 7kaaAppImage:/home/7kaa/7kaa-dev-x86_64.AppImage .
+podman rm 7kaaAppImage
+chmod +x 7kaa-dev-x86_64.AppImage
+./7kaa-dev-x86_64.AppImage</code></pre>
+<p>and everything should work.</p>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>We were able to use podman and dockerfile to create a replicable build of an AppImage for the Seven Kingdoms: Ancient Adversaries.</p>
+<p>Handling podman and contairnerfiles was rather easy, the biggest issue was making AppImages themselves. But we managed that as well.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
