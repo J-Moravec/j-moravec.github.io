@@ -186,29 +186,29 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <section id="unhelpful-errors" class="level3">
 <h3 class="anchored" data-anchor-id="unhelpful-errors">Unhelpful errors</h3>
-<p>You have probably experienced it more then once. You try to run some code and instead of result, you get a strange error saying that something is broken. You are scratching your head, because the error doesn’t say clearly what is broken, but points to some esoteric part of the code that should be right, or points very deep into subsystem or dependency, which points to another, only for you to discover in the end that the issue is in completely different part.</p>
-<p>Previously, this happened to me with <code>devtools</code> or <code>testthat</code>, when both packages added another dependency (or their depedency added a dependency) <code>cli</code>, which incorectly handled version string of one of the most common terminals on one of the most common linux distro. What was more infuriating is finding that it was supposed to be fixed 6 months ago. Why the main branch wasn’t patched, and the bugged version was released on CRAN instead is a mystery to me.</p>
+<p>You have probably experienced it more than once. You try to run some code and instead of a result, you get a strange error saying that something is broken. You are scratching your head because the error doesn’t say clearly what is broken but points to some esoteric part of the code that should be right, or points very deep into subsystem or dependency, which points to another, only for you to discover in the end that the issue is in a completely different part.</p>
+<p>Previously, this happened to me with <code>devtools</code> or <code>testthat</code>, when both packages added another dependency (or their dependency added a dependency) <code>cli</code>, which incorrectly handled the version string of one of the most common terminals on one of the most common Linux distro. What was more infuriating is finding that it was supposed to be fixed 6 months ago. Why the main branch wasn’t patched, and the bugged version was released on CRAN instead is a mystery to me.</p>
 <p>Anyway, enough of this rant, this blogpost is not about this, nor it is about R, but about another completely different issue.</p>
 </section>
 <section id="complex-build-systems" class="level3">
 <h3 class="anchored" data-anchor-id="complex-build-systems">Complex build systems</h3>
-<p>In the begining, well I don’t know since I wasn’t there, but much later then that we had <code>GNU make</code> to build C code. But the build became more and more complex, so more complex tools were developed. And these tools became, and still are, more and more complex. From my tiny experience, it was easier to write a package in Java, then to write and setup an ant or gradle from scratch. But this might be due to my inexperience, I write code frequently, although in compiled langauges, but I don’t write build scripts often enough.</p>
+<p>In the beginning, well I don’t know since I wasn’t there, but much later than that we had <code>GNU make</code> to build C code. But the build became more and more complex, so more complex tools were developed. And these tools became, and still are, more and more complex. From my tiny experience, it was easier to write a package in Java, than to write and setup Ant or Gradle from scratch. But this might be due to my inexperience, I write code frequently although in compiled languages but I don’t write build scripts often enough.</p>
 </section>
 <section id="dependencies" class="level3">
 <h3 class="anchored" data-anchor-id="dependencies">Dependencies</h3>
 <p>You can encounter a similar issue if you want to build existing code as well. For instance, <a href="https://github.com/the3dfxdude/7kaa/">7kaa</a>, a commercial game that was open-sourced by Enlight, uses <code>autotools</code>. As you might get from the name, autotools is not a single tool, but a collection of tools. And if you don’t have any of those installed, you will get strange errors, especially if you didn’t notice a single warning at the start of the very long log file.</p>
-<p>In the end, I managed to solve this issue by installing dependencies and potentially poluting my system. But what if I wanted to do this next time again? Would I remember what did I do wrong and how I solved the issue? Can I do something better to isolate the dependency issue in a testable and replicable way so that a completely new clean system can be guranteed to succeed?</p>
+<p>In the end, I managed to solve this issue by installing dependencies and potentially polluting my system. But what if I wanted to do this next time again? Would I remember what did I do wrong and how I solved the issue? Can I do something better to isolate the dependency issue in a testable and replicable way so that a completely new clean system can be guaranteed to succeed?</p>
 </section>
 </section>
 <section id="podman" class="level2">
 <h2 class="anchored" data-anchor-id="podman">Podman</h2>
-<p><a href="https://podman.io/">podman</a> is a lesser known cousin of Docker. The advantage of Podman is that it allows creation of so called rootles containers. This makes it a little easier to work with.</p>
-<p>But what are Podman/Docker containers? Simply said, containers are packages containing an application, including dependencies and even OS. This means that with containers, you can create a replicable installation and deployment of applications on a clean systems, which are isolated from your host system by the Docker/Podman engine.</p>
+<p><a href="https://podman.io/">podman</a> is a lesser-known cousin of Docker. The advantage of Podman is that it allows the creation of so-called rootless containers. This makes it a little easier to work with.</p>
+<p>But what are Podman/Docker containers? Simply said, containers are packages containing an application, including dependencies and even OS. This means that with containers, you can create a replicable installation and deployment of applications on clean systems, which are isolated from your host system by the Docker/Podman engine.</p>
 <section id="installing-podman" class="level3">
 <h3 class="anchored" data-anchor-id="installing-podman">Installing podman</h3>
 <p>On my system (Ubuntu 22.04), <code>podman</code> is easy to install:</p>
 <p><code>sudo apt install podman</code></p>
-<p>However, there is a currently a <a href="https://github.com/containers/podman/issues/8896">bug</a>, the config in <code>/etc/containers/registries.conf</code> does not come with correct presets. In fact, it does not come with any presets at all, it only contains documentation. This means that it is not connected to any repository, and the commands mentioned in tutorial, such as:</p>
+<p>However, there is currently a <a href="https://github.com/containers/podman/issues/8896">bug</a>, the config in <code>/etc/containers/registries.conf</code> does not come with correct presets. In fact, it does not come with any presets at all, it only contains documentation. This means that it is not connected to any repository, and the commands mentioned in the tutorial, such as:</p>
 <pre><code>podman search [search term]</code></pre>
 <p>do not output anything.</p>
 <p>To fix this, we need to append:</p>
@@ -224,13 +224,13 @@ location = "docker.io</code></pre>
 <h3 class="anchored" data-anchor-id="setting-up-container">Setting up container</h3>
 <p>First, we download an image:</p>
 <pre><code>podman pull docker.io/library/ubuntu</code></pre>
-<p>Now we can run the container. We run it with the detach <code>-d</code> option, as otherwise the container would just execute all required code and stopped working. We also run the container with <code>-t</code> option, to enable tty, or terminal. For repeatability, we provide a custom name with the <code>--name</code> command. After that, we <code>attach</code> to the container.</p>
+<p>Now we can run the container. We run it with the detach <code>-d</code> option, as otherwise the container would just execute all required code and stopped working. We also run the container with the <code>-t</code> option, to enable tty, or terminal. For repeatability, we provide a custom name with the <code>--name</code> command. After that, we <code>attach</code> to the container.</p>
 <pre><code>podman run  --name "test" -dt docker.io/library/ubuntu:latest
 podman attach "test"
 
 # to clean the container after finishing, run:
 podman rm "test"</code></pre>
-<p>We are now inside of the container, a brand new and clean Ubuntu 22.04 install, and we can start installing dependencies and building our app. After a few tries trying to find out required libraries and dependencies, I reached to this:</p>
+<p>We are now inside the container, a brand new and clean Ubuntu 22.04 install, and we can start installing dependencies and building our app. After a few tries trying to find out the required libraries and dependencies, I reached this:</p>
 <pre><code># update apt
 apt update
 
@@ -249,7 +249,7 @@ cd home/7kaa
 <section id="writing-a-containerfile" class="level3">
 <h3 class="anchored" data-anchor-id="writing-a-containerfile">Writing a Containerfile</h3>
 <p>We have commands that we want to run, but having to run them manually is annoying. To automate this, we can write a <code>Containerfile</code>! Or <code>Dockerfile</code>, as Docker calls it, but the syntax is identical.</p>
-<p>Most container files consist of <code>FROM</code>, which specify the image one is working with, <code>RUN</code> which runs various commands used to build the container, <code>COPY</code> which allows to copy content to or from the container, and <code>CMD</code> which is then used to launch the applications themselves.</p>
+<p>Most container files consist of <code>FROM</code>, which specifies the image one is working with, <code>RUN</code> which runs various commands used to build the container, <code>COPY</code> which allows one to copy content to or from the container, and <code>CMD</code> which is then used to launch the applications themselves.</p>
 <pre><code># Containerfile
 FROM ubuntu:22.04
 
@@ -270,15 +270,15 @@ RUN ./autogen.sh &amp;&amp; ./configure &amp;&amp; make</code></pre>
 </section>
 <section id="appimage" class="level2">
 <h2 class="anchored" data-anchor-id="appimage">AppImage</h2>
-<p>We have a replicable way to build a binary. The issue is that it is build against a particular version of Ubuntu and against a particular version of SDL2, Enet, OpenAL and Curl, so the binary won’t work on every system. One way to bundle these dependencies is with AppImage.</p>
+<p>We have a replicable way to build a binary. The issue is that it is built against a particular version of Ubuntu and against a particular version of SDL2, Enet, OpenAL and Curl, so the binary won’t work on every system. One way to bundle these dependencies is with AppImage.</p>
 <p>Note that to run AppImages, you need to have <code>libfuse2</code> installed. Also, I will be using <code>wget</code> to download some files, so make sure you have it installed as well. Everything will be provided in the final containerfile.</p>
-<p>To create AppImage, we need to create <code>AppDir</code> directory with pre-specified format either manually, or with the help of the <a href="https://docs.appimage.org/packaging-guide/from-source/linuxdeploy-user-guide.html#">linuxdeploy</a> tool. Linuxdeploy is a tool to create AppImages, so it not only creates required directory structure, but also copies dependencies for provided binary, compiles provided icon and desktop file (which are required), and also creates AppImage itself. To make an AppImage with linuxdeploy, we need to:</p>
+<p>To create AppImage, we need to create <code>AppDir</code> directory with a pre-specified format either manually, or with the help of the <a href="https://docs.appimage.org/packaging-guide/from-source/linuxdeploy-user-guide.html#">linuxdeploy</a> tool. Linuxdeploy is a tool to create AppImages, so it not only creates the required directory structure, but also copies dependencies for provided binary, compiles provided icon and desktop file (which are required), and also creates AppImage itself. To make an AppImage with linuxdeploy, we need to:</p>
 <ul>
 <li>create <code>AppDir</code> structure</li>
-<li>create binary, icon and desktop files in pre-specified format</li>
+<li>create binary, icon and desktop files in a pre-specified format</li>
 <li>create AppImage</li>
 </ul>
-<p>Linuxdeploy allows working in iterative format. That basically means that you mess around until it works. When you do this, note that provided binary, icon, and desktop file are currently not updated with repeated runs, so the iterative approach does not work completely. Alas, after mocking around for a bit and trying to figure it out since the documentation is not great and in many areas resemble stump, this is what we will do:</p>
+<p>Linuxdeploy allows working in an iterative format. That basically means that you mess around until it works. When you do this, note that provided binary, icon, and a desktop file are currently not updated with repeated runs, so the iterative approach does not work completely. Alas, after mocking around for a bit and trying to figure it out since the documentation is not great and in many areas resembles stump, this is what we will do:</p>
 <ul>
 <li>Install 7kaa into <code>AppDir</code></li>
 <li>convert icon 7k.ico to the png format</li>
@@ -287,10 +287,10 @@ RUN ./autogen.sh &amp;&amp; ./configure &amp;&amp; make</code></pre>
 </ul>
 <section id="installing-into-appdir" class="level3">
 <h3 class="anchored" data-anchor-id="installing-into-appdir">Installing into AppDir</h3>
-<p>First, we need to build the application in a way that it is installed. But we do not want to actually install it into the image filesytem, but into the <code>AppDir</code>:</p>
+<p>First, we need to build the application in a way that it is installed. But we do not want to actually install it into the image filesystem, but into the <code>AppDir</code>:</p>
 <pre><code>make install  DESTDIR=/home/7kaa/AppDir</code></pre>
-<p>Note that due to the way the build system for 7kaa is setup, with multiple makefiles for various subsystems, we need to specify AppDir with an absolute path instead of relative.</p>
-<p>Another thing that we need to do is move everything from <code>/usr/local/</code> to <code>/usr/</code>. While both are valid locations, and in fact <code>/usr/local/</code> is more suitable from administrative perspective, linuxdeploy does not recognize binary in <code>/usr/local/bin/</code></p>
+<p>Note that due to the way the build system for 7kaa is set up, with multiple makefiles for various subsystems, we need to specify AppDir with an absolute path instead of relative.</p>
+<p>Another thing that we need to do is move everything from <code>/usr/local/</code> to <code>/usr/</code>. While both are valid locations and in fact <code>/usr/local/</code> is more suitable from an administrative perspective, linuxdeploy does not recognize binary in <code>/usr/local/bin/</code></p>
 <pre><code>mv AppDir/usr/local/* AppDir/usr/
 rm -r AppDir/usr/local</code></pre>
 </section>
@@ -299,7 +299,7 @@ rm -r AppDir/usr/local</code></pre>
 <p>The icon that we have is in <code>ico</code> format, which comes from Windows and is not supported by the XDG Linux desktop specification, which accepts only png, svg and xpm.</p>
 <p>We can use imagemagick to convert it with:</p>
 <pre><code>convert src/7k.ico 7k.png</code></pre>
-<p>But its another dependency we need to include in our containerfile.</p>
+<p>But it is another dependency we need to include in our containerfile.</p>
 </section>
 <section id="creating-desktop-file" class="level3">
 <h3 class="anchored" data-anchor-id="creating-desktop-file">Creating desktop file</h3>
@@ -311,8 +311,8 @@ Name=7kaa
 Comment=Seven Kingdoms: Ancient Adversaries
 Path=/usr/bin
 Exec=7kaa
-Icon=7k # should not contain extension
-Categories=Game; # one of a several categories in specification</code></pre>
+Icon=7k # should not contain an extension
+Categories=Game; # one of several categories in specification</code></pre>
 </section>
 <section id="running-linuxdeploy" class="level3">
 <h3 class="anchored" data-anchor-id="running-linuxdeploy">Running linuxdeploy</h3>
@@ -324,9 +324,9 @@ VERSION=dev ./linuxdeploy.AppImage --appdir AppDir -d 7kaa.desktop -i 7k.png --o
 </section>
 <section id="pointing-7kaa-to-its-data" class="level3">
 <h3 class="anchored" data-anchor-id="pointing-7kaa-to-its-data">Pointing 7kaa to its data</h3>
-<p>Normally, this is all we would have to do. But if you try to run the AppImage, you will find out that the binary can’t find the data, this is because the binary is not in the same directory and the <code>SKDATA</code> environment variable is empty. We need to run the <code>7kaa</code> binary in the same way that we run the <code>linuxdeploy.AppImage</code>, which essentially mean we need to write our own runner script.</p>
+<p>Normally, this is all we would have to do. But if you try to run the AppImage, you will find out that the binary can’t find the data, this is because the binary is not in the same directory and the <code>SKDATA</code> environment variable is empty. We need to run the <code>7kaa</code> binary in the same way that we run the <code>linuxdeploy.AppImage</code>, which essentially means we need to write our own runner script.</p>
 <p>There are two ways how we can do it, either run a complex bash script that does some environment parsing and settings as required for AppImage, like <a href="https://github.com/KurtPfeifle/ImageMagick/blob/master/appimage/AppRun">imagemagick</a> does, or we use just a simple runner script and use provided <a href="https://github.com/AppImage/AppImageKit/releases">AppRun</a>, which is a simple binary that does what we need and also parses the desktop file.</p>
-<p>First, create a <code>AppDir/usr/bin/7krun</code></p>
+<p>First, create an <code>AppDir/usr/bin/7krun</code></p>
 <pre><code>#!/bin/env sh
 
 SKDATA=share/7kaa/ 7kaa</code></pre>
@@ -349,7 +349,7 @@ Categories=Game;</code></pre>
 </section>
 <section id="adding-music" class="level3">
 <h3 class="anchored" data-anchor-id="adding-music">Adding music</h3>
-<p>Due to copyright reasons, music is distributed separately. In fact, one of the motivation for creating an AppImage was that on some Linux distributions, music is not distributed at all due to it not being FOSS.</p>
+<p>Due to copyright reasons, music is distributed separately. In fact, one of the motivations for creating an AppImage was that on some Linux distributions, music is not distributed at all due to it not being FOSS.</p>
 <p>The music is available at the <a href="https://www.7kfans.com/downloads">7kfans website</a> as a separate download. We will download the archive, unpack it, transfer the music into the <code>DATA</code> directory and rebuild the AppImage.</p>
 <pre><code># force IPv4, the default IPv6 seems to be broken and just hang on
 wget -nv -c -4 https://www.7kfans.com/downloads/7kaa-music-2.15.tar.bz2
@@ -415,7 +415,7 @@ RUN wget -nv -c https://github.com/AppImage/AppImageKit/releases/download/13/App
 <p>Note that I did some minor tweeks to iron out potential issues.</p>
 <p>Now we should be able to run:</p>
 <pre><code>podman build -t 7kaa -f Containerfile</code></pre>
-<p>And half an hour later, when the image is finally build:</p>
+<p>And half an hour later, when the image is finally built:</p>
 <pre><code>podman create --name 7kaaAppImage 7kaa
 podman cp 7kaaAppImage:/home/7kaa/7kaa-dev-x86_64.AppImage .
 podman rm 7kaaAppImage
