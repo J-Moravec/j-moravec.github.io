@@ -4,7 +4,7 @@ description: "Solving unhelpful errors in build systems with containerization"
 date: "2023-07-09"
 categories:
     - others
-image: example_long.svg
+image: icons.svg
 toc: true
 toc-depth: 4
 ---
@@ -13,28 +13,28 @@ toc-depth: 4
 
 ### Unhelpful errors
 
-You have probably experienced it more then once. You try to run some code and instead of result, you get a strange error saying that something is broken. You are scratching your head, because the error doesn't say clearly what is broken, but points to some esoteric part of the code that should be right, or points very deep into subsystem or dependency, which points to another, only for you to discover in the end that the issue is in completely different part.
+You have probably experienced it more than once. You try to run some code and instead of a result, you get a strange error saying that something is broken. You are scratching your head because the error doesn't say clearly what is broken but points to some esoteric part of the code that should be right, or points very deep into subsystem or dependency, which points to another, only for you to discover in the end that the issue is in a completely different part.
 
-Previously, this happened to me with `devtools` or `testthat`, when both packages added another dependency (or their depedency added a dependency) `cli`, which incorectly handled version string of one of the most common terminals on one of the most common linux distro. What was more infuriating is finding that it was supposed to be fixed 6 months ago. Why the main branch wasn't patched, and the bugged version was released on CRAN instead is a mystery to me.
+Previously, this happened to me with `devtools` or `testthat`, when both packages added another dependency (or their dependency added a dependency) `cli`, which incorrectly handled the version string of one of the most common terminals on one of the most common Linux distro. What was more infuriating is finding that it was supposed to be fixed 6 months ago. Why the main branch wasn't patched, and the bugged version was released on CRAN instead is a mystery to me.
 
 Anyway, enough of this rant, this blogpost is not about this, nor it is about R, but about another completely different issue.
 
 ### Complex build systems
 
-In the begining, well I don't know since I wasn't there, but much later then that we had `GNU make` to build C code. But the build became more and more complex, so more complex tools were developed. And these tools became, and still are, more and more complex. From my tiny experience, it was easier to write a package in Java, then to write and setup an ant or gradle from scratch. But this might be due to my inexperience, I write code frequently, although in compiled langauges, but I don't write build scripts often enough.
+In the beginning, well I don't know since I wasn't there, but much later than that we had `GNU make` to build C code. But the build became more and more complex, so more complex tools were developed. And these tools became, and still are, more and more complex. From my tiny experience, it was easier to write a package in Java, than to write and setup Ant or Gradle from scratch. But this might be due to my inexperience, I write code frequently although in compiled languages but I don't write build scripts often enough.
 
 ### Dependencies
 
 You can encounter a similar issue if you want to build existing code as well.
 For instance, [7kaa](https://github.com/the3dfxdude/7kaa/), a commercial game that was open-sourced by Enlight, uses `autotools`. As you might get from the name, autotools is not a single tool, but a collection of tools. And if you don't have any of those installed, you will get strange errors, especially if you didn't notice a single warning at the start of the very long log file.
 
-In the end, I managed to solve this issue by installing dependencies and potentially poluting my system. But what if I wanted to do this next time again? Would I remember what did I do wrong and how I solved the issue? Can I do something better to isolate the dependency issue in a testable and replicable way so that a completely new clean system can be guranteed to succeed?
+In the end, I managed to solve this issue by installing dependencies and potentially polluting my system. But what if I wanted to do this next time again? Would I remember what did I do wrong and how I solved the issue? Can I do something better to isolate the dependency issue in a testable and replicable way so that a completely new clean system can be guaranteed to succeed?
 
 ## Podman
 
-[podman](https://podman.io/) is a lesser known cousin of Docker. The advantage of Podman is that it allows creation of so called rootles containers. This makes it a little easier to work with.
+[podman](https://podman.io/) is a lesser-known cousin of Docker. The advantage of Podman is that it allows the creation of so-called rootless containers. This makes it a little easier to work with.
 
-But what are Podman/Docker containers? Simply said, containers are packages containing an application, including dependencies and even OS. This means that with containers, you can create a replicable installation and deployment of applications on a clean systems, which are isolated from your host system by the Docker/Podman engine.
+But what are Podman/Docker containers? Simply said, containers are packages containing an application, including dependencies and even OS. This means that with containers, you can create a replicable installation and deployment of applications on clean systems, which are isolated from your host system by the Docker/Podman engine.
 
 ### Installing podman
 
@@ -42,7 +42,7 @@ On my system (Ubuntu 22.04), `podman` is easy to install:
 
 `sudo apt install podman`
 
-However, there is a currently a [bug](https://github.com/containers/podman/issues/8896), the config in `/etc/containers/registries.conf` does not come with correct presets. In fact, it does not come with any presets at all, it only contains documentation. This means that it is not connected to any repository, and the commands mentioned in tutorial, such as:
+However, there is currently a [bug](https://github.com/containers/podman/issues/8896), the config in `/etc/containers/registries.conf` does not come with correct presets. In fact, it does not come with any presets at all, it only contains documentation. This means that it is not connected to any repository, and the commands mentioned in the tutorial, such as:
 
 ```
 podman search [search term]
@@ -73,7 +73,7 @@ First, we download an image:
 podman pull docker.io/library/ubuntu
 ```
 
-Now we can run the container. We run it with the detach `-d` option, as otherwise the container would just execute all required code and stopped working. We also run the container with `-t` option, to enable tty, or terminal. For repeatability, we provide a custom name with the `--name` command. After that, we `attach` to the container.
+Now we can run the container. We run it with the detach `-d` option, as otherwise the container would just execute all required code and stopped working. We also run the container with the `-t` option, to enable tty, or terminal. For repeatability, we provide a custom name with the `--name` command. After that, we `attach` to the container.
 ```
 podman run  --name "test" -dt docker.io/library/ubuntu:latest
 podman attach "test"
@@ -82,7 +82,7 @@ podman attach "test"
 podman rm "test"
 ```
 
-We are now inside of the container, a brand new and clean Ubuntu 22.04 install, and we can start installing dependencies and building our app. After a few tries trying to find out required libraries and dependencies, I reached to this:
+We are now inside the container, a brand new and clean Ubuntu 22.04 install, and we can start installing dependencies and building our app. After a few tries trying to find out the required libraries and dependencies, I reached this:
 
 ```
 # update apt
@@ -106,7 +106,7 @@ All we need now is to copy the binary and data with `podman container cp [source
 
 We have commands that we want to run, but having to run them manually is annoying. To automate this, we can write a `Containerfile`! Or `Dockerfile`, as Docker calls it, but the syntax is identical.
 
-Most container files consist of `FROM`, which specify the image one is working with, `RUN` which runs various commands used to build the container, `COPY` which allows to copy content to or from the container, and `CMD` which is then used to launch the applications themselves.
+Most container files consist of `FROM`, which specifies the image one is working with, `RUN` which runs various commands used to build the container, `COPY` which allows one to copy content to or from the container, and `CMD` which is then used to launch the applications themselves.
 ```
 # Containerfile
 FROM ubuntu:22.04
@@ -129,17 +129,17 @@ Build this image with `podman -t "7kaa" -f Containerfile`.
 
 ## AppImage
 
-We have a replicable way to build a binary. The issue is that it is build against a particular version of Ubuntu and against a particular version of SDL2, Enet, OpenAL and Curl, so the binary won't work on every system. One way to bundle these dependencies is with AppImage.
+We have a replicable way to build a binary. The issue is that it is built against a particular version of Ubuntu and against a particular version of SDL2, Enet, OpenAL and Curl, so the binary won't work on every system. One way to bundle these dependencies is with AppImage.
 
 Note that to run AppImages, you need to have `libfuse2` installed. Also, I will be using `wget` to download some files, so make sure you have it installed as well. Everything will be provided in the final containerfile.
 
-To create AppImage, we need to create `AppDir` directory with pre-specified format either manually, or with the help of the [linuxdeploy](https://docs.appimage.org/packaging-guide/from-source/linuxdeploy-user-guide.html#) tool. Linuxdeploy is a tool to create AppImages, so it not only creates required directory structure, but also copies dependencies for provided binary, compiles provided icon and desktop file (which are required), and also creates AppImage itself. To make an AppImage with linuxdeploy, we need to:
+To create AppImage, we need to create `AppDir` directory with a pre-specified format either manually, or with the help of the [linuxdeploy](https://docs.appimage.org/packaging-guide/from-source/linuxdeploy-user-guide.html#) tool. Linuxdeploy is a tool to create AppImages, so it not only creates the required directory structure, but also copies dependencies for provided binary, compiles provided icon and desktop file (which are required), and also creates AppImage itself. To make an AppImage with linuxdeploy, we need to:
 
 * create `AppDir` structure
-* create binary, icon and desktop files in pre-specified format
+* create binary, icon and desktop files in a pre-specified format
 * create AppImage
 
-Linuxdeploy allows working in iterative format. That basically means that you mess around until it works. When you do this, note that provided binary, icon, and desktop file are currently not updated with repeated runs, so the iterative approach does not work completely. Alas, after mocking around for a bit and trying to figure it out since the documentation is not great and in many areas resemble stump, this is what we will do:
+Linuxdeploy allows working in an iterative format. That basically means that you mess around until it works. When you do this, note that provided binary, icon, and a desktop file are currently not updated with repeated runs, so the iterative approach does not work completely. Alas, after mocking around for a bit and trying to figure it out since the documentation is not great and in many areas resembles stump, this is what we will do:
 
 * Install 7kaa into `AppDir`
 * convert icon 7k.ico to the png format
@@ -147,15 +147,15 @@ Linuxdeploy allows working in iterative format. That basically means that you me
 * run linuxdeploy to put it all together and create AppImage
 
 ### Installing into AppDir
-First, we need to build the application in a way that it is installed. But we do not want to actually install it into the image filesytem, but into the `AppDir`:
+First, we need to build the application in a way that it is installed. But we do not want to actually install it into the image filesystem, but into the `AppDir`:
 
 ```
 make install  DESTDIR=/home/7kaa/AppDir
 ```
 
-Note that due to the way the build system for 7kaa is setup, with multiple makefiles for various subsystems, we need to specify AppDir with an absolute path instead of relative.
+Note that due to the way the build system for 7kaa is set up, with multiple makefiles for various subsystems, we need to specify AppDir with an absolute path instead of relative.
 
-Another thing that we need to do is move everything from `/usr/local/` to `/usr/`. While both are valid locations, and in fact `/usr/local/` is more suitable from administrative perspective, linuxdeploy does not recognize binary in `/usr/local/bin/`
+Another thing that we need to do is move everything from `/usr/local/` to `/usr/`. While both are valid locations and in fact `/usr/local/` is more suitable from an administrative perspective, linuxdeploy does not recognize binary in `/usr/local/bin/`
 
 ```
 mv AppDir/usr/local/* AppDir/usr/
@@ -170,7 +170,7 @@ We can use imagemagick to convert it with:
 convert src/7k.ico 7k.png
 ```
 
-But its another dependency we need to include in our containerfile.
+But it is another dependency we need to include in our containerfile.
 
 ### Creating desktop file
 Desktop files are files that allow integration of your program/binary with your desktop, and they are required to create an AppImage. An example can be found on [archlinux wiki](https://wiki.archlinux.org/title/Desktop_entries), with full specification on [freedesktop.org](https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html#recognized-keys). Note that quite a few elements appear to be required by the linuxdeploy.
@@ -183,8 +183,8 @@ Name=7kaa
 Comment=Seven Kingdoms: Ancient Adversaries
 Path=/usr/bin
 Exec=7kaa
-Icon=7k # should not contain extension
-Categories=Game; # one of a several categories in specification
+Icon=7k # should not contain an extension
+Categories=Game; # one of several categories in specification
 ```
 
 ### Running linuxdeploy
@@ -198,11 +198,11 @@ VERSION=dev ./linuxdeploy.AppImage --appdir AppDir -d 7kaa.desktop -i 7k.png --o
 We have also set a version of the resulting appimage to `dev` by specifying the recognized environment variable `VERSION`.
 
 ### Pointing 7kaa to its data
-Normally, this is all we would have to do. But if you try to run the AppImage, you will find out that the binary can't find the data, this is because the binary is not in the same directory and the `SKDATA` environment variable is empty. We need to run the `7kaa` binary in the same way that we run the `linuxdeploy.AppImage`, which essentially mean we need to write our own runner script.
+Normally, this is all we would have to do. But if you try to run the AppImage, you will find out that the binary can't find the data, this is because the binary is not in the same directory and the `SKDATA` environment variable is empty. We need to run the `7kaa` binary in the same way that we run the `linuxdeploy.AppImage`, which essentially means we need to write our own runner script.
 
 There are two ways how we can do it, either run a complex bash script that does some environment parsing and settings as required for AppImage, like [imagemagick](https://github.com/KurtPfeifle/ImageMagick/blob/master/appimage/AppRun) does, or we use just a simple runner script and use provided [AppRun](https://github.com/AppImage/AppImageKit/releases), which is a simple binary that does what we need and also parses the desktop file.
 
-First, create a `AppDir/usr/bin/7krun`
+First, create an `AppDir/usr/bin/7krun`
 ```
 #!/bin/env sh
 
@@ -239,7 +239,7 @@ and test with:
 ```
 
 ### Adding music
-Due to copyright reasons, music is distributed separately. In fact, one of the motivation for creating an AppImage was that on some Linux distributions, music is not distributed at all due to it not being FOSS.
+Due to copyright reasons, music is distributed separately. In fact, one of the motivations for creating an AppImage was that on some Linux distributions, music is not distributed at all due to it not being FOSS.
 
 The music is available at the [7kfans website](https://www.7kfans.com/downloads) as a separate download. We will download the archive, unpack it, transfer the music into the `DATA` directory and rebuild the AppImage.
 
@@ -319,7 +319,7 @@ Now we should be able to run:
 ```
 podman build -t 7kaa -f Containerfile
 ```
-And half an hour later, when the image is finally build:
+And half an hour later, when the image is finally built:
 
 ```
 podman create --name 7kaaAppImage 7kaa
