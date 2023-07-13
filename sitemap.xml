@@ -2,46 +2,50 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://J-Moravec.github.io/j-moravec.github.io/software.html</loc>
-    <lastmod>2023-07-10T09:36:32.103Z</lastmod>
+    <lastmod>2023-07-13T10:51:16.863Z</lastmod>
   </url>
   <url>
     <loc>https://J-Moravec.github.io/j-moravec.github.io/publications.html</loc>
-    <lastmod>2023-07-10T09:36:32.471Z</lastmod>
+    <lastmod>2023-07-13T10:51:17.211Z</lastmod>
   </url>
   <url>
     <loc>https://J-Moravec.github.io/j-moravec.github.io/index.html</loc>
-    <lastmod>2023-07-10T09:36:32.887Z</lastmod>
+    <lastmod>2023-07-13T10:51:17.651Z</lastmod>
   </url>
   <url>
     <loc>https://J-Moravec.github.io/j-moravec.github.io/about.html</loc>
-    <lastmod>2023-07-10T09:36:33.163Z</lastmod>
+    <lastmod>2023-07-13T10:51:17.935Z</lastmod>
   </url>
   <url>
     <loc>https://J-Moravec.github.io/j-moravec.github.io/posts/digital_cubism/1_kmeans_cart.html</loc>
-    <lastmod>2023-07-10T09:36:33.799Z</lastmod>
+    <lastmod>2023-07-13T10:51:18.563Z</lastmod>
   </url>
   <url>
     <loc>https://J-Moravec.github.io/j-moravec.github.io/posts/sql_nz_names/sql_nz_names.html</loc>
-    <lastmod>2023-07-10T09:36:34.255Z</lastmod>
+    <lastmod>2023-07-13T10:51:19.059Z</lastmod>
   </url>
   <url>
     <loc>https://J-Moravec.github.io/j-moravec.github.io/posts/baseR_AZ/1_introduction.html</loc>
-    <lastmod>2023-07-10T09:36:34.943Z</lastmod>
+    <lastmod>2023-07-13T10:51:19.823Z</lastmod>
   </url>
   <url>
     <loc>https://J-Moravec.github.io/j-moravec.github.io/posts/baseR_AZ/3_operators.html</loc>
-    <lastmod>2023-07-10T09:36:36.075Z</lastmod>
+    <lastmod>2023-07-13T10:51:21.071Z</lastmod>
   </url>
   <url>
     <loc>https://J-Moravec.github.io/j-moravec.github.io/posts/baseR_AZ/2_functions.html</loc>
-    <lastmod>2023-07-10T09:36:36.827Z</lastmod>
+    <lastmod>2023-07-13T10:51:21.779Z</lastmod>
   </url>
   <url>
     <loc>https://J-Moravec.github.io/j-moravec.github.io/posts/hello_world/index.html</loc>
-    <lastmod>2023-07-10T09:36:37.139Z</lastmod>
+    <lastmod>2023-07-13T10:51:22.063Z</lastmod>
   </url>
   <url>
     <loc>https://J-Moravec.github.io/j-moravec.github.io/posts/containers/containers.html</loc>
-    <lastmod>2023-07-10T09:36:37.611Z</lastmod>
+    <lastmod>2023-07-13T10:51:22.495Z</lastmod>
+  </url>
+  <url>
+    <loc>https://J-Moravec.github.io/j-moravec.github.io/posts/containers/vmwin.html</loc>
+    <lastmod>2023-07-13T10:51:22.815Z</lastmod>
   </url>
 </urlset>

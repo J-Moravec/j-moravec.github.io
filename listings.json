@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/containers/vmwin.html",
       "/posts/containers/containers.html",
       "/posts/sql_nz_names/sql_nz_names.html",
       "/posts/digital_cubism/1_kmeans_cart.html",
