@@ -4,7 +4,7 @@ description: "How to get Windows 11 working on VirtualBox to run Windows-only ap
 date: "2023-07-13"
 categories:
     - others
-image: virtualbox.png
+image: VirtualBox.svg
 toc: true
 toc-depth: 4
 ---
