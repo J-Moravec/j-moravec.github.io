@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2023-07-20">
+<meta name="description" content="Looking at patterns of car crashes in New Zealand">
+
+<title>Jiří C. Moravec - Exploratory Data Analysis: NZ Crash Data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Jiří C. Moravec</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications.html">
+ <span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../software.html">
+ <span class="menu-text">Software</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/J-Moravec/"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/jcmoravec"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#about-this-work" id="toc-about-this-work" class="nav-link" data-scroll-target="#about-this-work">About this work</a></li>
+  <li><a href="#eda-nz-crash-data" id="toc-eda-nz-crash-data" class="nav-link" data-scroll-target="#eda-nz-crash-data">EDA: NZ Crash Data</a>
+  <ul>
+  <li><a href="#downloading-the-data" id="toc-downloading-the-data" class="nav-link" data-scroll-target="#downloading-the-data">Downloading the data</a></li>
+  <li><a href="#basic-data-cleaning-and-exploration" id="toc-basic-data-cleaning-and-exploration" class="nav-link" data-scroll-target="#basic-data-cleaning-and-exploration">Basic data cleaning and exploration</a>
+  <ul class="collapse">
+  <li><a href="#other-variables" id="toc-other-variables" class="nav-link" data-scroll-target="#other-variables">Other variables</a></li>
+  <li><a href="#time-variables" id="toc-time-variables" class="nav-link" data-scroll-target="#time-variables">Time variables</a></li>
+  <li><a href="#location-variables" id="toc-location-variables" class="nav-link" data-scroll-target="#location-variables">Location variables</a></li>
+  <li><a href="#weather-variables" id="toc-weather-variables" class="nav-link" data-scroll-target="#weather-variables">Weather variables</a></li>
+  <li><a href="#crash-severity-variables" id="toc-crash-severity-variables" class="nav-link" data-scroll-target="#crash-severity-variables">Crash Severity variables</a></li>
+  <li><a href="#other-objects" id="toc-other-objects" class="nav-link" data-scroll-target="#other-objects">Other objects</a></li>
+  <li><a href="#terrain-features" id="toc-terrain-features" class="nav-link" data-scroll-target="#terrain-features">Terrain features</a></li>
+  <li><a href="#road-conditions" id="toc-road-conditions" class="nav-link" data-scroll-target="#road-conditions">Road conditions</a></li>
+  <li><a href="#vehicle-type" id="toc-vehicle-type" class="nav-link" data-scroll-target="#vehicle-type">Vehicle Type</a></li>
+  </ul></li>
+  <li><a href="#patterns-across-regions" id="toc-patterns-across-regions" class="nav-link" data-scroll-target="#patterns-across-regions">Patterns across regions</a></li>
+  <li><a href="#modelling" id="toc-modelling" class="nav-link" data-scroll-target="#modelling">Modelling</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Exploratory Data Analysis: NZ Crash Data</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">R</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Looking at patterns of car crashes in New Zealand
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 20, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>This is an Exploratory Data Analysis (EDA) for New Zealand Crash data. The aim of EDA is to explore data, find interesting patterns, and generate set of hypothesis that are worth to explore further, but also to find inconsistencies, coding errors, duplications and so on. For this reason, EDA is often the first step that needs to be done when looking at new data before other statistical or machine learning approaches are used. Ideally, EDA will be done in collaboration with a domain expert as many of the patterns or inconsistencies can be just a property of the data, be it from the way the data was collected, or expected patterns based on the mechanism that generate the data. Since these kind of patterns might influence the model-fitting and hypothesis testing steps later in the analysis, identifying these patterns and working with domain expert is an important step to get aware of these patterns so that they do not influence steps later and do not produce false positive relationships, or mask the true ones.</p>
+<p>EDA is not a hard science, but more of an art, and there are no hard rules. While some tools for automatic EDA exist, see <a href="https://arxiv.org/pdf/1904.02101.pdf">The Landscape of R Packages for Automated Exploratory Data Analysis</a> for review, EDA is in its essence interactive. You are going through data, looking at various data points, features, and patterns, and searching for interesting questions and answers.</p>
+<p>The history of EDA is interesting and its modern history starts with Tukey, but in truth, any data analysis starts with looking at patterns in the data and in truth, EDA is as old as statistics, and perhaps even predates it. After all, this is how Bayes came with, and Laplace rediscovered the Bayesian theorem, or how various probability distributions were invented/discovered. For a good review on statistics data science, and EDA, see <a href="https://www.tandfonline.com/doi/full/10.1080/10618600.2017.1384734">50 years of Data Science</a>. Or you can go directly for the <a href="https://web.stanford.edu/~gavish/documents/Tukey_the_future_of_data_analysis.pdf">Future of Data Analysis</a> from Tukey written in 1961. For a good tutorial for EDA, the <a href="https://r4ds.had.co.nz/exploratory-data-analysis.html#exploratory-data-analysis">R for Data Science</a> from Hadley is a great source.</p>
+</section>
+<section id="about-this-work" class="level2">
+<h2 class="anchored" data-anchor-id="about-this-work">About this work</h2>
+<p>This work was done as a part of interview for the Data Analyst position with New Zealand Ministry of Transport and got me an offer. The task was to look at geographical patterns, but since this is my first time working with the data, I think that EDA is a must to familiarize oneself with the data and how the data are coded, because interpretation of the patterns will strongly depend on this.</p>
+<p>All the code as well as a version of this document is available on <a href="http://github.com/j-moravec/CrashDataEda">my github</a>. The crash data is quite large, so I didn’t include a copy of it here, but I did include copy of some population data we will use for normalization later.</p>
+</section>
+<section id="eda-nz-crash-data" class="level2">
+<h2 class="anchored" data-anchor-id="eda-nz-crash-data">EDA: NZ Crash Data</h2>
+<p>The purpose of this analysis is to explore New Zealand crash statistics data, and create insight on crashes by region, or other spatial area. And if we find some interesting relationship, we might try to do some little non-serious modelling. Why non-serious? Because we need domain expert to discuss the data with us, but we do not have a domain expert. Because of that, we do not know what are the limitations and assumptions in the data, so any modelling done in here is purely exploratory.</p>
+<p>As pointed by the previous paragraph, there are some limitations. The challenge here is to do this in a limited time, so we will be able to do only very cursory exploration and look only at some overall patterns in the data, we won’t be going much into detail both by looking at year to year differences in various statistics, or by looking closely at small geographical areas, such as spikes in the city centres and so on. We also do not have a domain expert on hand, so we can’t discuss various findings, which means we do not know if any pattern we see is a true pattern, or just something resulting from the way the data way collected/encoded. This will be obvious quite later.</p>
+<p>Finally, as this is exploratory analysis, do not expect high quality infographics. Quick and dirty graphs are what we are looking for. In fact, in some some cases, I prefer to not even look at graphs, instead look at distribution of numbers. Good graphs take a time to setup, and sometimes might hide some obvious issues with the data. For instance, boxplots are great for visualising basic statistics, but it hides how the data are distributed inside the box, for instance, perfectly clean boxplot might not show a bimodal distribution of data.</p>
+<section id="downloading-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="downloading-the-data">Downloading the data</h3>
+<p>To get the data, we download the CSV from <a href="https://opendata-nzta.opendata.arcgis.com/datasets/NZTA::crash-analysis-system-cas-data-1/about">https://opendata-nzta.opendata.arcgis.com</a>.</p>
+<p>I downloaded a table updated on <code>6th July 2023</code>, and there are <code>821 744</code> records. Unfortunately, there is no way how to provide a direct link to download the data, as this is hidden behind javascript action. There is a ArcGIS REST API, but it is not documented at this page, and even the <a href="https://developers.arcgis.com/documentation/mapping-apis-and-services/data-hosting/services/feature-service/">main documentation</a>, once you figure out that you are looking for <code>Feature Service</code>, is less than ideal.</p>
+<p>Given enough time, this could be figured out, but by default, only <code>2000</code> records are downloaded, and since we are pressed for time, I chose to not explore this further. Last time I worked with a similar API (GenBank), there was a hard limit on how many records could be downloaded at once. To download everything, one had to split the query into multiple subqueries and collate the result. To do this right, I would need to either use or write a package to provide binding for these queries and this would take quite a bit of time. It is possible to do this without package, but <a href="https://community.esri.com/t5/gis-life-blog/accessing-arcgis-rest-services-using-r/ba-p/898451">it might get quite a bit difficult</a> and error-prone.</p>
+</section>
+<section id="basic-data-cleaning-and-exploration" class="level3">
+<h3 class="anchored" data-anchor-id="basic-data-cleaning-and-exploration">Basic data cleaning and exploration</h3>
+<p>I downloaded the data into the <code>data</code> folder, so we can start looking at it and doing some basic cleaning.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>filename <span class="ot">=</span> <span class="st">"data/Crash_Analysis_System_(CAS)_data.csv"</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">read.csv</span>(filename)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>##  [1] "X"                         "Y"                        
+##  [3] "OBJECTID"                  "advisorySpeed"            
+##  [5] "areaUnitID"                "bicycle"                  
+##  [7] "bridge"                    "bus"                      
+##  [9] "carStationWagon"           "cliffBank"                
+## [11] "crashDirectionDescription" "crashFinancialYear"       
+## [13] "crashLocation1"            "crashLocation2"           
+## [15] "crashRoadSideRoad"         "crashSeverity"            
+## [17] "crashSHDescription"        "crashYear"                
+## [19] "debris"                    "directionRoleDescription" 
+## [21] "ditch"                     "fatalCount"               
+## [23] "fence"                     "flatHill"                 
+## [25] "guardRail"                 "holiday"                  
+## [27] "houseOrBuilding"           "intersection"             
+## [29] "kerb"                      "light"                    
+## [31] "meshblockId"               "minorInjuryCount"         
+## [33] "moped"                     "motorcycle"               
+## [35] "NumberOfLanes"             "objectThrownOrDropped"    
+## [37] "otherObject"               "otherVehicleType"         
+## [39] "overBank"                  "parkedVehicle"            
+## [41] "pedestrian"                "phoneBoxEtc"              
+## [43] "postOrPole"                "region"                   
+## [45] "roadCharacter"             "roadLane"                 
+## [47] "roadSurface"               "roadworks"                
+## [49] "schoolBus"                 "seriousInjuryCount"       
+## [51] "slipOrFlood"               "speedLimit"               
+## [53] "strayAnimal"               "streetLight"              
+## [55] "suv"                       "taxi"                     
+## [57] "temporarySpeedLimit"       "tlaId"                    
+## [59] "tlaName"                   "trafficControl"           
+## [61] "trafficIsland"             "trafficSign"              
+## [63] "train"                     "tree"                     
+## [65] "truck"                     "unknownVehicleType"       
+## [67] "urban"                     "vanOrUtility"             
+## [69] "vehicle"                   "waterRiver"               
+## [71] "weatherA"                  "weatherB"</code></pre>
+<p>There is quite lot of features in here. One big issue with this dataset is that there is a complete lack of description <em>what these features mean</em>. Previously, I worked with <a href="https://d-place.org/contributions/EA">Ethnographic Atlas</a>, and there is a whole <a href="https://github.com/J-Moravec/clustering_ethnographic_atlas/blob/master/data">codebook</a> on the meaning of individual features and the way they were coded. IMHO, this is quite an issue that should be corrected and something that could be easily resolved if we had an expert on hand.</p>
+<p>For instance, what is <code>advisorySpeed</code>? Advised speed lower than maximum allowed speed that is put in tight corners? That would make sense. But look at what happens when we create a contingency table (bivariate relationship) of <code>advisorySpeed</code> and <code>speedLimit</code>, which I assume is the maximum allowed speed:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="st">"Speed Limit"</span><span class="ot">=</span>data<span class="sc">$</span>speedLimit, <span class="st">"Advisory Speed"</span><span class="ot">=</span>data<span class="sc">$</span>advisorySpeed, <span class="at">useNA=</span><span class="st">"always"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>##            Advisory Speed
+## Speed Limit     15     20     25     30     35     40     45     50     55
+##        2         0      0      0      0      0      0      0      0      0
+##        5         0      0      0      0      0      0      0      0      0
+##        6         0      0      0      0      0      0      0      0      0
+##        10        0      0      0      0      0      0      0      0      0
+##        15        0      0      0      0      0      0      0      0      0
+##        20       11      1      0      0      0      0      0      0      0
+##        30       24     20     33      0      0      0      0      0      0
+##        40        2      2      5      3      6      0      0      1      0
+##        50      172    353    637    915   1220    498   1254      7      2
+##        51        0      0      0      0      0      0      0      0      0
+##        60        6      1     25     11     99     11    120     27    119
+##        61        0      0      0      0      0      0      0      0      0
+##        70        4      7     70     29    224     20    201    102    207
+##        80        6      8    101     35    444      8    463     83    598
+##        90        0      0      0      0      0      0      3      0      1
+##        100      65     27    658    315   2053     88   2802    421   3750
+##        110       0      0      0      0      2      0      1      0      0
+##        &lt;NA&gt;      0      0      0      0      0      0      0      0      0
+##            Advisory Speed
+## Speed Limit     60     65     70     75     80     85     90     95   &lt;NA&gt;
+##        2         0      0      0      0      0      0      0      0      1
+##        5         0      0      0      0      0      0      0      0     15
+##        6         0      0      0      0      0      0      0      0      1
+##        10        0      0      0      0      0      0      0      0    813
+##        15        0      0      0      0      0      0      0      0     10
+##        20        0      0      0      0      0      0      0      0   1934
+##        30        0      0      0      0      0      0      0      0   7261
+##        40        0      0      0      0      0      0      0      0   1800
+##        50        0      1      0      2      0      0      0      0 488142
+##        51        0      0      0      0      0      0      0      0      1
+##        60        1      3      0      1      0      0      0      0  22471
+##        61        0      0      0      0      0      0      0      0      1
+##        70       29    200      1      1      0      1      0      0  24372
+##        80       41    488     60    255      0      0      0      0  37847
+##        90        0      0      0      4      1      3      0      0    465
+##        100     213   4556    501   3684    675   1798    153    289 204254
+##        110       0      1      0      0      0      0      0      1    174
+##        &lt;NA&gt;      0      0      0      0      0      0      0      0    838</code></pre>
+<p>Advisory Speed is usually bellow the Speed Limit, as expected, but I would expect that Advisory Speed is <em>always</em> bellow the Speed Limit. In some cases, this is not true. Are the assumptions we made about the meaning of both variables correct? If so, does that mean that there is a codding error? Or something else is happening, such as incorrect signage on road?</p>
+<p>For instance, we could easily subset some of the strange datapoints, for instance, where Speed Limit is <code>50</code>, and Advisory Speed is larger than that:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(data, data<span class="sc">$</span>speedLimit <span class="sc">==</span> <span class="dv">50</span> <span class="sc">&amp;</span> data<span class="sc">$</span>advisorySpeed <span class="sc">&gt;</span> <span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>##              X       Y OBJECTID advisorySpeed areaUnitID bicycle bridge bus
+## 98658  1823770 5537280   160173            75     561811       0      0   0
+## 192652 1819785 5576514   316844            65     558700       0     NA   0
+## 295973 1572148 5170547   480920            55     596400       0      0   0
+## 517292 1751258 5950941   822065            55     505805       0     NA   0
+## 721471 1571780 5170316  1158036            75     596503       0      0   0
+##        carStationWagon cliffBank crashDirectionDescription crashFinancialYear
+## 98658                1         0                     South          2020/2021
+## 192652               1        NA                      West          2018/2019
+## 295973               0         0                     North          2018/2019
+## 517292               2        NA                     South          2021/2022
+## 721471               1         1                      East          2020/2021
+##                crashLocation1     crashLocation2 crashRoadSideRoad
+## 98658            RAILWAY ROAD       MAPLE STREET                NA
+## 192652               01N-0885    KOTUKUTUKU ROAD                NA
+## 295973     GOVERNORS BAY ROAD   SANDY BEACH ROAD                NA
+## 517292 HIBISCUS COAST HIGHWAY           GRUTS BR                NA
+## 721471        DYERS PASS ROAD GOVERNORS BAY ROAD                NA
+##           crashSeverity crashSHDescription crashYear debris
+## 98658  Non-Injury Crash                 No      2021      0
+## 192652      Minor Crash                Yes      2018     NA
+## 295973 Non-Injury Crash                 No      2019      0
+## 517292 Non-Injury Crash                 No      2021     NA
+## 721471 Non-Injury Crash                 No      2020      0
+##        directionRoleDescription ditch fatalCount fence  flatHill guardRail
+## 98658                     South     0          0     0      Flat         0
+## 192652                    South    NA          0    NA      Flat        NA
+## 295973                    South     0          0     0 Hill Road         0
+## 517292                    South    NA          0    NA Hill Road        NA
+## 721471                     East     0          0     0 Hill Road         0
+##        holiday houseOrBuilding intersection kerb      light meshblockId
+## 98658                        0           NA    0       Dark     1792100
+## 192652                      NA           NA   NA       Dark     1728600
+## 295973                       0           NA    0       Dark     2711400
+## 517292                      NA           NA   NA Bright sun      171102
+## 721471                       0           NA    0       Dark     2711501
+##        minorInjuryCount moped motorcycle NumberOfLanes objectThrownOrDropped
+## 98658                 0     0          0             2                     0
+## 192652                1     0          0             2                    NA
+## 295973                0     0          0             2                     0
+## 517292                0     0          0             2                    NA
+## 721471                0     0          0             2                     0
+##        otherObject otherVehicleType overBank parkedVehicle pedestrian
+## 98658            0                0        0             0         NA
+## 192652          NA                0       NA            NA         NA
+## 295973           0                0        0             0         NA
+## 517292          NA                0       NA            NA         NA
+## 721471           0                0        0             0         NA
+##        phoneBoxEtc postOrPole                    region roadCharacter roadLane
+## 98658            0          0 Manawatū-Whanganui Region           Nil    2-way
+## 192652          NA         NA Manawatū-Whanganui Region           Nil    2-way
+## 295973           0          0         Canterbury Region           Nil    2-way
+## 517292          NA         NA           Auckland Region           Nil    2-way
+## 721471           0          0         Canterbury Region           Nil    2-way
+##        roadSurface roadworks schoolBus seriousInjuryCount slipOrFlood
+## 98658       Sealed         0         0                  0           0
+## 192652      Sealed        NA         0                  0          NA
+## 295973      Sealed         0         0                  0           0
+## 517292      Sealed        NA         0                  0          NA
+## 721471      Sealed         0         0                  0           0
+##        speedLimit strayAnimal streetLight suv taxi temporarySpeedLimit tlaId
+## 98658          50           0        None   0    0                  NA    40
+## 192652         50          NA        None   0    0                  NA    38
+## 295973         50           0          On   0    0                  NA    60
+## 517292         50          NA        None   0    0                  NA    76
+## 721471         50           0        None   0    0                  NA    60
+##                      tlaName trafficControl trafficIsland trafficSign train
+## 98658  Palmerston North City            Nil             0           0     0
+## 192652   Rangitikei District        Unknown            NA          NA    NA
+## 295973     Christchurch City        Unknown             0           0     0
+## 517292              Auckland       Give way            NA          NA    NA
+## 721471     Christchurch City            Nil             0           0     0
+##        tree truck unknownVehicleType urban vanOrUtility vehicle waterRiver
+## 98658     0     0                  0 Urban            0       0          0
+## 192652   NA     0                  0 Urban            0      NA         NA
+## 295973    1     0                  0 Urban            1       0          0
+## 517292   NA     0                  0 Urban            0      NA         NA
+## 721471    0     0                  0 Urban            0       0          0
+##        weatherA    weatherB
+## 98658      Fine        Null
+## 192652     Fine        Null
+## 295973     Fine        Null
+## 517292     Fine Strong wind
+## 721471     Fine        Null</code></pre>
+<p>but I don’t see anything particularly wrong or strange.</p>
+<p>Knowing this, we will start cleaning the data, and by that I mostly mean dropping variables.</p>
+<p>For instance, we won’t be working with many geographical variables, and we do not need their IDs, so we can drop <code>X</code>, <code>Y</code>, <code>OBJECTID</code>, <code>areaUnitID</code>, <code>meshblockId</code>, <code>crashFinancialYear</code>, and <code>tlaId</code>.</p>
+<p>The <code>tla</code> stands for Territorial Local Authority, which divides regions into subregions (contained in <code>region</code> variable), so we will rename <code>tlaName</code> into <code>subregion</code> for better understandability.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>data[<span class="fu">c</span>(<span class="st">"X"</span>, <span class="st">"Y"</span>, <span class="st">"OBJECTID"</span>, <span class="st">"areaUnitID"</span>, <span class="st">"meshblockId"</span>, <span class="st">"crashFinancialYear"</span>, <span class="st">"tlaId"</span>)] <span class="ot">=</span> <span class="cn">NULL</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data)[<span class="fu">names</span>(data) <span class="sc">==</span> <span class="st">"tlaName"</span>] <span class="ot">=</span> <span class="st">"subregion"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>There is more cleaning that we will do, but for that, we need to look at the data. A simple <code>lapply(data, table)</code> will do most of the work, since all the data is categorical or ordinal. But doing so for 65 variables is quite a bit too much, so we will divide the features according to their type. We will start with <code>vehicleType</code> and continue with other groups such as <code>roadConditions</code>, <code>otherObjects</code> and so on.</p>
+<p>Also, to help us in this, I define the operator <code>%-%</code> so we can see what we already defined.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="st">"%-%"</span> <span class="ot">=</span> <span class="cf">function</span>(x,y){x[<span class="sc">!</span>(x <span class="sc">%in%</span> y)]}</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>vehicleType <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"bicycle"</span>, <span class="st">"bus"</span>, <span class="st">"carStationWagon"</span>, <span class="st">"moped"</span>, <span class="st">"motorcycle"</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"otherVehicleType"</span>, <span class="st">"parkedVehicle"</span>, <span class="st">"schoolBus"</span>, <span class="st">"suv"</span>, <span class="st">"taxi"</span>, <span class="st">"train"</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"truck"</span>, <span class="st">"unknownVehicleType"</span>, <span class="st">"vanOrUtility"</span>, <span class="st">"vehicle"</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data) <span class="sc">%-%</span> vehicleType</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>##  [1] "advisorySpeed"             "bridge"                   
+##  [3] "cliffBank"                 "crashDirectionDescription"
+##  [5] "crashLocation1"            "crashLocation2"           
+##  [7] "crashRoadSideRoad"         "crashSeverity"            
+##  [9] "crashSHDescription"        "crashYear"                
+## [11] "debris"                    "directionRoleDescription" 
+## [13] "ditch"                     "fatalCount"               
+## [15] "fence"                     "flatHill"                 
+## [17] "guardRail"                 "holiday"                  
+## [19] "houseOrBuilding"           "intersection"             
+## [21] "kerb"                      "light"                    
+## [23] "minorInjuryCount"          "NumberOfLanes"            
+## [25] "objectThrownOrDropped"     "otherObject"              
+## [27] "overBank"                  "pedestrian"               
+## [29] "phoneBoxEtc"               "postOrPole"               
+## [31] "region"                    "roadCharacter"            
+## [33] "roadLane"                  "roadSurface"              
+## [35] "roadworks"                 "seriousInjuryCount"       
+## [37] "slipOrFlood"               "speedLimit"               
+## [39] "strayAnimal"               "streetLight"              
+## [41] "temporarySpeedLimit"       "subregion"                
+## [43] "trafficControl"            "trafficIsland"            
+## [45] "trafficSign"               "tree"                     
+## [47] "urban"                     "waterRiver"               
+## [49] "weatherA"                  "weatherB"</code></pre>
+<p>This helps us filtering down the list of names until we ended with everything categorized into somewhat related variables. It is just for a better systematic exploration, it doesn’t have to be perfect. For that, we would need an expert.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>roadConditions <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"advisorySpeed"</span>, <span class="st">"temporarySpeedLimit"</span>, <span class="st">"speedLimit"</span>, <span class="st">"roadCharacter"</span>,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"roadLane"</span>, <span class="st">"roadSurface"</span>, <span class="st">"roadworks"</span>, <span class="st">"trafficControl"</span>, <span class="st">"trafficSign"</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"streetLight"</span>, <span class="st">"NumberOfLanes"</span>, <span class="st">"intersection"</span>, <span class="st">"trafficIsland"</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>terrainFeature <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"bridge"</span>, <span class="st">"cliffBank"</span>, <span class="st">"ditch"</span>, <span class="st">"fence"</span>, <span class="st">"flatHill"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"guardRail"</span>, <span class="st">"houseOrBuilding"</span>, <span class="st">"kerb"</span>, <span class="st">"overBank"</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"waterRiver"</span>, <span class="st">"slipOrFlood"</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>otherObjects <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"debris"</span>, <span class="st">"objectThrownOrDropped"</span>, <span class="st">"otherObject"</span>, <span class="st">"pedestrian"</span>,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"phoneBoxEtc"</span>, <span class="st">"postOrPole"</span>, <span class="st">"strayAnimal"</span>, <span class="st">"tree"</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>crashSeverity <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"crashSeverity"</span>, <span class="st">"fatalCount"</span>, <span class="st">"minorInjuryCount"</span>, <span class="st">"seriousInjuryCount"</span>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>weather <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"light"</span>, <span class="st">"weatherA"</span>, <span class="st">"weatherB"</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>location <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"crashDirectionDescription"</span>, <span class="st">"crashLocation1"</span>, <span class="st">"crashLocation2"</span>, <span class="st">"directionRoleDescription"</span>, <span class="st">"region"</span>, <span class="st">"subregion"</span>, <span class="st">"urban"</span>)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>time <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"crashYear"</span>, <span class="st">"holiday"</span>)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>other <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"crashRoadSideRoad"</span>, <span class="st">"crashSHDescription"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now, we can look closely at all these variables and their distributions.</p>
+<section id="other-variables" class="level4">
+<h4 class="anchored" data-anchor-id="other-variables">Other variables</h4>
+<p>Let’s start with the <code>other</code> category:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this is very efficient for ordinal or categorical variables:</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>data[other] <span class="sc">|&gt;</span> <span class="fu">lapply</span>(table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## $crashRoadSideRoad
+## &lt; table of extent 0 &gt;
+## 
+## $crashSHDescription
+## 
+##      No Unknown     Yes 
+##  580900      55  240789</code></pre>
+<p>The <code>crashRoadSideRoad</code> is empty and we can safely drop it.</p>
+<p>I didn’t know what <code>crashSHDescription</code> means, so I had to google around and apparently, there is an <a href="https://hub.arcgis.com/pages/087345dce5454c4399af3cae69e0f5c1">old key</a> from 2019! The fields and values differ, but there is at least some explanation. Apparently, this variable indicate if the crash happened on State Highway (SH) or somewhere else.</p>
+<p>The encoding of <code>crashSHDescription</code> is nice and readable, but if we meant to fit it into model, we would like binary variable with unknown coded as <code>NA</code> instead, so we recode it.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>crashRoadSideRoad <span class="ot">=</span> <span class="cn">NULL</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># probably my favourite way how to do recoding</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>crashSHDescription <span class="ot">=</span> <span class="fu">setNames</span>(</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="cn">NA</span>), <span class="fu">c</span>(<span class="st">"No"</span>,<span class="st">"Yes"</span>,<span class="st">"Unknown"</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    )[data<span class="sc">$</span>crashSHDescription]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="time-variables" class="level4">
+<h4 class="anchored" data-anchor-id="time-variables">Time variables</h4>
+<p>Now we look at the <code>time</code> group, but nothing strange is happening in here. The number of crashes through time might be an interesting, as well as the number of crashes over holidays, but we would need to normalize it per day to know if the frequency is any greater.</p>
+<p>The no holiday could use a better name than just empty string, so I recode it.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>data[time] <span class="sc">|&gt;</span> <span class="fu">lapply</span>(table, <span class="at">useNA=</span><span class="st">"ifany"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## $crashYear
+## 
+##  2000  2001  2002  2003  2004  2005  2006  2007  2008  2009  2010  2011  2012 
+## 31996 36125 38045 37950 37051 38364 39778 41661 39535 38247 36870 32450 30443 
+##  2013  2014  2015  2016  2017  2018  2019  2020  2021  2022  2023 
+## 30109 29784 32103 37249 39314 38469 36919 32808 34080 27982  4412 
+## 
+## $holiday
+## 
+##                    Christmas New Year             Easter     Labour Weekend 
+##             776922              20453               9463               7055 
+##    Queens Birthday 
+##               7851</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>holiday <span class="ot">=</span> <span class="fu">replace</span>(data<span class="sc">$</span>holiday, data<span class="sc">$</span>holiday <span class="sc">==</span> <span class="st">""</span>, <span class="st">"Not holiday"</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>crashYear <span class="sc">|&gt;</span> <span class="fu">table</span>() <span class="sc">|&gt;</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot</span>(<span class="at">las=</span><span class="dv">2</span>, <span class="at">ylab=</span><span class="st">""</span>, <span class="at">lwd=</span><span class="dv">5</span>, <span class="at">frame.plot=</span><span class="cn">FALSE</span>,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Number of crashes through time"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/time-1.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">plot of chunk time</figcaption><p></p>
+</figure>
+</div>
+<p>There is interesting cyclical behaviour. Obviously the 2023 year is incomplete, so we do not take that in account, and in similar fashion, I am not sure how complete are data from 2000, but otherwise there is a dip from 2009 to 2016. I don’t know what happened at that time, since I arrived to NZ during 2014-2015 (so I single-handedly caused an increase of crashes, cool), and then again a decrease from 2019, which surely is due to Covid, but only on 2022 it we get global minimum, and 2022 is already after lockdowns. To be complete, 2007 is a global maximum of the number of crashes in our dataset.</p>
+</section>
+<section id="location-variables" class="level4">
+<h4 class="anchored" data-anchor-id="location-variables">Location variables</h4>
+<p>Now to the <code>location</code>. There will be quite a few geographical variables, such as <code>region</code> and <code>subregion</code>, variables that describe the road where the crash happened, such as <code>crashLocation1</code> and <code>crashLocation2</code>, whether the crash happened in <code>urban</code> environment, and two direction variables, which I don’t understand even after reading the key description, so I will drop them.</p>
+<p>The <code>urban</code> variable is quite simple, it signify whether the crash happened in an urban environment. The crashes are about twice likely to happen in an urban environment compared to an open one. This is not that surprising as most people are concentrated in cities, but NZ is still relatively rural country and as we see later, most crashes happen on the State Highways, so the difference between urban and open crashes is not overwhelming. We will recode it from a categorical to binary variable.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>crashDirectionDescription <span class="ot">=</span> <span class="cn">NULL</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>directionRoleDescription <span class="ot">=</span> <span class="cn">NULL</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>urban <span class="ot">=</span> <span class="fu">setNames</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="fu">c</span>(<span class="st">"Open"</span>, <span class="st">"Urban"</span>))[data<span class="sc">$</span>urban]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now to the <code>region</code> and <code>subregion</code>. In both cases, there are crashes that happened in the region marked as empty string. I assume that this means that the region is unknown and recode them as <code>NA</code>. But after looking at the data, I am not that sure about that, since their <code>crashLocation</code> is known. Again, expert knowledge would surely help and since the road and surely the dropped latitude and longitude are known, the region and subregion can be derived.</p>
+<p>In total, there are 16 regions and 67 subregions. We can effectively visualize 16 regions, but 67 subregions would take some work.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>region <span class="ot">=</span> <span class="fu">with</span>(data, {<span class="fu">replace</span>(region, region <span class="sc">==</span> <span class="st">""</span>, <span class="cn">NA</span>)})</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>subregion <span class="ot">=</span> <span class="fu">with</span>(data, {<span class="fu">replace</span>(subregion, subregion <span class="sc">==</span> <span class="st">""</span>, <span class="cn">NA</span>)})</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"src/graphics.r"</span>) <span class="co"># I prepared some customized barplots</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>region <span class="sc">|&gt;</span> <span class="fu">table</span>() <span class="sc">|&gt;</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">barplot</span>(<span class="at">angle=</span><span class="dv">35</span>, <span class="at">cex=</span><span class="fl">0.6</span>, <span class="at">font=</span><span class="dv">2</span>, <span class="at">las=</span><span class="dv">2</span>,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">main=</span><span class="st">"Crashes in across regions"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/location2-1.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">plot of chunk location2</figcaption><p></p>
+</figure>
+</div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>subregion <span class="sc">|&gt;</span> <span class="fu">table</span>() <span class="sc">|&gt;</span> <span class="fu">sort</span>(<span class="at">decreasing=</span><span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## 
+##          Auckland Christchurch City   Wellington City     Hamilton City 
+##            285346             53011             32876             28594 
+##      Dunedin City     Tauranga City 
+##             24707             18973</code></pre>
+<p>Auckland has the most crashes, with Christchurch second and Wellington third. A similar situation is happening with regions, although here the Waikato region is second.</p>
+<p>However, this is to be expected, isn’t it? Auckland will have the most crashes because Auckland is the biggest baddest city in NZ. We need to normalize this by population to get some unexpected insight.</p>
+<p>For this, I downloaded some StatsNZ data for population, unfortunately it is only for 2019-2021, but anything will do. After all, we are not interested in trend and population will surely not change dramatically in the past 20 years.</p>
+<p>The only potential problem is to match region names, I already did some cleaning in the population data, but seems that the NZ crash database does not like Maori spelling. For instance, there is <code>Manawatū-Whanganui Region</code>, but only <code>Manawatu District</code>.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"src/population.r"</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>population <span class="ot">=</span> <span class="fu">get_population_year</span>(<span class="dv">2021</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>regions <span class="ot">=</span> data<span class="sc">$</span>region <span class="sc">|&gt;</span> <span class="fu">table</span>() <span class="sc">|&gt;</span> <span class="fu">names</span>()</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>regions[<span class="sc">!</span>regions <span class="sc">%in%</span> <span class="fu">names</span>(population)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## character(0)</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>subregions <span class="ot">=</span> data<span class="sc">$</span>subregion <span class="sc">|&gt;</span> <span class="fu">table</span>() <span class="sc">|&gt;</span> <span class="fu">names</span>()</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>subregions[<span class="sc">!</span>subregions <span class="sc">%in%</span> <span class="fu">names</span>(population)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## [1] "Manawatu District"  "Taupo District"     "Whakatane District"
+## [4] "Whangarei District"</code></pre>
+<p>We need to fix these regions.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># base R is not really good at this, so here is a good solution from my pkg:</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>replace2 <span class="ot">=</span> <span class="cf">function</span>(x, values, replace, ...){</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">length</span>(values) <span class="sc">!=</span> <span class="fu">length</span>(replace))</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">"The vector `values` and `replace` must have the same length!"</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    match <span class="ot">=</span> <span class="fu">match</span>(x, values)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    x[<span class="sc">!</span><span class="fu">is.na</span>(match)] <span class="ot">=</span> replace[match][<span class="sc">!</span><span class="fu">is.na</span>(match)]</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    x</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>before <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"Manawatu District"</span>, <span class="st">"Taupo District"</span>, <span class="st">"Whakatane District"</span>, <span class="st">"Whangarei District"</span>)</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>after <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"Manawatū District"</span>, <span class="st">"Taupō District"</span>, <span class="st">"Whakatāne District"</span>, <span class="st">"Whangārei District"</span>)</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>subregion <span class="ot">=</span> <span class="fu">replace2</span>(data<span class="sc">$</span>subregion, before, after)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now we can normalize the regional counts per population:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>regions <span class="ot">=</span> data<span class="sc">$</span>region <span class="sc">|&gt;</span> <span class="fu">table</span>() <span class="sc">|&gt;</span> <span class="fu">names</span>()</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>subregions <span class="ot">=</span> data<span class="sc">$</span>subregion <span class="sc">|&gt;</span> <span class="fu">table</span>() <span class="sc">|&gt;</span> <span class="fu">names</span>()</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>region <span class="sc">|&gt;</span> <span class="fu">table</span>() <span class="sc">|&gt;</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    (<span class="cf">function</span>(x){x<span class="sc">/</span>population[regions]})() <span class="sc">|&gt;</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">barplot</span>(<span class="at">angle=</span><span class="dv">35</span>, <span class="at">cex=</span><span class="fl">0.6</span>, <span class="at">font=</span><span class="dv">2</span>, <span class="at">las=</span><span class="dv">2</span>, <span class="at">labels=</span><span class="cn">FALSE</span>,</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Crashes across regions normalized by population"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/population3-1.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">plot of chunk population3</figcaption><p></p>
+</figure>
+</div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>subregion <span class="sc">|&gt;</span> <span class="fu">table</span>() <span class="sc">|&gt;</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    (<span class="cf">function</span>(x){x<span class="sc">/</span>population[subregions]})() <span class="sc">|&gt;</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sort</span>(<span class="at">decreasing=</span><span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## 
+##   Waitomo District   Ruapehu District  Kaikoura District  Westland District 
+##          0.3231328          0.3065116          0.2948357          0.2676768 
+## Mackenzie District    Wairoa District 
+##          0.2594891          0.2522124</code></pre>
+<p>Now, that is interesting. Auckland is dethroned as the most dangerous city and instead West Coast Region is a hellhole! And Waitomo district, which I never heard about. Apparently, it sparsely populated rural area. It might be possible that there is a highway and as we will saw, most crashes happens on highway. So lets check it out.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>WaitomoDistrict <span class="ot">=</span> <span class="fu">subset</span>(data, subregion <span class="sc">==</span> <span class="st">"Waitomo District"</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>WaitomoDistrict<span class="sc">$</span>crashLocation1 <span class="sc">|&gt;</span> <span class="fu">table</span>() <span class="sc">|&gt;</span> <span class="fu">sort</span>(<span class="at">decreasing=</span><span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## 
+##         SH 3         SH 4        SH 30        SH 37 TE ANGA ROAD      RORA ST 
+##         1409          372          315           86           73           64</code></pre>
+<p>Looks like the hunch was confirmed. Most crashes happened on State Highways 3, 4 and 30.</p>
+<p>Finally, we will explore the <code>crashLocation1</code> and <code>crashLocation2</code>. According to the key, the <code>crashLocation1</code> is the primary road where the crash happened, while the <code>crashLocation2</code> being the secondary one, side road, or place nearby. I don’t know what exactly it means, but in both cases, State Highways and other long roads are the most frequent places for crashes.</p>
+<p>Again, this should not be much of a surprise, since these roads are very long, so assuming that the chance that the car crashes is the same for every single road, the longer the road, the more crashes we would expect to see.</p>
+<p>Unfortunately, there is not a good way for me to check this assumption and normalize the number in the same way as we did it for the regions with population. I doubt that there is a statistics that specifies how long each road is.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>crashLocation1 <span class="sc">|&gt;</span> <span class="fu">table</span>() <span class="sc">|&gt;</span> <span class="fu">length</span>() <span class="co"># 37453 unique values</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## [1] 37453</code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>crashLocation2 <span class="sc">|&gt;</span> <span class="fu">table</span>() <span class="sc">|&gt;</span> <span class="fu">length</span>() <span class="co"># 52060 unique values</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## [1] 52060</code></pre>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>crashLocation1 <span class="sc">|&gt;</span> <span class="fu">table</span>() <span class="sc">|&gt;</span> <span class="fu">sort</span>(<span class="at">decreasing=</span><span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## 
+##            SH 1N             SH 2            SH 1S             SH 3 
+##            54779            21225            17586            10898 
+## GREAT SOUTH ROAD             SH 6 
+##            10243             9834</code></pre>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>crashLocation2 <span class="sc">|&gt;</span> <span class="fu">table</span>() <span class="sc">|&gt;</span> <span class="fu">sort</span>(<span class="at">decreasing=</span><span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## 
+##            SH 1N GREAT SOUTH ROAD             SH 2 GREAT NORTH ROAD 
+##             3765             3340             2337             1822 
+##         QUEEN ST            SH 1S 
+##             1771             1742</code></pre>
+</section>
+<section id="weather-variables" class="level4">
+<h4 class="anchored" data-anchor-id="weather-variables">Weather variables</h4>
+<p>The three weather variables are <code>light</code>, <code>weatherA</code> and <code>weatherB</code>.</p>
+<p>I am not sure if the <code>Dark</code> category in the <code>light</code> variable means nighttime, or if this might mean that it was just very cloudy day, but I guess cloudy day is the <code>Overcast</code> category. In that case, about <code>30%</code> of crashes happened during night. Since there is less traffic during night, this is quite significant increase from what I would expect, but I have no means of normalizing this to get precise answer.</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>light <span class="sc">|&gt;</span> <span class="fu">table</span>(<span class="at">useNA=</span><span class="st">"ifany"</span>) <span class="sc">|&gt;</span> (<span class="cf">function</span>(x){x<span class="sc">/</span><span class="fu">sum</span>(x)})()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## 
+##  Bright sun        Dark    Overcast    Twilight     Unknown 
+## 0.368695117 0.274927471 0.299935260 0.046695808 0.009746344</code></pre>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>light[data<span class="sc">$</span>light <span class="sc">==</span> <span class="st">"Unknown"</span>] <span class="ot">=</span> <span class="cn">NA</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>weatherA <span class="sc">|&gt;</span> <span class="fu">table</span>(<span class="at">useNA=</span><span class="st">"ifany"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## 
+##          Fine Hail or Sleet    Heavy rain    Light rain   Mist or Fog 
+##        635621           132         33153        124210         11306 
+##          Null          Snow 
+##         15778          1544</code></pre>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>weatherA[data<span class="sc">$</span>weatherA <span class="sc">==</span> <span class="st">"Null"</span>] <span class="ot">=</span> <span class="cn">NA</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The two other weather variables are quite peculiar. <code>weatherA</code> encodes weather, everything seems to be relatively standard, just using <code>Null</code> to encode unknown data (that is like the fifth different value for unknown data we have encountered, bruh). The majority of crashes happened during <code>Fine</code> weather and <code>Light rain</code>, which would be the majority of days, it rains quite a lot in NZ, while <code>Hail</code> and <code>Snow</code> are quite uncommon. Still, there was quite a lot of fog in Dunedin so I would expect more crashes during that time. We could check it out:</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>Foggy <span class="ot">=</span> <span class="fu">subset</span>(data, weatherA <span class="sc">==</span> <span class="st">"Mist or Fog"</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>Foggy<span class="sc">$</span>region <span class="sc">|&gt;</span> <span class="fu">table</span>() <span class="sc">|&gt;</span> <span class="fu">sort</span>(<span class="at">decreasing=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## 
+##            Waikato Region           Auckland Region         Canterbury Region 
+##                      2566                      2154                      1699 
+##              Otago Region          Northland Region         Wellington Region 
+##                       932                       615                       613 
+## Manawatū-Whanganui Region      Bay of Plenty Region          Southland Region 
+##                       506                       489                       447 
+##        Hawke's Bay Region         West Coast Region           Taranaki Region 
+##                       444                       224                       196 
+##             Tasman Region           Gisborne Region        Marlborough Region 
+##                       127                       112                       108 
+##             Nelson Region 
+##                        52</code></pre>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>Foggy<span class="sc">$</span>subregion <span class="sc">|&gt;</span> <span class="fu">table</span>() <span class="sc">|&gt;</span> <span class="fu">sort</span>(<span class="at">decreasing=</span><span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## 
+##           Auckland  Christchurch City   Waikato District      Hamilton City 
+##               2154                800                645                484 
+##       Dunedin City Far North District 
+##                458                293</code></pre>
+<p>Looks like Waikato is the most misty region, at least regarding crashes. Auckland is still there, although it is not that dominant as we would expect from the total number of crashes and population. All things considered, Dunedin is not that misty, even Christchurch beats it. But again, if we normalized this by the total number of crashes or population, the numbers would surely look different. This doesn’t mean that this pattern doesn’t exist and it is not a valuable insight, just that there are different ways how to look on these patterns.</p>
+<p>Now, <code>WeatherB</code> is quite a bit weirder. It has two categories <code>None</code> and <code>Null</code>. Not sure if it means unknown data or just nothing further description. The overwhelming presence of the <code>Null</code> would suggest just no further information. Given this, I am not that willing to use this variable for further modelling. Frost and Strong Wind would certainly have an effect on the probability that a crash will occur or on their severity, but this variable is miscoded. Merging it with <code>WeatherA</code> would be meaningful, although it would introduce a bit too many categories, which is another reason for dropping this, or make a note to look at this later with an expert.</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>weatherB <span class="sc">|&gt;</span> <span class="fu">table</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## 
+##       Frost        None        Null Strong wind 
+##        9254           5      798096       14389</code></pre>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(<span class="fu">c</span>(<span class="st">"Frost"</span>, <span class="st">"Strong wind"</span>), <span class="cf">function</span>(x){<span class="fu">subset</span>(data, weatherB <span class="sc">==</span> x, <span class="at">select=</span>weatherA) <span class="sc">|&gt;</span> <span class="fu">table</span>()})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## [[1]]
+## 
+##          Fine Hail or Sleet    Heavy rain    Light rain   Mist or Fog 
+##          7140            21            43           333           894 
+##          Snow 
+##           385 
+## 
+## [[2]]
+## 
+##          Fine Hail or Sleet    Heavy rain    Light rain   Mist or Fog 
+##          7217            23          3274          3360           135 
+##          Snow 
+##           177</code></pre>
+<p>When we look at interactions between <code>weatherA</code> and <code>weatherB</code>, we can see that <code>Frost</code> is associated a little bit more with <code>Mist or Fog</code>and <code>Snow</code>, while <code>Strong wind</code> is associated quite strongly with <code>Heavy rain</code> and <code>Light rain</code>. In both cases, the number of crashes during <code>Fine</code> is almost identical.</p>
+</section>
+<section id="crash-severity-variables" class="level4">
+<h4 class="anchored" data-anchor-id="crash-severity-variables">Crash Severity variables</h4>
+<p>Now we are getting into interesting data that we might explore rather with modelling.</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(data[crashSeverity], table, <span class="at">useNA=</span><span class="st">"ifany"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## $crashSeverity
+## 
+##      Fatal Crash      Minor Crash Non-Injury Crash    Serious Crash 
+##             7589           191336           575954            46865 
+## 
+## $fatalCount
+## 
+##      0      1      2      3      4      5      6      7      8      9   &lt;NA&gt; 
+## 814154   6854    567    115     39      7      3      2      1      1      1 
+## 
+## $minorInjuryCount
+## 
+##      0      1      2      3      4      5      6      7      8      9     10 
+## 615625 165582  30358   6996   2164    649    228     83     23     13      7 
+##     11     12     13     14     15     16     18     21     26     30     34 
+##      2      1      1      1      2      2      2      1      1      1      1 
+##   &lt;NA&gt; 
+##      1 
+## 
+## $seriousInjuryCount
+## 
+##      0      1      2      3      4      5      6      7      8      9     10 
+## 772759  43060   4596    924    271     86     28      8      5      1      3 
+##     12     14   &lt;NA&gt; 
+##      1      1      1</code></pre>
+<p>The <code>crashSeverity</code> variable is a summary variable that tells us how severe was the crash. Fortunately, only <code>7589</code> crashes were fatal over the 20 years, with total of <code>8573</code> people perished. The most serious was a crash where 9 people died in total.</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Total number of people died over the 20 year period:</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>fatalCount <span class="sc">|&gt;</span> <span class="fu">table</span>() <span class="sc">|&gt;</span> (<span class="cf">function</span>(x){x <span class="sc">*</span> <span class="fu">as.numeric</span>(<span class="fu">names</span>(x))})() <span class="sc">|&gt;</span> <span class="fu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## [1] 8573</code></pre>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Explore the cases where deaths &gt; 6</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="co"># subset(data, crashSeverity &gt; 6)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Looking at the 4 cases with high death count, I don’t see anything particular. In all cases, this hppened on fine weather, State Highway with sealed road with speed limit 100. In one case there was temporary speed limit 30, maybe due to roadwork but the <code>roadwork</code> variable is set to unknown.</p>
+</section>
+<section id="other-objects" class="level4">
+<h4 class="anchored" data-anchor-id="other-objects">Other objects</h4>
+<p>Category of “I don’t know where to put it”.</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(data[otherObjects], table, <span class="at">useNA=</span><span class="st">"ifany"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## $debris
+## 
+##      0      1      2      3      4      5      6      7   &lt;NA&gt; 
+## 330374   2376    131     24      4      2      1      1 488831 
+## 
+## $objectThrownOrDropped
+## 
+##      0      1      2      3      4   &lt;NA&gt; 
+## 332232    636     35      8      2 488831 
+## 
+## $otherObject
+## 
+##      0      1      2      3      4      5   &lt;NA&gt; 
+## 325189   7662     51      7      2      2 488831 
+## 
+## $pedestrian
+## 
+##      1      2      3      4      5      6   &lt;NA&gt; 
+##  25681    785    110     23      3      3 795139 
+## 
+## $phoneBoxEtc
+## 
+##      0      1      2      3   &lt;NA&gt; 
+## 328797   4096     19      1 488831 
+## 
+## $postOrPole
+## 
+##      0      1      2      3      4   &lt;NA&gt; 
+## 292252  40439    214      7      1 488831 
+## 
+## $strayAnimal
+## 
+##      0      1      2      3   &lt;NA&gt; 
+## 331843    994     72      4 488831 
+## 
+## $tree
+## 
+##      0      1      2      3   &lt;NA&gt; 
+## 299466  33089    354      4 488831</code></pre>
+<p>From the pattern of <code>NA</code> values, it looks like that this category is quite interconnected, with only <code>pedestrian</code> being the weird one. The <code>pedestrian</code> variable should probably be in the <code>vehicles</code> class.</p>
+<p>Out of all of these, the only common objects seem to be the <code>postOrPole</code> and <code>tree</code> with about 5 and 4 percent of all crashes respectively. Other objects are quite rare.</p>
+</section>
+<section id="terrain-features" class="level4">
+<h4 class="anchored" data-anchor-id="terrain-features">Terrain features</h4>
+<p>First thing that hits me is the pattern of <code>NA</code>. We already saw it in the otherObjects category. Looks like for more than half of the data, any further description is simply missing. So I looked again at the key and these all are not description of the state of the terrain, but <em>how many times X was hit</em> during the crash. That is, the fence was hit once in <code>68473</code> cases. Other than fence, only <code>CliffBank</code> and <code>ditch</code> appear to be somewhat common, but well bellow 5 percent of cases.</p>
+<p>The only description of terrain is in fact <code>flatHill</code>, which is also a badly encoded variable with categories <code>Flat</code>, <code>Hill Road</code> and <code>Null</code>. So I make null about all this, remove the <code>flatHill</code> and encode it simply as a <code>hill</code> with <code>0</code>, <code>1</code> and <code>NA</code> cases.</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Its quite bit of text, so we won't use this:</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="co"># lapply(data[terrainFeature], table, useNA="ifany")</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Instead we use barplots from src/graphics.r</span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>data[terrainFeature ] <span class="sc">|&gt;</span> <span class="fu">lapply</span>(table, <span class="at">useNA=</span><span class="st">"ifany"</span>) <span class="sc">|&gt;</span> <span class="fu">barplots</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/terrainFeatures-1.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">plot of chunk terrainFeatures</figcaption><p></p>
+</figure>
+</div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>hill <span class="ot">=</span> <span class="fu">setNames</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="cn">NA</span>), <span class="fu">c</span>(<span class="st">"Flat"</span>, <span class="st">"Hill Road"</span>, <span class="st">"Null"</span>))[data<span class="sc">$</span>flatHill]</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>flatHill <span class="ot">=</span> <span class="cn">NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="road-conditions" class="level4">
+<h4 class="anchored" data-anchor-id="road-conditions">Road conditions</h4>
+<p>Remember, this is EDA, the plots do not have to be pretty or even that detailed. When we are looking cursory on a large number of plots, all we need to know is if there is some basic pattern and if we need to look deeper.</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>data[roadConditions ] <span class="sc">|&gt;</span> <span class="fu">lapply</span>(table, <span class="at">useNA=</span><span class="st">"ifany"</span>) <span class="sc">|&gt;</span> <span class="fu">barplots</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/roadConditions-1.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">plot of chunk roadConditions</figcaption><p></p>
+</figure>
+</div>
+<p>For instance, we can already see that <code>intersection</code> is degenerated/constant variable and can be simply dropped. We can also see that we need to review Speed variables (<code>advisorySpeed</code>, <code>temporarySpeedLimit</code>, and <code>speedLimit</code>) separately, look at <code>roadCharacter</code> and <code>trafficControl</code> more closely, and recode a bunch of <code>Null</code> into <code>NA</code>.</p>
+<p>So let’s look at the variables more closely.</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>data[<span class="fu">c</span>(<span class="st">"advisorySpeed"</span>, <span class="st">"temporarySpeedLimit"</span>, <span class="st">"speedLimit"</span>)] <span class="sc">|&gt;</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lapply</span>(table, <span class="at">useNA=</span><span class="st">"ifany"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## $advisorySpeed
+## 
+##     15     20     25     30     35     40     45     50     55     60     65 
+##    290    419   1529   1308   4048    625   4844    641   4677    284   5249 
+##     70     75     80     85     90     95   &lt;NA&gt; 
+##    562   3947    676   1802    153    290 790400 
+## 
+## $temporarySpeedLimit
+## 
+##      8     10     20     30     40     45     50     60     70     75     80 
+##      1    106    151   5757    817      1   2547    396   1169      2   1501 
+##     90    100   &lt;NA&gt; 
+##    134      1 809161 
+## 
+## $speedLimit
+## 
+##      2      5      6     10     15     20     30     40     50     51     60 
+##      1     15      1    813     10   1946   7338   1819 493203      1  22895 
+##     61     70     80     90    100    110   &lt;NA&gt; 
+##      1  25468  40437    477 226302    179    838</code></pre>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>advisorySpeed <span class="ot">=</span> <span class="cn">NULL</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>temporarySpeedLimit <span class="ot">=</span> <span class="cn">NULL</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>intersection <span class="ot">=</span> <span class="cn">NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The number of <code>NA</code> values in <code>advisorySpeed</code> and <code>temporarySpeedLimit</code> suggest that the data are missing not because they are unknown, but because there is no advisory or temporary speed. This is another point we need to be aware when doing modelling, as interpretation will change drastically.</p>
+<p>For instance, since this value is not missing, it would be folly to use methods to estimate it, such as through frequentist or bayesian mean. Instead, it is a conditional variable, either there is or isn’t advisory/temporary speed, or there is one with a certain value.</p>
+<p>I got a feeling that trying to model these variables in relationship to <code>speedLimit</code> would be something that would most resemble the conditions on road, i.e., looking at what is the speed limit and if it is significantly different from the other two variables. If it is, flipping a switch in a binary representation. For instance, if there is a sharp turn with advisory speed 25, it will mean something different on State Highway with speed limit 100 and smaller road with speed limit 30.</p>
+<p>But this is really something that should be discussed with an expert. After all, this is why we are doing EDA after all. In the meantime, I will not use these variables (i.e., drop them), since properly exploring them will take quite a lot of time, I am already spending too much time on this, and I still can’t see the end.</p>
+<p>Now back to the <code>speedLimit</code>. I did not honestly know that there were places with speed limit <code>2</code>. Looking at the item with <code>subset(data, speedLimit == 2)</code> tells me that it is a crash in Auckland during nighttime on a sealed road between two station wagons, one of which was parked, but no temporary speed limit or roadwork.</p>
+<p>Next we look at <code>roadworks</code>, <code>trafficSign</code> and <code>trafficIsland</code>. Unlike what I originally thought, these are items similar to a <code>tree</code>, <code>riverBanks</code> and similar, objects that were hit during the crash, and not road conditions. Again, not very interesting variables since we lack this information for more than half of the data points. I will again make note for a future me here and write down some thoughts. Feels to me like we could derive a single variable from all of these, such as “other objects were hit”. But it is also likely that these variables were collected for a reason, I can imagine crashes against trees being absolutely lethal, and encoding trees together with other variables might not be what we want. So maybe binarize them all and use Lasso to find which ones are significant?</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>data[<span class="fu">c</span>(<span class="st">"roadworks"</span>, <span class="st">"trafficSign"</span>, <span class="st">"trafficIsland"</span>) ] <span class="sc">|&gt;</span> <span class="fu">lapply</span>(table, <span class="at">useNA=</span><span class="st">"ifany"</span>) <span class="sc">|&gt;</span> <span class="fu">barplots</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/roadConditions2-1.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">plot of chunk roadConditions2</figcaption><p></p>
+</figure>
+</div>
+<p>Road character is another variable that could use better encoding. There is a big category <code>Nil</code> cotaining the majority of the data. But it looks like <code>No special feature</code> or <code>Normal</code> rather than <code>Unknown data</code>. In here the encoding is quite obvious so I will recode it this way.</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>roadCharacter <span class="sc">|&gt;</span> <span class="fu">table</span>(<span class="at">useNA=</span><span class="st">"ifany"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## 
+##        Bridge Motorway ramp           Nil      Overpass     Rail xing 
+##         16365         11503        789988           646          2157 
+##    Speed hump    Tram lines        Tunnel     Underpass 
+##           579            30           145           331</code></pre>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>roadCharacter <span class="ot">=</span> <span class="fu">replace2</span>(data<span class="sc">$</span>roadCharacter, <span class="st">"Nil"</span>, <span class="st">"Normal"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><code>trafficControl</code> has not one, but two different “missing data” variables, <code>Nil</code> and <code>Unknown</code>. The key is not really helpful as it just says that these categories exists, but what is the difference between those two? For safety, I am dropping this variable.</p>
+<p>We are left with <code>roadLane</code>, <code>roadSurface</code>, <code>streetLight</code>, and <code>numberOfLanes</code>. They looks well-behaved, we just need to recode missing data for three of them.</p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>trafficControl <span class="ot">=</span> <span class="cn">NULL</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>roadLane <span class="ot">=</span> <span class="fu">replace2</span>(data<span class="sc">$</span>roadLane, <span class="st">"Null"</span>, <span class="cn">NA</span>)</span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>roadSurface <span class="ot">=</span> <span class="fu">replace2</span>(data<span class="sc">$</span>roadSurface, <span class="st">"Null"</span>, <span class="cn">NA</span>)</span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>streetLight <span class="ot">=</span> <span class="fu">replace2</span>(data<span class="sc">$</span>streetLight, <span class="st">"Null"</span>, <span class="cn">NA</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="vehicle-type" class="level4">
+<h4 class="anchored" data-anchor-id="vehicle-type">Vehicle Type</h4>
+<p>And we are at the last variable class, the <code>vehicleType</code> class.</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>data[vehicleType] <span class="sc">|&gt;</span> <span class="fu">lapply</span>(table, <span class="at">useNA=</span><span class="st">"ifany"</span>) <span class="sc">|&gt;</span> <span class="fu">barplots</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/vehicleType-1.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">plot of chunk vehicleType</figcaption><p></p>
+</figure>
+</div>
+<p>From the missing values, you can see that there are two classes. The <code>parkedVehicle</code>, <code>train</code> and <code>vehicle</code>, and the rest. The first tree are interpreted as “how many times X was struck during the crash”, while the other variables are keyed as “how many X were involved in the crash”. Quite the different interpetation, and the pattern of missing variables. I can feel something is happening in there, we saw the <code>488831</code> missing data quite a lot.</p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Not super readable, but you can see the general pattern</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">is.na</span>(data) <span class="sc">|&gt;</span></span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">colSums</span>() <span class="sc">|&gt;</span></span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sort</span>(<span class="at">decreasing=</span><span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">barplot</span>(<span class="at">angle=</span><span class="dv">45</span>, <span class="at">labels=</span><span class="cn">FALSE</span>, <span class="at">cex.axis=</span><span class="fl">0.4</span>, <span class="at">font=</span><span class="dv">2</span>,</span>
+<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Missing data across variables"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/NApattern-1.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">plot of chunk NApattern</figcaption><p></p>
+</figure>
+</div>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co"># For the list of variables:</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">is.na</span>(data) <span class="sc">|&gt;</span> <span class="fu">colSums</span>() <span class="sc">|&gt;</span> (<span class="cf">function</span>(x){<span class="fu">subset</span>(x, x <span class="sc">==</span> <span class="st">"488831"</span>)})() <span class="sc">|&gt;</span> <span class="fu">names</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>##  [1] "bridge"                "cliffBank"             "debris"               
+##  [4] "ditch"                 "fence"                 "guardRail"            
+##  [7] "houseOrBuilding"       "kerb"                  "objectThrownOrDropped"
+## [10] "otherObject"           "overBank"              "parkedVehicle"        
+## [13] "phoneBoxEtc"           "postOrPole"            "roadworks"            
+## [16] "slipOrFlood"           "strayAnimal"           "trafficIsland"        
+## [19] "trafficSign"           "train"                 "tree"                 
+## [22] "vehicle"               "waterRiver"</code></pre>
+<p>All of them are other objects that might have been hit during the crash.</p>
+<p>And this is all. We went through all the variables and looked at their individual patterns. Now we should move to relationship between two variables, but I run out of time, so maybe later!</p>
+</section>
+</section>
+<section id="patterns-across-regions" class="level3">
+<h3 class="anchored" data-anchor-id="patterns-across-regions">Patterns across regions</h3>
+<p>We do not have time to do full bivariate exploration, but we wanted to look at some patterns across regions.</p>
+<p>First, I want to look at which region is the deadliest. Don’t worry, I don’t have any unhealthy morbid obsession, but since we are investigating car crashes, this seems a natural thing to look at and try to identify causes. We already know that Auckland has the most crashes simply because it has the highest population, so we will normalize according to the number of crashes.</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>crashSeverity <span class="ot">=</span> <span class="fu">table</span>(data<span class="sc">$</span>region, data<span class="sc">$</span>crashSeverity)[</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>    , <span class="fu">c</span>(<span class="st">"Non-Injury Crash"</span>, <span class="st">"Minor Crash"</span>, <span class="st">"Serious Crash"</span>, <span class="st">"Fatal Crash"</span>)</span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>    ] <span class="co"># sorted for convenience</span></span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>col <span class="ot">=</span> <span class="fu">palette.colors</span>(<span class="dv">4</span>, <span class="st">"Set 1"</span>)</span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="st">"mar"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">9</span>,<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a>(crashSeverity <span class="sc">/</span> <span class="fu">rowSums</span>(crashSeverity)) <span class="sc">|&gt;</span></span>
+<span id="cb74-8"><a href="#cb74-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">t</span>() <span class="sc">|&gt;</span></span>
+<span id="cb74-9"><a href="#cb74-9" aria-hidden="true" tabindex="-1"></a>    graphics<span class="sc">::</span><span class="fu">barplot</span>(<span class="at">horiz=</span><span class="cn">TRUE</span>, <span class="at">las=</span><span class="dv">1</span>, <span class="at">col=</span>col, <span class="at">border=</span><span class="cn">NA</span>, <span class="at">cex.names=</span><span class="fl">0.6</span>, <span class="at">font=</span><span class="dv">2</span>,</span>
+<span id="cb74-10"><a href="#cb74-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Severity of crashes"</span>)</span>
+<span id="cb74-11"><a href="#cb74-11" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"top"</span>, <span class="at">legend =</span> <span class="fu">colnames</span>(crashSeverity), <span class="at">fill =</span> col, <span class="at">ncol =</span> <span class="dv">2</span>,</span>
+<span id="cb74-12"><a href="#cb74-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">inset =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">1.1</span>),  <span class="at">xpd =</span> <span class="cn">TRUE</span>, <span class="at">bty =</span> <span class="st">"n"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/regions-1.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">plot of chunk regions</figcaption><p></p>
+</figure>
+</div>
+<p>Contrary to the number of crashes, Auckland seems to be a relatively safer region, since most crashes are without any injury. On the other hand, West Coast and Northland are more dangerous</p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="st">"mar"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">9</span>,<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>fatalCount <span class="ot">=</span> <span class="fu">table</span>(data<span class="sc">$</span>region, data<span class="sc">$</span>fatalCount)</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>(<span class="fu">t</span>(fatalCount) <span class="sc">*</span> <span class="fu">as.numeric</span>(<span class="fu">colnames</span>(fatalCount))) <span class="sc">|&gt;</span></span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">colSums</span>() <span class="sc">|&gt;</span></span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>    graphics<span class="sc">::</span><span class="fu">barplot</span>(<span class="at">horiz=</span><span class="cn">TRUE</span>, <span class="at">las=</span><span class="dv">1</span>, <span class="at">border=</span><span class="cn">NA</span>, <span class="at">cex.names=</span><span class="fl">0.6</span>, <span class="at">col=</span>col[<span class="dv">4</span>],</span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">font=</span><span class="dv">2</span>, <span class="at">main=</span><span class="st">"Total crash fatalities"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="figures/regions2-1.png" class="img-fluid" alt="plot of chunk regions2"> Another way to look at this is to look at total number of deaths, this include multiple deaths per crash. Despite Waikato having only 30% population of Auckland, it is way above Auckland in the number of deaths in crashes over 20 year period.</p>
+<p>And to finish it, to escape the morbidity, I will look at weather.</p>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>weather <span class="ot">=</span> <span class="fu">table</span>(data<span class="sc">$</span>region, data<span class="sc">$</span>weatherA)[</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>    , <span class="fu">c</span>(<span class="st">"Fine"</span>, <span class="st">"Light rain"</span>, <span class="st">"Heavy rain"</span>, <span class="st">"Mist or Fog"</span>, <span class="st">"Hail or Sleet"</span>, <span class="st">"Snow"</span>)</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>    ] <span class="co"># sorted for convenience</span></span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>col <span class="ot">=</span> <span class="fu">palette.colors</span>(<span class="dv">6</span>, <span class="st">"Set 1"</span>) <span class="sc">|&gt;</span> <span class="fu">rev</span>()</span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="st">"mar"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">9</span>,<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a>(weather <span class="sc">/</span> <span class="fu">rowSums</span>(weather)) <span class="sc">|&gt;</span></span>
+<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">t</span>() <span class="sc">|&gt;</span></span>
+<span id="cb76-8"><a href="#cb76-8" aria-hidden="true" tabindex="-1"></a>    graphics<span class="sc">::</span><span class="fu">barplot</span>(<span class="at">horiz=</span><span class="cn">TRUE</span>, <span class="at">las=</span><span class="dv">1</span>, <span class="at">col=</span>col, <span class="at">border=</span><span class="cn">NA</span>, <span class="at">cex.names=</span><span class="fl">0.6</span>, <span class="at">font=</span><span class="dv">2</span>,</span>
+<span id="cb76-9"><a href="#cb76-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Weather during accidents"</span>)</span>
+<span id="cb76-10"><a href="#cb76-10" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"top"</span>, <span class="at">legend =</span> <span class="fu">colnames</span>(weather), <span class="at">fill =</span> col, <span class="at">ncol =</span> <span class="dv">3</span>,</span>
+<span id="cb76-11"><a href="#cb76-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">inset =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">1.1</span>),  <span class="at">xpd =</span> <span class="cn">TRUE</span>, <span class="at">bty =</span> <span class="st">"n"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="figures/regions3-1.png" class="img-fluid" alt="plot of chunk regions3"> Looks like Nelson and Marlborough are the sunniest regions, while Southland and Otago the snowiest. I can confirm, I lived in Dunedin, on the hills there. But usually the snow thawed during day, so you could enjoy it only at night or early in the morning. Still, snow in New Zealand, fun times.</p>
+</section>
+<section id="modelling" class="level3">
+<h3 class="anchored" data-anchor-id="modelling">Modelling</h3>
+<p>Here we just do a quick look into the modelling. Some simple models are convenient to do during data-exploration, particularly the three methods are very convenient, be it CART or RandomForest. They can all handle continuous and categorical data, missing data, and are relatively robust, with RandomForest being also quite performant, often just little behind well-optimized Gradient Boosting algos.</p>
+<p>A big advantage of CART is that it provides a great graphical output and is easy to interpret. Although they are not as performant, they can help you discover patterns in data, which means they are great for EDA.</p>
+<p>First of all, we will make a model data containing a variables we want to use during modelling.</p>
+<p>Then we fit a simple CART. At first, we do not care about any test error, we want to just ascertain the pattern in the data.</p>
+<p>We want to model <code>crashSeverity</code> based on various reasonable variables we have selected during our process. Lets start with types of vehicles involved, weather, light conditions, holiday time, hill, urban environment, road characters, and whether, but not other objects.</p>
+<p>We won’t include <code>fatalCount</code>, <code>minorInjuryCount</code> and <code>majorInjuryCount</code> as this will cause data leakage.</p>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>mdata <span class="ot">=</span> data[<span class="fu">c</span>(</span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"bicycle"</span>, <span class="st">"bus"</span>, <span class="st">"carStationWagon"</span>,</span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"crashSeverity"</span>, <span class="st">"crashSHDescription"</span>,</span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"holiday"</span>, <span class="st">"light"</span>, <span class="st">"moped"</span>, <span class="st">"motorcycle"</span>,</span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NumberOfLanes"</span>, <span class="st">"otherVehicleType"</span>, <span class="st">"pedestrian"</span>,</span>
+<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"roadCharacter"</span>, <span class="st">"roadLane"</span>, <span class="st">"roadSurface"</span>,</span>
+<span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"schoolBus"</span>, <span class="st">"speedLimit"</span>, <span class="st">"streetLight"</span>,</span>
+<span id="cb77-8"><a href="#cb77-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"suv"</span>, <span class="st">"taxi"</span>, <span class="st">"truck"</span>, <span class="st">"unknownVehicleType"</span>,</span>
+<span id="cb77-9"><a href="#cb77-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"weatherA"</span>, <span class="st">"hill"</span></span>
+<span id="cb77-10"><a href="#cb77-10" aria-hidden="true" tabindex="-1"></a>    )]</span>
+<span id="cb77-11"><a href="#cb77-11" aria-hidden="true" tabindex="-1"></a><span class="co"># we also need to convert them to factors</span></span>
+<span id="cb77-12"><a href="#cb77-12" aria-hidden="true" tabindex="-1"></a>chars <span class="ot">=</span> <span class="fu">lapply</span>(mdata, class) <span class="sc">==</span> <span class="st">"character"</span></span>
+<span id="cb77-13"><a href="#cb77-13" aria-hidden="true" tabindex="-1"></a>mdata[chars] <span class="ot">=</span> <span class="fu">lapply</span>(mdata[chars], factor)</span>
+<span id="cb77-14"><a href="#cb77-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-15"><a href="#cb77-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tree"</span>)</span>
+<span id="cb77-16"><a href="#cb77-16" aria-hidden="true" tabindex="-1"></a>tree <span class="ot">=</span> <span class="fu">tree</span>(crashSeverity <span class="sc">~</span> ., <span class="at">data=</span>mdata)</span>
+<span id="cb77-17"><a href="#cb77-17" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(tree)</span>
+<span id="cb77-18"><a href="#cb77-18" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(tree, <span class="at">pretty=</span><span class="dv">0</span>, <span class="at">cex=</span><span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="figures/cart-1.png" class="img-fluid" alt="plot of chunk cart"> Uh, I have expected a more deeper tree. This is really bad, even if the model is ultimately not good, you would expect for CART to pick up some pattern.</p>
+<p>The error is terrible, we have predicted over 80% of classes wrong.</p>
+<p>We can see what is happening by looking at the contingency table. Remember that because of our mad model, we are classifying only between minor and serious crash.</p>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>predicted <span class="ot">=</span> <span class="fu">predict</span>(tree, <span class="at">newdata =</span> mdata, <span class="at">type=</span><span class="st">"class"</span>)</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>error <span class="ot">=</span> predicted <span class="sc">!=</span>  mdata<span class="sc">$</span>crashSeverity</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="st">"Predicted"</span><span class="ot">=</span>predicted, <span class="st">"actual"</span><span class="ot">=</span>data<span class="sc">$</span>crashSeverity)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>##                   actual
+## Predicted          Fatal Crash Minor Crash Non-Injury Crash Serious Crash
+##   Fatal Crash                0           0                0             0
+##   Minor Crash             1797      113086           391522         22476
+##   Non-Injury Crash           0           0                0             0
+##   Serious Crash           5792       78250           184432         24389</code></pre>
+<p>Looks like we just can’t predict well non-injury crashes. These are distributed both among our predicted minor and serious crash.</p>
+<p>We know that CART is bad, but we didn’t know that it is that bad. We would expect it to pick up on some signal, but either we have removed it by filtering some features, or type of crash just can’t be predicted from the data on hand.</p>
+<p>But here is a thought. Non-injury is quite overrepresented in the data and thus we would need to build quite deep tree to find differences. I can get to this point my manipulating with <code>mindev</code>, so maybe there is something hidden deep inside, but there isn’t a single clear pattern.</p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"randomForest"</span>)</span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>) <span class="co"># for replicability</span></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>mdata <span class="ot">=</span> <span class="fu">na.roughfix</span>(mdata) <span class="co"># randomForest doesn't handle missing values well</span></span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>mdata <span class="ot">=</span> mdata[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(mdata), <span class="at">size=</span><span class="dv">20000</span>),] <span class="co"># subsample, otherwise my computer breaks</span></span>
+<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>rf <span class="ot">=</span> <span class="fu">randomForest</span>(crashSeverity <span class="sc">~</span> ., <span class="at">data=</span>mdata)</span>
+<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a>rf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>## 
+## Call:
+##  randomForest(formula = crashSeverity ~ ., data = mdata) 
+##                Type of random forest: classification
+##                      Number of trees: 500
+## No. of variables tried at each split: 4
+## 
+##         OOB estimate of  error rate: 27.78%
+## Confusion matrix:
+##                  Fatal Crash Minor Crash Non-Injury Crash Serious Crash
+## Fatal Crash                0          17              151            13
+## Minor Crash                0         628             3861            76
+## Non-Injury Crash           0         315            13739            22
+## Serious Crash              1         254              846            77
+##                  class.error
+## Fatal Crash       1.00000000
+## Minor Crash       0.86243154
+## Non-Injury Crash  0.02394146
+## Serious Crash     0.93463497</code></pre>
+<p>The OOB estimate of error is promising, but closer look at the confusion matrix and class error shows that we are unable to predict anything and the relatively low error is caused purely by the overrepresented Non-Injury Crash.</p>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>I have performed Exploratory Data Analysis on the New Zealand Crash data. It was a bit contrived and we have spend a lot of time trying to clean the data and figure out what each variable or category means rather than looking more into patterns. This is another reason why you should always have an expert on hand, or become one, when you are working with data.</p>
+<p>Aside of cleaning, we have did some exploration, notably into the fatalities. Auckland is not as terrifying as it might look like, it has a large number of crashes, but this is to be expected due to its large population, and most crashes are without injury. On the other hand, you should be a bit worried if you are living or driving in Waikato.</p>
+<p>In the end, we weren’t able to find reason for why crashes become fatal. This is another reason why you should be vigilant and try to err on the safe side. Any crash, no matter the speed, road type, or weather condition can turn into serious injury or even become fatal. So drive safe, you are not the only one on the road.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
