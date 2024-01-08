@@ -1,21 +1,26 @@
-Operators:
+# TODO
+ * operators called as a function, with lapply, Reduce etc.
+ * cover all.equal together with identical
+
+Covered functions:
     Arithmetics:
-        -, +, *, /, %/%, %%, ^
+        -, +, *, /, %/%, %%, ^, **
     Logical:
-        !, !=, &, &&, |, ||
-    Relation:
-        <, <=, ==, >, >=,
+        !, !=, &, &&, |, ||, xor, isTRUE, isFALSE, all, any, as.logical, is.logical, logical
+    Relational:
+        <, <=, ==, >, >=,    
+
+
+Not covered functions:
 
     Matrix operations:
         %*%, %o%, %x%
-
     Matching (nesting in formula)
         %in%
-    Sequence (of interactions in formula)
+    Sequence (or interactions in formula)
         :
     Namespace access:
         ::, :::
-
     Language features
         (, {
     Subsetting:
@@ -39,12 +44,10 @@ addTaskCallback
 agrep
 agrepl
 alist
-all
 all.equal
 all.names
 all.vars
 allowInterrupts
-any
 anyDuplicated
 anyNA
 aperm
@@ -69,7 +72,6 @@ as.function
 as.hexmode
 as.integer
 as.list
-as.logical
 as.matrix
 as.name
 as.null
@@ -375,7 +377,6 @@ is.integer
 is.language
 is.list
 is.loaded
-is.logical
 is.matrix
 is.na
 is.na<-
@@ -402,7 +403,6 @@ isa
 isatty
 isBaseNamespace
 isdebugged
-isFALSE
 isIncomplete
 isNamespace
 isNamespaceLoaded
@@ -413,7 +413,6 @@ isRestart
 isS4
 isSeekable
 isSymmetric
-isTRUE
 jitter
 julian
 kappa
@@ -459,7 +458,6 @@ log10
 log1p
 log2
 logb
-logical
 lower.tri
 ls
 make.names
@@ -850,7 +848,6 @@ write.dcf
 writeBin
 writeChar
 writeLines
-xor
 xpdrows.data.frame
 xtfrm
 xzfile
