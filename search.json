@@ -18,7 +18,7 @@
     "href": "index.html",
     "title": "Jiří C. Moravec",
     "section": "",
-    "text": "Exploratory Data Analysis: NZ Crash Data\n\n\n\n\n\n\n\nR\n\n\n\n\nLooking at patterns of car crashes in New Zealand\n\n\n\n\n\n\nJul 20, 2023\n\n\n\n\n\n\n  \n\n\n\n\nVirtualBox with Windows 11\n\n\n\n\n\n\n\nothers\n\n\n\n\nHow to get Windows 11 working on VirtualBox to run Windows-only applications\n\n\n\n\n\n\nJul 13, 2023\n\n\n\n\n\n\n  \n\n\n\n\nErrors, builds, and containers\n\n\n\n\n\n\n\nothers\n\n\n\n\nSolving unhelpful errors in build systems with containerization\n\n\n\n\n\n\nJul 9, 2023\n\n\n\n\n\n\n  \n\n\n\n\nLearn SQL with me: NZ names\n\n\n\n\n\n\n\nsql\n\n\nNZ names\n\n\n\n\nSQL, database design and the most popular names in New Zealand\n\n\n\n\n\n\nMar 22, 2023\n\n\n\n\n\n\n  \n\n\n\n\nDigital Cubism (1)\n\n\n\n\n\n\n\nR\n\n\ngraphics\n\n\n\n\nKmeans and CART\n\n\n\n\n\n\nMar 15, 2023\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBase R from A to Z: Operators (3)\n\n\n\n\n\n\n\nR\n\n\n\n\nArithmetic, Logical and Relational operators\n\n\n\n\n\n\nMar 4, 2023\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBase R from A to Z: Types of functions (2)\n\n\n\n\n\n\n\nR\n\n\n\n\nClosures, primitives and internals\n\n\n\n\n\n\nFeb 25, 2023\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBase R from A to Z: Introduction (1)\n\n\n\n\n\n\n\nR\n\n\n\n\nOverview of preinstalled packages\n\n\n\n\n\n\nFeb 18, 2023\n\n\n\n\n\n\n  \n\n\n\n\nHello World!\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nFeb 15, 2023\n\n\n\n\n\n\nNo matching items"
+    "text": "Make it pop!\n\n\n\n\n\n\n\nR\n\n\n\n\nImplementing stack behaviour in R\n\n\n\n\n\n\nMar 12, 2024\n\n\n\n\n\n\n  \n\n\n\n\nErrors, builds, and containers (2)\n\n\n\n\n\n\n\nothers\n\n\n\n\nMulti-stage dockerfile\n\n\n\n\n\n\nMar 11, 2024\n\n\n\n\n\n\n  \n\n\n\n\nExploratory Data Analysis: NZ Crash Data\n\n\n\n\n\n\n\nR\n\n\n\n\nLooking at patterns of car crashes in New Zealand\n\n\n\n\n\n\nJul 20, 2023\n\n\n\n\n\n\n  \n\n\n\n\nVirtualBox with Windows 11\n\n\n\n\n\n\n\nothers\n\n\n\n\nHow to get Windows 11 working on VirtualBox to run Windows-only applications\n\n\n\n\n\n\nJul 13, 2023\n\n\n\n\n\n\n  \n\n\n\n\nErrors, builds, and containers\n\n\n\n\n\n\n\nothers\n\n\n\n\nSolving unhelpful errors in build systems with containerization\n\n\n\n\n\n\nJul 9, 2023\n\n\n\n\n\n\n  \n\n\n\n\nLearn SQL with me: NZ names\n\n\n\n\n\n\n\nsql\n\n\nNZ names\n\n\n\n\nSQL, database design and the most popular names in New Zealand\n\n\n\n\n\n\nMar 22, 2023\n\n\n\n\n\n\n  \n\n\n\n\nDigital Cubism (1)\n\n\n\n\n\n\n\nR\n\n\ngraphics\n\n\n\n\nKmeans and CART\n\n\n\n\n\n\nMar 15, 2023\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBase R from A to Z: Operators (3)\n\n\n\n\n\n\n\nR\n\n\n\n\nArithmetic, Logical and Relational operators\n\n\n\n\n\n\nMar 4, 2023\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBase R from A to Z: Types of functions (2)\n\n\n\n\n\n\n\nR\n\n\n\n\nClosures, primitives and internals\n\n\n\n\n\n\nFeb 25, 2023\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBase R from A to Z: Introduction (1)\n\n\n\n\n\n\n\nR\n\n\n\n\nOverview of preinstalled packages\n\n\n\n\n\n\nFeb 18, 2023\n\n\n\n\n\n\n  \n\n\n\n\nHello World!\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nFeb 15, 2023\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about.html",
@@ -203,6 +203,27 @@
     "text": "Conclusion\nWe were able to use podman and dockerfile to create a replicable build of an AppImage for the Seven Kingdoms: Ancient Adversaries.\nHandling podman and contairnerfiles was rather easy, the biggest issue was making AppImages themselves. But we managed that as well."
   },
   {
+    "objectID": "posts/containers/containers2.html",
+    "href": "posts/containers/containers2.html",
+    "title": "Errors, builds, and containers (2)",
+    "section": "",
+    "text": "Last time we created a Containerfile to build Seven Kingdoms: Ancient Adversaries from source. We then utilized Appimage to distribute the executable with all its dependencies for various Linux systems.\nThey way we created the containerfile is that we iteratively made it work and fixed any issues we have encountered. We did it by splitting steps into dependency install part, building binary, and then finally building the AppImage. To make the life a bit easier, these steps are cached, so they don’t need to be ran again if they are not changed. However, if we were missing dependency for AppImage, we had to rebuild everything from scratch, which wasn’t very efficient.\nI think we can do better. Since we first build the game from sources, and only then we created the AppImage, I think we could reasonably break this into two step process, essentially have a containerfile for build from the source, and another one for AppImage only. But connected. And only in a single file. That is what Multi-staged builds are."
+  },
+  {
+    "objectID": "posts/containers/containers2.html#multi-staged-builds",
+    "href": "posts/containers/containers2.html#multi-staged-builds",
+    "title": "Errors, builds, and containers (2)",
+    "section": "Multi-staged builds",
+    "text": "Multi-staged builds\nAs described above, multi-staged builds are essentially several different separated steps that are chained together. They make things easier as reason about and reduce potential cross-contamination between different unrelated parts of containerfile as you need to define everything explicitely, including copying any files or artifacts from one stage to another.\nSo let’s prepare a multi-staged Containerfile2:\nFROM ubuntu:22.04 as binary\n\n# you can add multiple labels in a field=value format\nLABEL maintainer=\"Jiří Moravec\"\n\n# tool required to make binary\n# alphabetically sorted (kind of) according to best practices\nRUN apt-get update && apt-get install -y \\\n    automake \\\n    autopoint \\\n    autoconf \\\n    autoconf-archive \\\n    g++ \\\n    gettext \\\n    git \\\n    make\n\n# 7kaa dependencies\nRUN apt-get install -y \\\n    libcurl4-openssl-dev \\\n    libenet-dev \\\n    libopenal-dev \\\n    libsdl2-dev\n\nRUN git clone https://github.com/the3dfxdude/7kaa /home/7kaa\n\n\nWORKDIR /home/7kaa\n\nRUN ./autogen.sh && \\\n    ./configure && \\\n    make install DESTDIR=/home/7kaa/inst && \\\n    cp src/7k.ico /home/7kaa/inst\nThis is our first part. We call it binary (coz we are building a binary) and to make it more general, we install it into inst directory instead of the AppImage.\nThis is everything we need to build 7kaa binary straight from source. If there are other unstated dependencies, they are installed with what we are installing or they are part of the Ubuntu image.\nNote that if we were to run make instead of make install and copied only the binary, we wouldn’t get locale files, and the run would run only in English. But we already have German, Polish, Spanish and other translations, so why not use them as well!\nNow, we will create the second stage of our Containerfile2, where we will utilize the artifacts from the binary part to build an AppImage.\nFROM ubuntu:22.04 as appimage\n\n# copying artifacts\nCOPY --from=binary /home/7kaa/inst/* /home/7kaa/AppDir\n\n# 7kaa dependencies, no dev variants required!\nRUN apt-get update && apt-get install -y \\\n    libcurl4 \\\n    libenet7 \\\n    libopenal1 \\\n    libsdl2-2.0-0\n\n\nRUN apt-get install -y \\\n    imagemagick \\\n    file \\\n    lbzip2 \\\n    libfuse2 \\\n    wget\n\n\nWORKDIR /home/7kaa/AppDir\n\nRUN mv usr/local/* usr/ && \\\n    rm -r usr/local\n\nRUN convert 7k.ico 7k.png && rm 7k.ico\n\nRUN echo '#!/bin/env sh' > 7krun && \\\n    echo '' 7krun && \\\n    echo 'SKDATA=share/7kaa/ 7kaa' >> 7krun && \\\n    chmod +x bin/7krun && \\\n    mv 7krun usr/bin\n\nRUN echo '[Desktop Entry]' > 7kaa.desktop && \\\n    echo 'Type=Application' >> 7kaa.desktop && \\\n    echo 'Name=7kaa' >> 7kaa.desktop && \\\n    echo 'Comment=Seven Kingdoms: Ancient Adversaries' >> 7kaa.desktop && \\\n    echo 'Path=/usr/bin' >> 7kaa.desktop && \\\n    echo 'Exec=7krun' >> 7kaa.desktop && \\\n    echo 'Icon=7k' >> 7kaa.desktop && \\\n    echo 'Categories=Game;' >> 7kaa.desktop\n\nRUN wget -nv -c -4 https://www.7kfans.com/downloads/7kaa-music-2.15.tar.bz2 && \\\n    tar -xf 7kaa-music-2.15.tar.bz2 && \\\n    mv 7kaa-music/MUSIC/ usr/share/7kaa/ && \\\n    rm -r 7kaa-music\n\nWORKDIR /home/7kaa/\n\nRUN wget -nv -c https://github.com/AppImage/AppImageKit/releases/download/13/AppRun-x86_64 -O AppDir/AppRun && \\\n    chmod +x AppDir/AppRun && \\\n    wget -nv -c https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20220822-1/linuxdeploy-x86_64.AppImage && \\\n    chmod +x linuxdeploy-x86_64.AppImage && \\\n    VERSION=dev ./linuxdeploy-x86_64.AppImage \\\n        --appimage-extract-and-run \\\n        --appdir AppDir \\\n        -d AppDir/7kaa.desktop \\\n        -i AppDir/7k.png \\\n        --output appimage\nSome of these steps, like the one creating 7kaa.desktop are relatively simple, but require a lot of weird bash code. I can see files like that be included in either the game repository, or a repository with a dockerfile and copied over. But also, there is an advantage having everything self-contained.\nA similar issue is with the icon. For the purpose of this build, I did not modified the original source (and now, 6 months after I started writing this document, the development have moved from GitHub to SourceForge), but a png icon should surely be in the source code. That would remove quite a hefty dependency."
+  },
+  {
+    "objectID": "posts/containers/containers2.html#conclusion",
+    "href": "posts/containers/containers2.html#conclusion",
+    "title": "Errors, builds, and containers (2)",
+    "section": "Conclusion",
+    "text": "Conclusion\nMulti-staged builds are powerful tool. If setup correctly, they can save a lot of time rebuilding container after changes. They are also great tool during development since it takes quite a lot of effort to catch all missing dependencies and make everything working as it should. And during this time, you will be rebuilding a lot. You could think about it as different targets in a makefile.\nHowever, they are not without issues. You might have noticed that the final containerfile is quite a bit more complicated. In addition to this, each layer of multi-staged build adds to the size of the image."
+  },
+  {
     "objectID": "posts/containers/vmwin.html",
     "href": "posts/containers/vmwin.html",
     "title": "VirtualBox with Windows 11",
@@ -222,6 +243,76 @@
     "title": "VirtualBox with Windows 11",
     "section": "Summary",
     "text": "Summary\nAnd you are there, you should be able to run PowerBI, or any Windows-only SW, on your Linux machine like I did. Hope some of this was helpful for you. See you in the industry!"
+  },
+  {
+    "objectID": "posts/pop/pop.html",
+    "href": "posts/pop/pop.html",
+    "title": "Make it pop!",
+    "section": "",
+    "text": "Functions like pop exists in many languages for iterable item, such as lists or arrays. While particulars change, in general pop removes an item from a container and return said item. This is typical for data structures called queue, stack, and deque, which beside pop implement functions for adding elements to this container and differ in whether they are first in first out (queue), first in last out (stack), or both ways (deque).\nWhile not common to R, these data structures are very convenient when you are consuming elements of an array, especially if the number of consumed elements can differ each iteration. For instance, you can consume command-line arguments when each parameter can have different number of arguments.\nSee following snippet.\nI could surely implement this by incrementing index i and it wouldn’t be much difficult. But this makes the code a bit cleaner."
+  },
+  {
+    "objectID": "posts/pop/pop.html#helper-functions",
+    "href": "posts/pop/pop.html#helper-functions",
+    "title": "Make it pop!",
+    "section": "Helper functions",
+    "text": "Helper functions\nSince we will be doing some memory inspections, we will define two helper functions.\ninspect is simple mapping of the internal inspect function to a visible namespace. It will print the internal structure of an object. Think about it as a very complex str.\naddress is a simple C function compiled using the great inline package to simply return address of an object. This function is copied from data.table.\n\ninspect = function(x) .Internal(inspect(x))\naddress = inline::cfunction(signature(x = \"SEXP\"),\n    body = \"\n    char buffer[32];\n    snprintf(buffer, 32, \\\"%p\\\", (void *)x);\n    return(mkString(buffer));\n    \",\n    language = \"C\",\n    )"
+  },
+  {
+    "objectID": "posts/pop/pop.html#definition",
+    "href": "posts/pop/pop.html#definition",
+    "title": "Make it pop!",
+    "section": "Definition",
+    "text": "Definition\nLet pop(x, n) be a function that returns n first elements of x and at the same time removes n elements from x.\nFor instance:\n\nvec = c(5, 3, 2, 10, 5)\npop(vec, 2) # [1] 5 3\nvec # [1] 2 10 5"
+  },
+  {
+    "objectID": "posts/pop/pop.html#usign-assign",
+    "href": "posts/pop/pop.html#usign-assign",
+    "title": "Make it pop!",
+    "section": "Usign assign",
+    "text": "Usign assign\nWhen doing modification of a state, the first thing that might come to your mind is the <<- operator.\n\npop = function(x){\n    val = x[1]\n    x <<- x[-1]\n    val\n    }\n\nvec = c(5, 3, 8)\npop(vec)\n\n[1] 5\n\nvec\n\n[1] 5 3 8\n\nx\n\n[1] 3 8\n\n\nBut that won’t work, since you are modifying the variable x instead of the one passed to the pop function. You need to find the name of that variable and assign the modified vector to it.\n\npop = function(x, n = 1){\n    ns = seq_len(min(n, length(x)))\n    val = x[ns]\n    obj = x[-ns]\n    assign(deparse(substitute(x)), obj, envir=parent.frame())\n    val\n    }\n\nvec = c(5, 3, 8)\npop(vec)\n\n[1] 5\n\nvec\n\n[1] 3 8\n\n\nThere are few potential issues here. First of all we are assigning the value into the parent.frame() of the pop function, which won’t work if the pop is being called inside function, but that is a risk I am willing to take and a version that I ended up using.\nThe second issue is that we are re-allocating the vector during each call pop. When we are doing only a few operatios with short vectors, this is fine. But this can be an interesting challenge.\nHowever, one of the big advantages of this approach is how easy it is, and that object we are working with, a vector, is just an R vector. We don’t need to define any particular new behaviour to work with it."
+  },
+  {
+    "objectID": "posts/pop/pop.html#function-factory",
+    "href": "posts/pop/pop.html#function-factory",
+    "title": "Make it pop!",
+    "section": "Function factory",
+    "text": "Function factory\nAnother way to do this might be to create a function factory that works as an iterator:\n\nnew_pop = function(x){\n    i = 1\n    x = x\n\n    function(n = 1){\n        if(i > length(x))\n            return(NULL)\n\n        ns = seq_len(min(n, length(x) - i + 1))\n        val = x[ns + i - 1]\n        i <<- i + n\n\n        cat(\"Address of 'x' is: \", address(x), \"\\n\")\n        val\n        }\n    }\n\nvec = c(5, 3, 8)\naddress(vec)\n\n[1] \"0x55b6d5aa3bc8\"\n\npop = new_pop(vec)\npop()\n\nAddress of 'x' is:  0x55b6d5aa3bc8 \n\n\n[1] 5\n\npop(2)\n\nAddress of 'x' is:  0x55b6d5aa3bc8 \n\n\n[1] 3 8\n\npop()\n\nNULL\n\n\nNotice that the address of the vector didn’t change! Since there is no internal modification, R will never have to create a copy. All we are changing is the iterating variable i.\nLike the previous example, this is a really simple to do and we do not need to define any additional functions and methods.\nThe disadvantage is that we don’t know the number of remaining elements, and we can’t look ahead. But surely, these are solvable problems with some parametrization or just"
+  },
+  {
+    "objectID": "posts/pop/pop.html#environments",
+    "href": "posts/pop/pop.html#environments",
+    "title": "Make it pop!",
+    "section": "Environments",
+    "text": "Environments\nThe function factory worked because the i and x were stored in an enclosing environment of the returned function.\nWe can do something like that explicitly since environments are the only objects in R where pass-by-reference works. This is how RC and R6 are defined and we are essentially building classes.\n\nnew_stack = function(x){\n    env = new.env(parent = emptyenv(), size = 2)\n    env$x = x\n    env$i = 1 \n    env\n    }\n\npop = function(obj, n = 1){\n    if(obj$i > length(obj$x))\n        return(NULL)\n\n    ns = seq_len(min(n, length(obj$x) - obj$i + 1))\n    val = obj$x[ns + obj$i - 1]\n    obj$i = obj$i + n\n\n    cat(\"Address of 'obj$x' is: \", address(obj$x), \"\\n\")\n    val\n    }\n\nvec = c(5, 3, 8)\naddress(vec)\n\n[1] \"0x55b6d37f94a8\"\n\nstack = new_stack(vec)\naddress(stack)\n\n[1] \"0x55b6d5870ba0\"\n\npop(stack)\n\nAddress of 'obj$x' is:  0x55b6d37f94a8 \n\n\n[1] 5\n\npop(stack, 2)\n\nAddress of 'obj$x' is:  0x55b6d37f94a8 \n\n\n[1] 3 8\n\npop(stack)\n\nNULL\n\n\nThe address of the stack or the internal vector stack$obj doesn’t change."
+  },
+  {
+    "objectID": "posts/pop/pop.html#rc-class",
+    "href": "posts/pop/pop.html#rc-class",
+    "title": "Make it pop!",
+    "section": "RC class",
+    "text": "RC class\nFrom this, it is only a small step towards fully fledged classes. As mentioned before, we have RC classes and R6 classes that implements classical OOP seamantics using environments. Generally R6 classes are preferred as they are more performant, but require dependency (the R6 package). RC classes are very similar and included in base R. So let’s try to use them.\n\nStack = setRefClass(\"Stack\",\n    fields = list(\n        items = \"vector\",\n        index = \"integer\"\n        ),\n\n    methods = list(\n        initialize = function(x){\n            items <<- x\n            index <<- 1L\n            },\n        pop = function(n = 1){\n            if(index > length(items))\n                return(NULL)\n\n            ns = seq_len(min(n, length(items) - index + 1))\n            val = items[ns + index - 1]\n            index <<- index + as.integer(n)\n\n            val\n            },\n\n        peek = function(n = 1){\n            if(index > length(items))\n                return(NULL)\n\n            ns = seq_len(min(n, length(items) - index + 1))\n            items[ns]\n            },\n\n        size = function(){\n            length(items) - index + 1\n            }\n        )\n    )\n\nvec = c(5, 3, 8)\nstack = Stack(vec)\nstack$pop()\n\n[1] 5\n\nstack$pop(2)\n\n[1] 3 8\n\nstack$pop()\n\nNULL"
+  },
+  {
+    "objectID": "posts/pop/pop.html#bare-environment",
+    "href": "posts/pop/pop.html#bare-environment",
+    "title": "Make it pop!",
+    "section": "Bare environment",
+    "text": "Bare environment\nRC classes are quite hungry and you should generally use R6 classes instead (see RC vs R6 performance).\nThere is however an interestring trick in the above article. Bare environments.\n\nnew_stack = function(x){\n    i = 1\n\n    pop = function(n = 1){\n        if(i > length(x))\n            return(NULL)\n\n        ns = seq_len(min(n, length(x) - i + 1))\n        val = x[ns + i - 1]\n        i <<- i + n\n\n        val\n        }\n\n    peek = function(n = 1){\n        if(i > length(x))\n            return(NULL)\n\n        ns = seq_len(min(n, length(x) - i + 1))\n        x[ns]\n        }\n\n    size = function(){\n        length(x) - i + 1\n        }\n\n    structure(environment(), class = \"Stack\")\n    }\n\nvec = c(5, 3, 8)\nstack = new_stack(vec)\nstack$pop()\n\n[1] 5\n\nstack$peek()\n\n[1] 5\n\nstack$size()\n\n[1] 2\n\nstack$pop(2)\n\n[1] 3 8\n\n\nYou got most of the power of R6 classes for free right there in the base R! And they are much easier to work with than RC classes and much more performant."
+  },
+  {
+    "objectID": "posts/pop/pop.html#attributes",
+    "href": "posts/pop/pop.html#attributes",
+    "title": "Make it pop!",
+    "section": "Attributes",
+    "text": "Attributes\nAll R objects have attributes. In the above example, set class attribute of an object generated by new_stack.\nCan we set class attribute without modification of the whole object?\n\npop = function(x, n = 1){\n    if(is.null(attr(x, \"index\")))\n        attr(x, \"index\") = 1\n\n        i = attr(x, \"index\")\n\n        if(i > length(x))\n            return(NULL)\n\n        ns = seq_len(min(n, length(x) - i + 1))\n        val = x[ns + i - 1]\n        attr(x, \"index\") = i + n\n\n        val\n    }\n\nvec = c(5, 3, 8)\npop(vec)\n\n[1] 5\n\npop(vec, 2)\n\n[1] 5 3\n\n\nUnfortunatelly, this doesn’t work since setting attribute is modification of an object. We would have to use .Call interface and modify it in C function:\n\nset_index = inline::cfunction(\n    signature(x = \"SEXP\", index = \"SEXP\"),\n    body = \"duplicate(x); setAttrib(x, install(\\\"index\\\"), index); return x;\",\n    language = \"C\"\n    )\n\npop = function(x, n = 1){\n    if(is.null(attr(x, \"index\")))\n        set_index(x, 1)\n\n        i = attr(x, \"index\")\n\n        if(i > length(x))\n            return(NULL)\n\n        ns = seq_len(min(n, length(x) - i + 1))\n        val = x[ns + i - 1]\n        set_index(x, i + n)\n        cat(\"Address of 'x' is: \", address(x), \"\\n\")\n\n        val\n    }\n\nvec = c(5, 3, 8)\naddress(vec)\n\n[1] \"0x55b6d3eb6e78\"\n\npop(vec)\n\nAddress of 'x' is:  0x55b6d3eb6e78 \n\n\n[1] 5\n\npop(vec, 2)\n\nAddress of 'x' is:  0x55b6d3eb6e78 \n\n\n[1] 3 8\n\n\nWith some C level magic, everything is possible! Address is the same, meaning that we are only modifying the attribute of a vector, but not the vector itself. To get the size or peek of the current stack, we would need to create a new functions that calculate the attribute. But since these functions do not need to do any in-place modification, it will not be a lot of work."
+  },
+  {
+    "objectID": "posts/pop/pop.html#summary",
+    "href": "posts/pop/pop.html#summary",
+    "title": "Make it pop!",
+    "section": "Summary",
+    "text": "Summary\nIn this small post we have investigated how to make simple pop function that simulate “consumption” of elements from a vector. Including memory-efficient methods providing modify-in-place seamantics.\nIf we wanted to implement full stack, queue, and deque with the put or insert functions that would add elements to the vector, the situation would be quite different and different solutions might be better. But since I didn’t need this functionality, I could afford to implement these easy solutions."
   },
   {
     "objectID": "posts/CrashDataEDA/CrashDataEDA.html",

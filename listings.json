@@ -2,6 +2,9 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/baseR_AZ/4_operators_.html",
+      "/posts/pop/pop.html",
+      "/posts/containers/containers2.html",
       "/posts/CrashDataEDA/CrashDataEDA.html",
       "/posts/containers/vmwin.html",
       "/posts/containers/containers.html",
