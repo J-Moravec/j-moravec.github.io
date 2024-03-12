@@ -1,8 +1,9 @@
 ---
 title: "Make it `pop`!"
 description: "Implementing stack behaviour in R"
-date: "2024-3-11"
+date: "2024-3-12"
 categories: [R]
+image: pop.png
 toc: true
 toc-depth: 4
 ---
