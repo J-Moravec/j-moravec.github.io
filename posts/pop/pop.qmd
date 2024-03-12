@@ -1,0 +1,376 @@
+---
+title: "Make it `pop`!"
+description: "Implementing stack behaviour in R"
+date: "2024-3-11"
+categories: [R]
+toc: true
+toc-depth: 4
+---
+
+Functions like `pop` exists in many languages for iterable item, such as lists or arrays.
+While particulars change, in general `pop` removes an item from a container and return said item.
+This is typical for data structures called `queue`, `stack`, and `deque`, which beside `pop` implement functions for adding elements to this container and differ in whether they are first in first out (queue), first in last out (stack), or both ways (deque).
+
+While not common to R, these data structures are very convenient when you are consuming elements of an array, especially if the number of consumed elements can differ each iteration.
+For instance, you can consume command-line arguments when each parameter can have different number of arguments.
+
+See following snippet.
+
+```{r}
+#| eval: false
+#| code-fold: true
+
+# Main argument parsing loop using pop
+# currently only 0 (flags) and 1 parameter arguments are supported
+    while(length(args) > 0){
+        arg = pop(args)
+        id = match(arg, options$long)
+
+        if(is.na(id)){
+            positional = c(positional, arg)
+            next
+            }
+
+        if(options$flag[[id]]){
+            pars[id] = TRUE
+            next
+            }
+
+        if(length(args) < 1 || args[1] %in% options$long)
+            stop("Not enough arguments for ", arg, call. = FALSE)
+
+        pars[id] = pop(args)
+        }
+```
+
+I could surely implement this by incrementing index `i` and it wouldn't be much difficult.
+But this makes the code a bit cleaner.
+
+## Helper functions
+
+Since we will be doing some memory inspections, we will define two helper functions.
+
+`inspect` is simple mapping of the internal `inspect` function to a visible namespace.
+It will print the internal structure of an object.
+Think about it as a very complex `str`.
+
+`address` is a simple `C` function compiled using the great `inline` package to simply return address of an object. This function is copied from `data.table`.
+
+```{r}
+inspect = function(x) .Internal(inspect(x))
+address = inline::cfunction(signature(x = "SEXP"),
+    body = "
+    char buffer[32];
+    snprintf(buffer, 32, \"%p\", (void *)x);
+    return(mkString(buffer));
+    ",
+    language = "C",
+    )
+```
+
+## Definition
+
+Let `pop(x, n)` be a function that returns `n` first elements of `x` and at the same time removes `n` elements from `x`.
+
+For instance:
+
+```{r}
+#| eval: false
+vec = c(5, 3, 2, 10, 5)
+pop(vec, 2) # [1] 5 3
+vec # [1] 2 10 5
+```
+
+## Usign `assign`
+
+When doing modification of a state, the first thing that might come to your mind is the `<<-` operator.
+
+```{r}
+pop = function(x){
+    val = x[1]
+    x <<- x[-1]
+    val
+    }
+
+vec = c(5, 3, 8)
+pop(vec)
+vec
+x
+```
+
+But that won't work, since you are modifying the variable `x` instead of the one passed to the `pop` function.
+You need to find the name of that variable and assign the modified vector to it.
+
+```{r}
+pop = function(x, n = 1){
+    ns = seq_len(min(n, length(x)))
+    val = x[ns]
+    obj = x[-ns]
+    assign(deparse(substitute(x)), obj, envir=parent.frame())
+    val
+    }
+
+vec = c(5, 3, 8)
+pop(vec)
+vec
+```
+
+There are few potential issues here. First of all we are assigning the value into the `parent.frame()` of the `pop` function, which won't work if the `pop` is being called inside function, but that is a risk I am willing to take and a version that I ended up using.
+
+The second issue is that we are re-allocating the vector during each call `pop`.
+When we are doing only a few operatios with short vectors, this is fine.
+But this can be an interesting challenge.
+
+However, one of the big advantages of this approach is how easy it is, and that object we are working with, a vector, is just an R vector.
+We don't need to define any particular new behaviour to work with it.
+
+## Function factory
+
+Another way to do this might be to create a function factory that works as an iterator:
+
+```{r}
+new_pop = function(x){
+    i = 1
+    x = x
+
+    function(n = 1){
+        if(i > length(x))
+            return(NULL)
+
+        ns = seq_len(min(n, length(x) - i + 1))
+        val = x[ns + i - 1]
+        i <<- i + n
+
+        cat("Address of 'x' is: ", address(x), "\n")
+        val
+        }
+    }
+
+vec = c(5, 3, 8)
+address(vec)
+pop = new_pop(vec)
+pop()
+pop(2)
+pop()
+```
+
+Notice that the address of the vector didn't change!
+Since there is no internal modification, R will never have to create a copy.
+All we are changing is the iterating variable `i`.
+
+Like the previous example, this is a really simple to do and we do not need to define any additional functions and methods.
+
+The disadvantage is that we don't know the number of remaining elements, and we can't look ahead.
+But surely, these are solvable problems with some parametrization or just 
+
+## Environments
+
+The function factory worked because the `i` and `x` were stored in an enclosing environment of the returned function.
+
+We can do something like that explicitly since environments are the only objects in R where pass-by-reference works.
+This is how `RC` and `R6` are defined and we are essentially building classes.
+
+```{r}
+new_stack = function(x){
+    env = new.env(parent = emptyenv(), size = 2)
+    env$x = x
+    env$i = 1 
+    env
+    }
+
+pop = function(obj, n = 1){
+    if(obj$i > length(obj$x))
+        return(NULL)
+
+    ns = seq_len(min(n, length(obj$x) - obj$i + 1))
+    val = obj$x[ns + obj$i - 1]
+    obj$i = obj$i + n
+
+    cat("Address of 'obj$x' is: ", address(obj$x), "\n")
+    val
+    }
+
+vec = c(5, 3, 8)
+address(vec)
+stack = new_stack(vec)
+address(stack)
+pop(stack)
+pop(stack, 2)
+pop(stack)
+```
+
+The address of the `stack` or the internal vector `stack$obj` doesn't change.
+
+## RC class
+
+From this, it is only a small step towards fully fledged classes.
+As mentioned before, we have `RC` classes and `R6` classes that implements classical OOP seamantics using environments.
+Generally `R6` classes are preferred as they are more performant, but require dependency (the `R6` package). `RC` classes are very similar and included in base R.
+So let's try to use them.
+
+```{r}
+Stack = setRefClass("Stack",
+    fields = list(
+        items = "vector",
+        index = "integer"
+        ),
+
+    methods = list(
+        initialize = function(x){
+            items <<- x
+            index <<- 1L
+            },
+        pop = function(n = 1){
+            if(index > length(items))
+                return(NULL)
+
+            ns = seq_len(min(n, length(items) - index + 1))
+            val = items[ns + index - 1]
+            index <<- index + as.integer(n)
+
+            val
+            },
+
+        peek = function(n = 1){
+            if(index > length(items))
+                return(NULL)
+
+            ns = seq_len(min(n, length(items) - index + 1))
+            items[ns]
+            },
+
+        size = function(){
+            length(items) - index + 1
+            }
+        )
+    )
+
+vec = c(5, 3, 8)
+stack = Stack(vec)
+stack$pop()
+stack$pop(2)
+stack$pop()
+```
+
+## Bare environment
+
+`RC` classes are quite hungry and you should generally use `R6` classes instead (see [RC vs R6 performance](https://r6.r-lib.org/articles/Performance.html)).
+
+There is however an interestring trick in the above article.
+Bare environments.
+
+```{r}
+new_stack = function(x){
+    i = 1
+
+    pop = function(n = 1){
+        if(i > length(x))
+            return(NULL)
+
+        ns = seq_len(min(n, length(x) - i + 1))
+        val = x[ns + i - 1]
+        i <<- i + n
+
+        val
+        }
+
+    peek = function(n = 1){
+        if(i > length(x))
+            return(NULL)
+
+        ns = seq_len(min(n, length(x) - i + 1))
+        x[ns]
+        }
+
+    size = function(){
+        length(x) - i + 1
+        }
+
+    structure(environment(), class = "Stack")
+    }
+
+vec = c(5, 3, 8)
+stack = new_stack(vec)
+stack$pop()
+stack$peek()
+stack$size()
+stack$pop(2)
+```
+
+You got most of the power of `R6` classes for free right there in the base R!
+And they are much easier to work with than `RC` classes and much more performant.
+
+## Attributes
+
+All R objects have attributes.
+In the above example, set `class` attribute of an object generated by `new_stack`.
+
+Can we set class attribute without modification of the whole object?
+
+```{r}
+pop = function(x, n = 1){
+    if(is.null(attr(x, "index")))
+        attr(x, "index") = 1
+
+        i = attr(x, "index")
+
+        if(i > length(x))
+            return(NULL)
+
+        ns = seq_len(min(n, length(x) - i + 1))
+        val = x[ns + i - 1]
+        attr(x, "index") = i + n
+
+        val
+    }
+
+vec = c(5, 3, 8)
+pop(vec)
+pop(vec, 2)
+```
+
+Unfortunatelly, this doesn't work since setting attribute is modification of an object.
+We would have to use `.Call` interface and modify it in `C` function:
+
+```{r}
+set_index = inline::cfunction(
+    signature(x = "SEXP", index = "SEXP"),
+    body = "duplicate(x); setAttrib(x, install(\"index\"), index); return x;",
+    language = "C"
+    )
+
+pop = function(x, n = 1){
+    if(is.null(attr(x, "index")))
+        set_index(x, 1)
+
+        i = attr(x, "index")
+
+        if(i > length(x))
+            return(NULL)
+
+        ns = seq_len(min(n, length(x) - i + 1))
+        val = x[ns + i - 1]
+        set_index(x, i + n)
+        cat("Address of 'x' is: ", address(x), "\n")
+
+        val
+    }
+
+vec = c(5, 3, 8)
+address(vec)
+pop(vec)
+pop(vec, 2)
+```
+
+With some `C` level magic, everything is possible!
+Address is the same, meaning that we are only modifying the attribute of a vector, but not the vector itself.
+To get the size or peek of the current stack, we would need to create a new functions that calculate the attribute.
+But since these functions do not need to do any in-place modification, it will not be a lot of work.
+
+## Summary
+
+In this small post we have investigated how to make simple `pop` function that simulate "consumption" of elements from a vector.
+Including memory-efficient methods providing modify-in-place seamantics.
+
+If we wanted to implement full stack, queue, and deque with the `put` or `insert` functions that would add elements to the vector, the situation would be quite different and different solutions might be better.
+But since I didn't need this functionality, I could afford to implement these easy solutions.
