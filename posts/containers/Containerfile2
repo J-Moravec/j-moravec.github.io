@@ -1,0 +1,95 @@
+FROM ubuntu:22.04 as binary
+
+# you can add multiple labels in a field=value format
+LABEL maintainer="Jiří Moravec"
+
+# tool required to make binary
+# alphabetically sorted (kind of) according to best practices
+RUN apt-get update && apt-get install -y \
+    automake \
+    autopoint \
+    autoconf \
+    autoconf-archive \
+    g++ \
+    gettext \
+    git \
+    make
+
+# 7kaa dependencies
+RUN apt-get install -y \
+    libcurl4-openssl-dev \
+    libenet-dev \
+    libopenal-dev \
+    libsdl2-dev
+
+RUN git clone https://github.com/the3dfxdude/7kaa /home/7kaa
+
+
+WORKDIR /home/7kaa
+
+RUN ./autogen.sh && \
+    ./configure && \
+    make install DESTDIR=/home/7kaa/inst && \
+    cp src/7k.ico /home/7kaa/inst
+
+
+FROM ubuntu:22.04 as appimage
+
+# copying artifacts
+COPY --from=binary /home/7kaa/inst /home/7kaa/AppDir
+
+# 7kaa dependencies, no dev variants required!
+RUN apt-get update && apt-get install -y \
+    libcurl4 \
+    libenet7 \
+    libopenal1 \
+    libsdl2-2.0-0
+
+RUN apt-get install -y \
+    imagemagick \
+    file \
+    lbzip2 \
+    libfuse2 \
+    wget
+
+
+
+WORKDIR /home/7kaa/AppDir
+
+RUN mv usr/local/* usr/ && \
+    rm -r usr/local
+
+RUN convert 7k.ico 7k.png && rm 7k.ico
+
+RUN echo '#!/bin/env sh' > 7krun && \
+    echo '' 7krun && \
+    echo 'SKDATA=share/7kaa/ 7kaa' >> 7krun && \
+    chmod +x 7krun && \
+    mv 7krun usr/bin
+
+RUN echo '[Desktop Entry]' > 7kaa.desktop && \
+    echo 'Type=Application' >> 7kaa.desktop && \
+    echo 'Name=7kaa' >> 7kaa.desktop && \
+    echo 'Comment=Seven Kingdoms: Ancient Adversaries' >> 7kaa.desktop && \
+    echo 'Path=/usr/bin' >> 7kaa.desktop && \
+    echo 'Exec=7krun' >> 7kaa.desktop && \
+    echo 'Icon=7k' >> 7kaa.desktop && \
+    echo 'Categories=Game;' >> 7kaa.desktop
+
+RUN wget -nv -c -4 https://www.7kfans.com/downloads/7kaa-music-2.15.tar.bz2 && \
+    tar -xf 7kaa-music-2.15.tar.bz2 && \
+    mv 7kaa-music/MUSIC/ usr/share/7kaa/ && \
+    rm -r 7kaa-music
+
+WORKDIR /home/7kaa/
+
+RUN wget -nv -c https://github.com/AppImage/AppImageKit/releases/download/13/AppRun-x86_64 -O AppDir/AppRun && \
+    chmod +x AppDir/AppRun && \
+    wget -nv -c https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20220822-1/linuxdeploy-x86_64.AppImage && \
+    chmod +x linuxdeploy-x86_64.AppImage && \
+    VERSION=dev ./linuxdeploy-x86_64.AppImage \
+        --appimage-extract-and-run \
+        --appdir AppDir \
+        -d AppDir/7kaa.desktop \
+        -i AppDir/7k.png \
+        --output appimage
